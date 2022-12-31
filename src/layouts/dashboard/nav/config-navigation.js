@@ -11,40 +11,41 @@ const icon = (name) => (
 
 const ICONS = {
   user: icon('ic_user'),
-  ecommerce: icon('ic_ecommerce'),
-  analytics: icon('ic_analytics'),
-  dashboard: icon('ic_dashboard'),
+  profil: icon('ic_profil'),
+  institut: icon('ic_institut'),
+  settings: icon('ic_settings'),
+  home: icon('ic_home'),
+  invoices: icon('ic_invoice'),
+  skills:icon('ic_skills'),
+  session:icon('ic_session'),
+  test:icon('ic_test'),
+  exam:icon('ic_exam'),
+  users:icon('ic_users'),
+
 };
 
 const navConfig = [
   // GENERAL
   // ----------------------------------------------------------------------
   {
-    subheader: 'general v4.1.0',
     items: [
-      { title: 'One', path: PATH_DASHBOARD.one, icon: ICONS.dashboard },
-      { title: 'Two', path: PATH_DASHBOARD.two, icon: ICONS.ecommerce },
-      { title: 'Three', path: PATH_DASHBOARD.three, icon: ICONS.analytics },
+      { title: 'Accueil', path: PATH_DASHBOARD.home, icon: ICONS.home },
+      { title: 'Profil', path: PATH_DASHBOARD.user.profil, icon: ICONS.profil },
+      { title: 'Paramètres', path: PATH_DASHBOARD.user.settings, icon: ICONS.settings }
     ],
   },
-
-  // MANAGEMENT
-  // ----------------------------------------------------------------------
   {
-    subheader: 'management',
+    subheader: "Gestion de l'application",
     items: [
-      {
-        title: 'user',
-        path: PATH_DASHBOARD.user.root,
-        icon: ICONS.user,
-        children: [
-          { title: 'Four', path: PATH_DASHBOARD.user.four },
-          { title: 'Five', path: PATH_DASHBOARD.user.five },
-          { title: 'Six', path: PATH_DASHBOARD.user.six },
-        ],
-      },
-    ],
-  },
+      {title: 'Instituts', path: PATH_DASHBOARD.admin.instituts.root, icon: ICONS.institut },
+      {title: 'Utilisateurs', path: PATH_DASHBOARD.admin.users.root, icon: ICONS.users },
+      {title: 'Tests', path: PATH_DASHBOARD.admin.tests.root, icon: ICONS.test },
+      {title: 'Sessions', path: PATH_DASHBOARD.admin.sessions.root, icon: ICONS.session },
+      {title: 'Epreuves', path: PATH_DASHBOARD.admin.exams.root, icon: ICONS.exam },
+      {title: 'Compétences', path: PATH_DASHBOARD.admin.skills.root, icon: ICONS.skills },
+      {title: 'Facturation', path: PATH_DASHBOARD.admin.invoices.root, icon: ICONS.invoices }
+    ]
+  }
 ];
 
 export default navConfig;

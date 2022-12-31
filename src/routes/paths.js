@@ -14,13 +14,33 @@ export const PATH_AUTH = {
 
 export const PATH_DASHBOARD = {
   root: ROOTS_DASHBOARD,
-  one: path(ROOTS_DASHBOARD, '/one'),
-  two: path(ROOTS_DASHBOARD, '/two'),
-  three: path(ROOTS_DASHBOARD, '/three'),
+  home: path(ROOTS_DASHBOARD, '/home'),
   user: {
     root: path(ROOTS_DASHBOARD, '/user'),
-    four: path(ROOTS_DASHBOARD, '/user/four'),
-    five: path(ROOTS_DASHBOARD, '/user/five'),
-    six: path(ROOTS_DASHBOARD, '/user/six'),
+    profil: path(ROOTS_DASHBOARD, '/profil'),
+    settings: path(ROOTS_DASHBOARD, '/user/settings'),
   },
+  admin: {
+    instituts: {
+      root: path(ROOTS_DASHBOARD, '/admin/instituts'),
+    },
+    sessions: {
+      root: path(ROOTS_DASHBOARD, '/admin/sessions'),
+    },
+    tests: {
+      root: path(ROOTS_DASHBOARD, '/admin/tests'),
+    },
+    exams: {
+      root: path(ROOTS_DASHBOARD, '/admin/exams'),
+    },
+    users: {
+      root: path(ROOTS_DASHBOARD, '/admin/users'),
+    },
+    skills: {
+      root: path(ROOTS_DASHBOARD, '/admin/skills'),
+    },
+    invoices: {
+      root: path(ROOTS_DASHBOARD, '/admin/invoices'),
+    },
+  }
 };

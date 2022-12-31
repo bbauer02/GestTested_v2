@@ -10,14 +10,18 @@ import { PATH_AFTER_LOGIN } from '../config-global';
 //
 import {
   Page404,
-  PageOne,
-  PageTwo,
-  PageSix,
-  PageFour,
-  PageFive,
   LoginPage,
-  PageThree,
+  UserSettingsPage,
+  DashboardMainPage,
+  UserProfilPage,
+  AdminExamsPage,
+  AdminTestsPage,
+  AdminSessionsPage,
+  AdminInvoicesPage,
+  AdminInstitutsPage,
+  AdminUsersPage
 } from './elements';
+import AdminSkillsPage from "../pages/dashboard/AdminSkillsPage";
 
 // ----------------------------------------------------------------------
 
@@ -46,18 +50,106 @@ export default function Router() {
       ),
       children: [
         { element: <Navigate to={PATH_AFTER_LOGIN} replace />, index: true },
-        { path: 'one', element: <PageOne /> },
-        { path: 'two', element: <PageTwo /> },
-        { path: 'three', element: <PageThree /> },
+        { path: 'home', element: <DashboardMainPage /> },
+        { path: 'profil', element: <UserProfilPage /> },
         {
           path: 'user',
           children: [
             { element: <Navigate to="/dashboard/user/four" replace />, index: true },
-            { path: 'four', element: <PageFour /> },
-            { path: 'five', element: <PageFive /> },
-            { path: 'six', element: <PageSix /> },
+            { path: 'settings', element: <UserSettingsPage /> },
           ],
         },
+        // Routes Dashboard => Admin
+        {
+          path: 'admin',
+          children: [
+            {
+              path: 'instituts',
+              children: [
+                { element: <Navigate to="/dashboard/admin/instituts/list" replace />, index: true },
+                {
+                  path: 'list', element:
+                  (
+                      <AdminInstitutsPage />
+                  )
+                }
+              ]
+            },
+            {
+              path: 'users',
+              children: [
+                { element: <Navigate to="/dashboard/admin/users/list" replace />, index: true },
+                {
+                  path: 'list', element:
+                      (
+                          <AdminUsersPage />
+                      )
+                }
+              ]
+            },
+            {
+              path: 'tests',
+              children: [
+                { element: <Navigate to="/dashboard/admin/tests/list" replace />, index: true },
+                {
+                  path: 'list', element:
+                      (
+                          <AdminTestsPage />
+                      )
+                }
+              ]
+            },
+            {
+              path: 'sessions',
+              children: [
+                { element: <Navigate to="/dashboard/admin/sessions/list" replace />, index: true },
+                {
+                  path: 'list', element:
+                      (
+                          <AdminSessionsPage />
+                      )
+                }
+              ]
+            },
+            {
+              path: 'skills',
+              children: [
+                { element: <Navigate to="/dashboard/admin/skills/list" replace />, index: true },
+                {
+                  path: 'list', element:
+                      (
+                          <AdminSkillsPage />
+                      )
+                }
+              ]
+            },
+            {
+              path: 'exams',
+              children: [
+                { element: <Navigate to="/dashboard/admin/exams/list" replace />, index: true },
+                {
+                  path: 'list', element:
+                      (
+                          <AdminExamsPage />
+                      )
+                }
+              ]
+            },
+            {
+              path: 'invoices',
+              children: [
+                { element: <Navigate to="/dashboard/admin/invoices/list" replace />, index: true },
+                {
+                  path: 'list', element:
+                      (
+                          <AdminInvoicesPage />
+                      )
+                }
+              ]
+            }
+
+          ]
+        }
       ],
     },
     {
