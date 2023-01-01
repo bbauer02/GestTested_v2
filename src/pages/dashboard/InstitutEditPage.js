@@ -1,4 +1,7 @@
 import { Helmet } from 'react-helmet-async';
+import { useEffect } from 'react';
+import { paramCase } from 'change-case';
+import { useParams, useLocation } from 'react-router-dom';
 // @mui
 import {
     Container,
@@ -7,12 +10,26 @@ import {
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
+// redux
+import { useDispatch, useSelector } from '../../redux/store';
+import { getInstitut } from '../../redux/slices/institut';
 // components
 import { useSettingsContext } from '../../components/settings';
-
+import InstitutNewEditForm from "../../sections/@dashboard/institut/InstitutNewEditForm";
 
 export default function InstitutEditPage() {
     const { themeStretch } = useSettingsContext();
+    const dispatch = useDispatch();
+    const { pathname } = useLocation();
+    const { id } = useParams();
+    const isEdit = pathname.includes('edit');
+    useEffect(() => {
+        dispatch(getInstitut(id));
+    }, [dispatch, id]);
+
+    const { institut } = useSelector((state) => state.institut);
+
+
     return (
         <>
             <Helmet>
@@ -26,9 +43,7 @@ export default function InstitutEditPage() {
                         { name: "Edition d'un institut" }
                     ]}
                 />
-                <Card>
-                    InstitutEditPage Component
-                </Card>
+                <InstitutNewEditForm isEdit={isEdit} currentInstitut={institut}/>
             </Container>
         </>
     );
