@@ -12,39 +12,41 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getInstitut } from '../../redux/slices/institut';
+import { getExam } from '../../redux/slices/exam';
 // components
 import { useSettingsContext } from '../../components/settings';
-import InstitutNewEditForm from "../../sections/@dashboard/institut/InstitutNewEditForm";
+import ExamNewEditForm from "../../sections/@dashboard/exam/ExamNewEditForm";
 
-export default function InstitutEditPage() {
-    const { themeStretch } = useSettingsContext();
+
+export default function ExamEditPage() {
     const dispatch = useDispatch();
+    const { themeStretch } = useSettingsContext();
     const { pathname } = useLocation();
     const { id } = useParams();
     const isEdit = pathname.includes('edit');
+    const { exam } = useSelector((state) => state.exam);
+
     useEffect(() => {
-        dispatch(getInstitut(id));
-    }, [dispatch, id]);
-
-    const { institut } = useSelector((state) => state.institut);
-
+        if (isEdit) {
+            dispatch(getExam(id));
+        }
+    }, [dispatch, id, isEdit]);
 
     return (
         <>
             <Helmet>
-                <title> Institut: Edition | Get-Tested</title>
+                <title> Administration: Epreuves | Get-Tested</title>
             </Helmet>
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
-                    heading="Edition d'un institut"
+                    heading="Edition d'une épreuve"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Liste des instituts', href: PATH_DASHBOARD.admin.institut.list },
-                        { name: "Edition d'un institut" }
+                        { name: 'Liste des épreuves', href: PATH_DASHBOARD.admin.exam.list },
+                        { name: "Edition d'une épreuve"  }
                     ]}
                 />
-                <InstitutNewEditForm isEdit={isEdit} currentInstitut={institut}/>
+                <ExamNewEditForm isEdit currentExam={exam}/>
             </Container>
         </>
     );

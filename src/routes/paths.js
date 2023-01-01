@@ -33,23 +33,26 @@ export const PATH_DASHBOARD = {
       prices: (id) => path(ROOTS_DASHBOARD, `/admin/institut/${id}/prices`),
 
     },
-    sessions: {
-      root: path(ROOTS_DASHBOARD, '/admin/sessions'),
+    session: {
+      root: path(ROOTS_DASHBOARD, '/admin/session'),
     },
-    tests: {
-      root: path(ROOTS_DASHBOARD, '/admin/tests'),
+    test: {
+      root: path(ROOTS_DASHBOARD, '/admin/test'),
     },
-    exams: {
-      root: path(ROOTS_DASHBOARD, '/admin/exams'),
+    exam: {
+      root: path(ROOTS_DASHBOARD, '/admin/exam'),
+      list: path(ROOTS_DASHBOARD, '/admin/exam/list'),
+      create: path(ROOTS_DASHBOARD, `/admin/exam/create`),
+      edit: (id) => path(ROOTS_DASHBOARD, `/admin/exam/${id}/edit`),
     },
-    users: {
-      root: path(ROOTS_DASHBOARD, '/admin/users'),
+    user: {
+      root: path(ROOTS_DASHBOARD, '/admin/user'),
     },
-    skills: {
-      root: path(ROOTS_DASHBOARD, '/admin/skills'),
+    skill: {
+      root: path(ROOTS_DASHBOARD, '/admin/skill'),
     },
-    invoices: {
-      root: path(ROOTS_DASHBOARD, '/admin/invoices'),
+    invoice: {
+      root: path(ROOTS_DASHBOARD, '/admin/invoice'),
     },
   }
 };

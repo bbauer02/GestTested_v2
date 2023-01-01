@@ -39,7 +39,7 @@ export default slice.reducer;
 // GET TESTS ----------------------------------------------------
 
 export function getTests(child=false) {
-  return async () => {
+  return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/tests?child=${child}`);

@@ -14,7 +14,9 @@ import {
   UserSettingsPage,
   DashboardMainPage,
   UserProfilPage,
-  ExamsPage,
+  ExamListPage,
+  ExamEditPage,
+  ExamCreatePage,
   TestsPage,
   SessionsPage,
   InvoicesPage,
@@ -26,9 +28,10 @@ import {
   InstitutDetailsPage,
   InstitutCreatePage,
   InstitutPricesPage,
-  UsersPage
+  UsersPage,
+  SkillsPage
 } from './elements';
-import SkillsPage from "../pages/dashboard/SkillsPage";
+
 
 // ----------------------------------------------------------------------
 
@@ -101,9 +104,9 @@ export default function Router() {
               ]
             },
             {
-              path: 'users',
+              path: 'user',
               children: [
-                { element: <Navigate to="/dashboard/admin/users/list" replace />, index: true },
+                { element: <Navigate to="/dashboard/admin/user/list" replace />, index: true },
                 {
                   path: 'list', element:
                       (
@@ -113,9 +116,9 @@ export default function Router() {
               ]
             },
             {
-              path: 'tests',
+              path: 'test',
               children: [
-                { element: <Navigate to="/dashboard/admin/tests/list" replace />, index: true },
+                { element: <Navigate to="/dashboard/admin/test/list" replace />, index: true },
                 {
                   path: 'list', element:
                       (
@@ -125,9 +128,9 @@ export default function Router() {
               ]
             },
             {
-              path: 'sessions',
+              path: 'session',
               children: [
-                { element: <Navigate to="/dashboard/admin/sessions/list" replace />, index: true },
+                { element: <Navigate to="/dashboard/admin/session/list" replace />, index: true },
                 {
                   path: 'list', element:
                       (
@@ -137,9 +140,9 @@ export default function Router() {
               ]
             },
             {
-              path: 'skills',
+              path: 'skill',
               children: [
-                { element: <Navigate to="/dashboard/admin/skills/list" replace />, index: true },
+                { element: <Navigate to="/dashboard/admin/skill/list" replace />, index: true },
                 {
                   path: 'list', element:
                       (
@@ -149,21 +152,27 @@ export default function Router() {
               ]
             },
             {
-              path: 'exams',
+              path: 'exam',
               children: [
-                { element: <Navigate to="/dashboard/admin/exams/list" replace />, index: true },
+                { element: <Navigate to="/dashboard/admin/exam/list" replace />, index: true },
                 {
                   path: 'list', element:
                       (
-                          <ExamsPage />
+                          <ExamListPage />
                       )
-                }
+                },
+                {path: 'create', element: (
+                      <ExamCreatePage />
+                )},
+                {path: ':id/edit', element: (
+                      <ExamEditPage />
+                )},
               ]
             },
             {
-              path: 'invoices',
+              path: 'invoice',
               children: [
-                { element: <Navigate to="/dashboard/admin/invoices/list" replace />, index: true },
+                { element: <Navigate to="/dashboard/admin/invoice/list" replace />, index: true },
                 {
                   path: 'list', element:
                       (

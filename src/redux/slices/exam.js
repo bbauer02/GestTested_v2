@@ -62,7 +62,7 @@ export default slice.reducer;
 // GET EXAMS ----------------------------------------------------
 
 export function getExams() {
-  return async () => {
+  return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get('/exams');
@@ -88,7 +88,7 @@ export function getExam(id) {
 // POST EXAMS ------------------------------------------------------
 
 export function postExam(exam) {
-  return async () => {
+  return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.post('/exams', exam);

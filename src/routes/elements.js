@@ -12,11 +12,13 @@ const Loadable = (Component) => (props) =>
   );
 
 // ----------------------------------------------------------------------
-
 // DashBoard
+export const SkillsPage = Loadable(lazy(() => import('../pages/dashboard/SkillsPage')));
 export const UserSettingsPage = Loadable(lazy(() => import('../pages/dashboard/UserSettingsPage')));
 export const UserProfilPage = Loadable(lazy(() => import('../pages/dashboard/UserProfilPage')));
-export const ExamsPage = Loadable(lazy(() => import('../pages/dashboard/ExamsPage')));
+export const ExamListPage = Loadable(lazy(() => import('../pages/dashboard/ExamListPage')));
+export const ExamCreatePage = Loadable(lazy(() => import('../pages/dashboard/ExamCreatePage')));
+export const ExamEditPage = Loadable(lazy(() => import('../pages/dashboard/ExamEditPage')));
 export const InstitutListPage = Loadable(lazy(() => import('../pages/dashboard/InstitutListPage')));
 export const InstitutCreatePage = Loadable(lazy(() => import('../pages/dashboard/InstitutCreatePage')));
 export const InstitutDetailsPage = Loadable(lazy(() => import('../pages/dashboard/InstitutDetailsPage')));
