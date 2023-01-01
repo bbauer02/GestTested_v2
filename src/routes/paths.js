@@ -21,8 +21,17 @@ export const PATH_DASHBOARD = {
     settings: path(ROOTS_DASHBOARD, '/user/settings'),
   },
   admin: {
-    instituts: {
-      root: path(ROOTS_DASHBOARD, '/admin/instituts'),
+    institut: {
+      root: path(ROOTS_DASHBOARD, '/admin/institut/'),
+      list: path(ROOTS_DASHBOARD, '/admin/institut/list'),
+      create: path(ROOTS_DASHBOARD, `/admin/institut/create`),
+      edit: (id) => path(ROOTS_DASHBOARD, `/admin/institut/${id}/edit`),
+      details: (id) => path(ROOTS_DASHBOARD, `/admin/institut/${id}/details`),
+      users: (id) => path(ROOTS_DASHBOARD, `/admin/institut/${id}/users`),
+      examinators: (id) => path(ROOTS_DASHBOARD, `/admin/institut/${id}/examinators`),
+      sessions: (id) => path(ROOTS_DASHBOARD, `/admin/institut/${id}/sessions`),
+      prices: (id) => path(ROOTS_DASHBOARD, `/admin/institut/${id}/prices`),
+
     },
     sessions: {
       root: path(ROOTS_DASHBOARD, '/admin/sessions'),

@@ -11,23 +11,23 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 
 
-export default function AdminUsersPage() {
+export default function InstitutSessionsListPage() {
     const { themeStretch } = useSettingsContext();
     return (
         <>
             <Helmet>
-                <title> Administration: utilisateurs | Get-Tested</title>
+                <title> Institut: Liste des sessions | Get-Tested</title>
             </Helmet>
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
-                    heading="Administration des utilisateurs"
+                    heading="Liste des sessions"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Utilisateurs' }
+                        { name: "Sessions d'un institut" }
                     ]}
                 />
                 <Card>
-                    AdminUsersPage Component
+                    InstitutSessionsListPage Component
                 </Card>
             </Container>
         </>

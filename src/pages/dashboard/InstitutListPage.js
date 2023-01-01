@@ -47,7 +47,7 @@ const TABLE_HEAD = [
 ];
 // ----------------------------------------------------------------------
 
-export default function AdminInstitutsPage() {
+export default function InstitutListPage() {
     const {
         dense,
         page,
@@ -120,27 +120,27 @@ export default function AdminInstitutsPage() {
     };
 
     const handleEditRow = (institutId) => {
-       // navigate(PATH_DASHBOARD.admin.instituts.edit(institutId));
+        navigate(PATH_DASHBOARD.admin.institut.edit(institutId));
     };
 
     const handleDetailRow = (institutId) => {
-       // navigate(PATH_DASHBOARD.admin.instituts.details(institutId));
+       navigate(PATH_DASHBOARD.admin.institut.details(institutId));
     };
 
     const handleUsersList = (institutId) => {
-      //  navigate(PATH_DASHBOARD.admin.instituts.users(institutId));
+      navigate(PATH_DASHBOARD.admin.institut.users(institutId));
     };
 
     const handleExaminatorsList = (institutId) => {
-      //  navigate(PATH_DASHBOARD.admin.instituts.examinators(institutId));
+      navigate(PATH_DASHBOARD.admin.institut.examinators(institutId));
     };
 
     const handleSessionsList = (institutId) => {
-       // navigate(PATH_DASHBOARD.admin.instituts.sessions(institutId));
+       navigate(PATH_DASHBOARD.admin.institut.sessions(institutId));
     };
 
     const handlePricesList = (institutId) => {
-      //  navigate(PATH_DASHBOARD.admin.instituts.prices(institutId));
+      navigate(PATH_DASHBOARD.admin.institut.prices(institutId));
     };
 
     const handleFilterName = (filtername) => {
@@ -166,7 +166,7 @@ export default function AdminInstitutsPage() {
                             variant="contained"
                             startIcon={<Iconify icon="eva:plus-fill" />}
                             component={RouterLink}
-                            to={PATH_DASHBOARD.admin.instituts.new}
+                            to={PATH_DASHBOARD.admin.institut.create}
                         >
                             Nouvel Institut
                         </Button>

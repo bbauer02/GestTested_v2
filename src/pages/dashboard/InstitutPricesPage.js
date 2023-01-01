@@ -11,23 +11,23 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 
 
-export default function AdminTestsPage() {
+export default function InstitutPricesPage() {
     const { themeStretch } = useSettingsContext();
     return (
         <>
             <Helmet>
-                <title> Administration: Tests | Get-Tested</title>
+                <title> Institut: Tarifs | Get-Tested</title>
             </Helmet>
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
-                    heading="Administration des tests"
+                    heading="Tarifs pratiqués par l'institut"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Tests' }
+                        { name: "Tarifs d'un institut" }
                     ]}
                 />
                 <Card>
-                    AdminTestsPage Component
+                    InstitutPricesPage Component
                 </Card>
             </Container>
         </>

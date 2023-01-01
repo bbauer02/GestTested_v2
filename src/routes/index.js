@@ -14,14 +14,21 @@ import {
   UserSettingsPage,
   DashboardMainPage,
   UserProfilPage,
-  AdminExamsPage,
-  AdminTestsPage,
-  AdminSessionsPage,
-  AdminInvoicesPage,
-  AdminInstitutsPage,
-  AdminUsersPage
+  ExamsPage,
+  TestsPage,
+  SessionsPage,
+  InvoicesPage,
+  InstitutListPage,
+  InstitutEditPage,
+  InstitutExaminatorsPage,
+  InstitutSessionsListPage,
+  InstitutUsersPage,
+  InstitutDetailsPage,
+  InstitutCreatePage,
+  InstitutPricesPage,
+  UsersPage
 } from './elements';
-import AdminSkillsPage from "../pages/dashboard/AdminSkillsPage";
+import SkillsPage from "../pages/dashboard/SkillsPage";
 
 // ----------------------------------------------------------------------
 
@@ -64,15 +71,33 @@ export default function Router() {
           path: 'admin',
           children: [
             {
-              path: 'instituts',
+              path: 'institut',
               children: [
-                { element: <Navigate to="/dashboard/admin/instituts/list" replace />, index: true },
-                {
-                  path: 'list', element:
-                  (
-                      <AdminInstitutsPage />
-                  )
-                }
+                { element: <Navigate to="/dashboard/admin/institut/list" replace />, index: true },
+                {path: 'list', element: (
+                      <InstitutListPage />
+                )},
+                {path: 'create', element: (
+                      <InstitutCreatePage />
+                )},
+                {path: ':id/edit', element: (
+                      <InstitutEditPage />
+                )},
+                {path: ':id/details', element: (
+                      <InstitutDetailsPage />
+                )},
+                {path: ':id/users', element: (
+                      <InstitutUsersPage />
+                )},
+                {path: ':id/examinators', element: (
+                      <InstitutExaminatorsPage />
+                )},
+                {path: ':id/sessions', element: (
+                      <InstitutSessionsListPage />
+                )},
+                {path: ':id/prices', element: (
+                      <InstitutPricesPage />
+                )}
               ]
             },
             {
@@ -82,7 +107,7 @@ export default function Router() {
                 {
                   path: 'list', element:
                       (
-                          <AdminUsersPage />
+                          <UsersPage />
                       )
                 }
               ]
@@ -94,7 +119,7 @@ export default function Router() {
                 {
                   path: 'list', element:
                       (
-                          <AdminTestsPage />
+                          <TestsPage />
                       )
                 }
               ]
@@ -106,7 +131,7 @@ export default function Router() {
                 {
                   path: 'list', element:
                       (
-                          <AdminSessionsPage />
+                          <SessionsPage />
                       )
                 }
               ]
@@ -118,7 +143,7 @@ export default function Router() {
                 {
                   path: 'list', element:
                       (
-                          <AdminSkillsPage />
+                          <SkillsPage />
                       )
                 }
               ]
@@ -130,7 +155,7 @@ export default function Router() {
                 {
                   path: 'list', element:
                       (
-                          <AdminExamsPage />
+                          <ExamsPage />
                       )
                 }
               ]
@@ -142,7 +167,7 @@ export default function Router() {
                 {
                   path: 'list', element:
                       (
-                          <AdminInvoicesPage />
+                          <InvoicesPage />
                       )
                 }
               ]

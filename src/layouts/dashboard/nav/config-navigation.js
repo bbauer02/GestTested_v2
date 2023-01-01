@@ -37,7 +37,7 @@ const navConfig = [
   {
     subheader: "Gestion de l'application",
     items: [
-      {title: 'Instituts', path: PATH_DASHBOARD.admin.instituts.root, icon: ICONS.institut },
+      {title: 'Instituts', path: PATH_DASHBOARD.admin.institut.root, icon: ICONS.institut },
       {title: 'Utilisateurs', path: PATH_DASHBOARD.admin.users.root, icon: ICONS.users },
       {title: 'Tests', path: PATH_DASHBOARD.admin.tests.root, icon: ICONS.test },
       {title: 'Sessions', path: PATH_DASHBOARD.admin.sessions.root, icon: ICONS.session },

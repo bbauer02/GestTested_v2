@@ -11,23 +11,23 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 
 
-export default function AdminInvoicesPage() {
+export default function ExamsPage() {
     const { themeStretch } = useSettingsContext();
     return (
         <>
             <Helmet>
-                <title> Administration: Facturation | Get-Tested</title>
+                <title> Administration: Epreuves | Get-Tested</title>
             </Helmet>
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
-                    heading="Facturation"
+                    heading="Administration des épreuves"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Facturation' }
+                        { name: 'épreuves' }
                     ]}
                 />
                 <Card>
-                    AdminInvoicesPage Component
+                    AdminExamsPage Component
                 </Card>
             </Container>
         </>

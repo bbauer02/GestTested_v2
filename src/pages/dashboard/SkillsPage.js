@@ -11,7 +11,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 
 
-export default function AdminSkillsPage() {
+export default function SkillsPage() {
     const { themeStretch } = useSettingsContext();
     return (
         <>
