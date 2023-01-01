@@ -8,7 +8,7 @@ import axios from '../../utils/axios';
 const initialState = {
   isLoading: false,
   error: false,
-  languages: {},
+  languages: [],
   language: null,
   search: null,
   sortBy: null
@@ -33,7 +33,7 @@ const slice = createSlice({
     // GET LANGUAGES
     getLanguagesSuccess(state, action) {
       state.isLoading = false;
-      state.languages = {};
+      state.languages = [];
       const allLanguages = action.payload.data;
       if (allLanguages)
         allLanguages.forEach((language) => {

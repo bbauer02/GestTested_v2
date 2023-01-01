@@ -49,6 +49,15 @@ const reducer = (state, action) => {
       user: null,
     };
   }
+  if(action.type === 'UPDATE') {
+    let { user } = action.payload;
+    user = {...state.user,...user}
+    return {
+      ...state,
+      isAuthenticated: true,
+      user
+    };
+  }
 
   return state;
 };
@@ -153,6 +162,19 @@ export function AuthProvider({ children }) {
     });
   }, []);
 
+  // UPDATE
+  const update = useCallback( async(user, userId) => {
+    const response = await axios.put(`/users/${userId}`, user);
+    dispatch({
+      type: 'UPDATE',
+      payload: {
+        user : response.data.User
+      }
+    });
+  }, []);
+
+
+
   const memoizedValue = useMemo(
     () => ({
       isInitialized: state.isInitialized,
@@ -162,8 +184,9 @@ export function AuthProvider({ children }) {
       login,
       register,
       logout,
+      update
     }),
-    [state.isAuthenticated, state.isInitialized, state.user, login, logout, register]
+    [state.isAuthenticated, state.isInitialized, state.user, login, update, logout, register]
   );
 
   return <AuthContext.Provider value={memoizedValue}>{children}</AuthContext.Provider>;

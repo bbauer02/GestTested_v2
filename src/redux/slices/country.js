@@ -32,7 +32,7 @@ const slice = createSlice({
     // GET COUNTRIES
     getCountriesSuccess(state, action) {
       state.isLoading = false;
-      state.countries = {};
+      state.countries = [];
       const allCountries = action.payload.data;
       if (allCountries)
         allCountries.forEach((country) => {
