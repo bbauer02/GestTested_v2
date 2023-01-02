@@ -191,7 +191,7 @@ export default function InstitutListPage() {
                             }
                             action={
                                 <Tooltip title="Delete">
-                                    <IconButton color="primary" onClick={handleOpenConfirm}>
+                                    <IconButton disabled color="primary" onClick={handleOpenConfirm}>
                                         <Iconify icon='eva:trash-2-outline' />
                                     </IconButton>
                                 </Tooltip>

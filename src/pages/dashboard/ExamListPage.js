@@ -27,6 +27,7 @@ import {
 } from "../../components/table";
 import Scrollbar from "../../components/scrollbar";
 import {ExamTableRow, ExamTableToolbar} from "../../sections/@dashboard/exam/list";
+import ConfirmDialog from "../../components/confirm-dialog";
 
 
 
@@ -79,6 +80,9 @@ export default function ExamListPage() {
     const handleOpenConfirm = () => {
         setOpenConfirm(true);
     };
+    const handleCloseConfirm = () => {
+        setOpenConfirm(false);
+    };
 
     useEffect(() => {
         dispatch(getExams());
@@ -126,6 +130,10 @@ export default function ExamListPage() {
             enqueueSnackbar('Une erreur est survenue', { variant: 'error' });
         }
     }
+
+    const handleDeleteRows = async (selectedRows) => {
+        // TO DO
+    }
     return (
         <>
             <Helmet>
@@ -169,7 +177,7 @@ export default function ExamListPage() {
                             }
                             action={
                                 <Tooltip title="Delete">
-                                    <IconButton color="primary" onClick={handleOpenConfirm}>
+                                    <IconButton disabled color="primary" onClick={handleOpenConfirm}>
                                         <Iconify icon='eva:trash-2-outline' />
                                     </IconButton>
                                 </Tooltip>
@@ -229,6 +237,28 @@ export default function ExamListPage() {
                     />
                 </Card>
             </Container>
+            <ConfirmDialog
+                open={openConfirm}
+                onClose={handleCloseConfirm}
+                title="Delete"
+                content={
+                    <>
+                        Are you sure want to delete <strong> {selected.length} </strong> items?
+                    </>
+                }
+                action={
+                    <Button
+                        variant="contained"
+                        color="error"
+                        onClick={() => {
+                            handleDeleteRows(selected);
+                            handleCloseConfirm();
+                        }}
+                    >
+                        Delete
+                    </Button>
+                }
+            />
         </>
     );
 }

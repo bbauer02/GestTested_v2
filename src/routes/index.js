@@ -18,7 +18,7 @@ import {
   ExamEditPage,
   ExamCreatePage,
   TestsPage,
-  SessionsPage,
+  SessionListPage,
   InvoicesPage,
   InstitutListPage,
   InstitutEditPage,
@@ -134,7 +134,7 @@ export default function Router() {
                 {
                   path: 'list', element:
                       (
-                          <SessionsPage />
+                          <SessionListPage />
                       )
                 }
               ]

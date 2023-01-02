@@ -11,7 +11,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 
 
-export default function SessionsPage() {
+export default function SessionListPage() {
     const { themeStretch } = useSettingsContext();
     return (
         <>
