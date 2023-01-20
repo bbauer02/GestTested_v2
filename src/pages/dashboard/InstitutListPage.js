@@ -190,10 +190,12 @@ export default function InstitutListPage() {
                                 )
                             }
                             action={
-                                <Tooltip title="Delete">
-                                    <IconButton disabled color="primary" onClick={handleOpenConfirm}>
-                                        <Iconify icon='eva:trash-2-outline' />
-                                    </IconButton>
+                                <Tooltip title="Suppression des instituts sélectionnés">
+                                    <span>
+                                        <IconButton disabled color="primary" onClick={handleOpenConfirm}>
+                                            <Iconify icon='eva:trash-2-outline' />
+                                        </IconButton>
+                                    </span>
                                 </Tooltip>
                             }
                         />

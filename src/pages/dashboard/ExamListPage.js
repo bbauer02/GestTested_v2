@@ -176,9 +176,11 @@ export default function ExamListPage() {
                                 )
                             }
                             action={
-                                <Tooltip title="Delete">
+                                <Tooltip title="Suppression des épreuves sélectionnées">
                                     <IconButton disabled color="primary" onClick={handleOpenConfirm}>
-                                        <Iconify icon='eva:trash-2-outline' />
+                                        <span>
+                                            <Iconify icon='eva:trash-2-outline' />
+                                        </span>
                                     </IconButton>
                                 </Tooltip>
                             }
