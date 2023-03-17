@@ -1,4 +1,5 @@
 import { Helmet } from 'react-helmet-async';
+import { useLocation } from 'react-router-dom';
 // @mui
 import {
     Container,
@@ -9,10 +10,13 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // components
 import { useSettingsContext } from '../../components/settings';
-
+import SessionNewEditForm from "../../sections/@dashboard/session/SessionNewEditForm";
 
 export default function SessionCreatePage() {
     const { themeStretch } = useSettingsContext();
+    const { pathname } = useLocation();
+    const isEdit = pathname.includes('edit');
+
     return (
         <>
             <Helmet>
@@ -22,13 +26,12 @@ export default function SessionCreatePage() {
                 <CustomBreadcrumbs
                     heading="Création d'une session"
                     links={[
-                        { name: 'Dashboard', href: PATH_DASHBOARD.session.root },
+                        { name: 'Dashboard', href: PATH_DASHBOARD.root },
+                        {name : 'Sessions', href: PATH_DASHBOARD.admin.session.root},
                         { name: "Création d'une session" }
                     ]}
                 />
-                <Card>
-                    SessionCreatePage Component
-                </Card>
+                <SessionNewEditForm isEdit={isEdit} currentInstitut={null} />
             </Container>
         </>
     );

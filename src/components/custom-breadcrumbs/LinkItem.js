@@ -19,9 +19,10 @@ export default function BreadcrumbsLink({ link, activeLast, disabled }) {
   const { name, href, icon } = link;
 
   const styles = {
-    display: 'inline-flex',
+    typography: 'body2',
     alignItems: 'center',
     color: 'text.primary',
+    display: 'inline-flex',
     ...(disabled &&
       !activeLast && {
         cursor: 'default',

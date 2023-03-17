@@ -30,6 +30,7 @@ export const InstitutPricesPage = Loadable(lazy(() => import('../pages/dashboard
 export const InvoicesPage = Loadable(lazy(() => import('../pages/dashboard/InvoicesPage')));
 export const SessionListPage = Loadable(lazy(() => import('../pages/dashboard/SessionListPage')));
 export const SessionCreatePage = Loadable(lazy(() => import('../pages/dashboard/SessionCreatePage')));
+export const SessionEditPage = Loadable(lazy(() => import('../pages/dashboard/SessionEditPage')));
 export const TestsPage = Loadable(lazy(() => import('../pages/dashboard/TestsPage')));
 export const UsersPage = Loadable(lazy(() => import('../pages/dashboard/UsersPage')));
 export const DashboardMainPage = Loadable(lazy( () => import('../pages/dashboard/DashboardMainPage')));

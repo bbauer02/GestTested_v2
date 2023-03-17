@@ -11,7 +11,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 
 
-export default function SessionCreatePage() {
+export default function SessionEditPage() {
     const { themeStretch } = useSettingsContext();
     return (
         <>
@@ -27,7 +27,7 @@ export default function SessionCreatePage() {
                     ]}
                 />
                 <Card>
-                    SessionCreatePage Component
+                    SessionEditPage Component
                 </Card>
             </Container>
         </>

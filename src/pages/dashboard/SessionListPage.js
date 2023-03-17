@@ -139,7 +139,7 @@ export default function SessionListPage() {
             </Helmet>
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
-                    heading="Administration des instituts"
+                    heading="Administration des sessions"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
                         { name: 'Sessions' }

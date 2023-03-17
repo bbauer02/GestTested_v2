@@ -19,6 +19,7 @@ import {
   ExamCreatePage,
   TestsPage,
   SessionListPage,
+  SessionCreatePage,
   InvoicesPage,
   InstitutListPage,
   InstitutEditPage,
@@ -136,6 +137,12 @@ export default function Router() {
                       (
                           <SessionListPage />
                       )
+                },
+                {
+                  path: 'create', element: 
+                  (
+                    <SessionCreatePage />
+                  )
                 }
               ]
             },
