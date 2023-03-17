@@ -39,11 +39,10 @@ import { SessionTableRow, SessionTableToolbar} from "../../sections/@dashboard/s
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
     { id: 'session_id', label: 'ID', align: 'left'},
-    { id: 'start', label: 'Début', align: 'left' },
-    { id: 'institut_id', label: 'Institut', align: 'left'},
-    { id: 'test_id', label: 'Test / Niveau', align: 'left' },
+    { id: 'institut', label: 'Institut', align: 'left' },
+    { id: 'start', label: 'Début', align: 'left'},
+    { id: 'test', label: 'Test / Niveau', align: 'left' },
     { id: 'subscribers', label: 'Inscrits', align: 'left' },
-    { id: 'validation', label: 'Validation', align: 'left' },
     { id: 'action', label: 'Action', align: 'left' },
     { id: '' },
 ];
@@ -76,7 +75,7 @@ export default function SessionListPage() {
 
     const dispatch = useDispatch();
 
-    const { session, isLoading} = useSelector((state) => state.session);
+    const { sessions, isLoading} = useSelector((state) => state.session);
 
     const [tableData, setTableData] = useState([]);
 
@@ -85,14 +84,14 @@ export default function SessionListPage() {
     const [openConfirm, setOpenConfirm] = useState(false);
 
     useEffect(() => {
-        dispatch(getInstituts());
+        dispatch(getSessionsFiltered());
     }, [dispatch]);
 
     useEffect(() => {
-        if (instituts.length) {
-            setTableData(instituts);
+        if (sessions.length) {
+            setTableData(sessions);
         }
-    }, [instituts]);
+    }, [sessions]);
 
     const dataFiltered = applyFilter({
         inputData : tableData,
@@ -122,28 +121,10 @@ export default function SessionListPage() {
     };
 
     const handleEditRow = (institutId) => {
-        navigate(PATH_DASHBOARD.admin.institut.edit(institutId));
+     //   navigate(PATH_DASHBOARD.admin.session.edit(institutId));
     };
 
-    const handleDetailRow = (institutId) => {
-        navigate(PATH_DASHBOARD.admin.institut.details(institutId));
-    };
 
-    const handleUsersList = (institutId) => {
-        navigate(PATH_DASHBOARD.admin.institut.users(institutId));
-    };
-
-    const handleExaminatorsList = (institutId) => {
-        navigate(PATH_DASHBOARD.admin.institut.examinators(institutId));
-    };
-
-    const handleSessionsList = (institutId) => {
-        navigate(PATH_DASHBOARD.admin.institut.sessions(institutId));
-    };
-
-    const handlePricesList = (institutId) => {
-        navigate(PATH_DASHBOARD.admin.institut.prices(institutId));
-    };
 
     const handleFilterName = (filtername) => {
         setFilterName(filtername);
@@ -154,28 +135,28 @@ export default function SessionListPage() {
     return (
         <>
             <Helmet>
-                <title> Administration: Instituts | Get-Tested</title>
+                <title> Administration: Sessions | Get-Tested</title>
             </Helmet>
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
                     heading="Administration des instituts"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Instituts' }
+                        { name: 'Sessions' }
                     ]}
                     action={
                         <Button
                             variant="contained"
                             startIcon={<Iconify icon="eva:plus-fill" />}
                             component={RouterLink}
-                            to={PATH_DASHBOARD.admin.institut.create}
+                            to={PATH_DASHBOARD.admin.session.create}
                         >
-                            Nouvel Institut
+                            Nouvelle Session
                         </Button>
                     }
                 />
                 <Card>
-                    <InstitutTableToolbar
+                    <SessionTableToolbar
                         filterName={filterName}
                         onFilterName={handleFilterName}
                     />
@@ -188,7 +169,7 @@ export default function SessionListPage() {
                             onSelectAllRows={(checked) =>
                                 onSelectAllRows(
                                     checked,
-                                    tableData.map((row) => row.institut_id)
+                                    tableData.map((row) => row.session_id)
                                 )
                             }
                             action={
@@ -222,18 +203,13 @@ export default function SessionListPage() {
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         .map((row, index) =>
                                             row ? (
-                                                <InstitutTableRow
-                                                    key={row.institut_id}
+                                                <SessionTableRow
+                                                    key={row.session_id}
                                                     row={row}
-                                                    selected={selected.includes(row.institut_id)}
-                                                    onSelectRow={() => onSelectRow(row.institut_id)}
-                                                    onDeleteRow={() => handleDeleteRow(row.institut_id)}
-                                                    onEditRow={() => handleEditRow(row.institut_id)}
-                                                    onDetailRow={() => handleDetailRow(row.institut_id)}
-                                                    onUsersListRow={() => handleUsersList(row.institut_id)}
-                                                    onExaminatorsListRow={() => handleExaminatorsList(row.institut_id) }
-                                                    onSessionsListRow={() => handleSessionsList(row.institut_id)}
-                                                    onPricesListRow={() => handlePricesList(row.institut_id)}
+                                                    selected={selected.includes(row.session_id)}
+                                                    onSelectRow={() => onSelectRow(row.session_id)}
+                                                    onDeleteRow={() => handleDeleteRow(row.session_id)}
+                                                    onEditRow={() => handleEditRow(row.session_id)}
                                                 />
                                             ) : (
                                                 !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -266,7 +242,7 @@ export default function SessionListPage() {
                 title="Delete"
                 content={
                     <>
-                        Voulez-vous vraiment supprimer <strong> {selected.length} </strong> instituts ?
+                        Voulez-vous vraiment supprimer <strong> {selected.length} </strong> session(s) ?
                     </>
                 }
                 action={
@@ -297,9 +273,8 @@ function applyFilter({ inputData, comparator, filterName }) {
     });
 
     inputData = stabilizedThis.map((el) => el[0]);
-
     if (filterName) {
-        inputData = inputData.filter((item) => item.label.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+        inputData = inputData.filter((item) => item.Institut.label.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
     }
 
     return inputData;

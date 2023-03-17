@@ -10,13 +10,19 @@ import {
     MenuItem,
     Alert,
     IconButton,
-    Button
+    Button, Chip
 } from '@mui/material';
+import TimelineIcon from "@mui/icons-material/Timeline";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import GroupIcon from "@mui/icons-material/Group";
 
 // components
 import Iconify from "../../../../components/iconify";
 import MenuPopover from '../../../../components/menu-popover';
 import ConfirmDialog from '../../../../components/confirm-dialog';
+
+
+
 //
 
 // ----------------------------------------------------------------------
@@ -27,11 +33,6 @@ SessionTableRow.propTypes = {
     onEditRow: PropTypes.func,
     onSelectRow: PropTypes.func,
     onDeleteRow: PropTypes.func,
-    onDetailRow: PropTypes.func,
-    onUsersListRow: PropTypes.func,
-    onExaminatorsListRow: PropTypes.func,
-    onSessionsListRow: PropTypes.func,
-    onPricesListRow: PropTypes.func
 
 };
 export default function SessionTableRow({
@@ -40,14 +41,9 @@ export default function SessionTableRow({
                                              onEditRow,
                                              onSelectRow,
                                              onDeleteRow,
-                                             onDetailRow,
-                                             onUsersListRow,
-                                             onExaminatorsListRow,
-                                             onSessionsListRow,
-                                             onPricesListRow
                                          }) {
     // eslint-disable-next-line camelcase
-    const { label, city, phone, email, institutCountry: { label : country } } = row;
+    const { Institut, Level, Test, start, validation, session_id, duration, sessionUsers, placeAvailable, institut_id} = row;
 
     const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -74,12 +70,24 @@ export default function SessionTableRow({
                     <Checkbox checked={selected} onClick={onSelectRow} />
                 </TableCell>
                 <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
-                    <Typography variant="subtitle2" noWrap>{label}</Typography>
+                    <Typography variant="subtitle2" noWrap>{session_id}</Typography>
                 </TableCell>
-                <TableCell> <Iconify icon={`twemoji:flag-${paramCase(country)}`} /> {country} </TableCell>
-                <TableCell> {city} </TableCell>
-                <TableCell> {email} </TableCell>
-                <TableCell> {phone} </TableCell>
+                <TableCell>   {Institut?.label? Institut?.label: "Inconnu"} </TableCell>
+                <TableCell>
+                    <Chip icon={<AccessTimeIcon />} size="small" label={new Date(start).toLocaleString([], {
+                        year: 'numeric',
+                        month: 'numeric',
+                        day: 'numeric',
+                        hour: '2-digit',
+                        minute: '2-digit'
+                    })}   />
+                </TableCell>
+                <TableCell>
+                    <Chip icon={<TimelineIcon />} label={`${row.Test?.label }  ${row.Level?.label ? `- ${  row.Level?.label}`: ""}`} size="small"   />
+                </TableCell>
+                <TableCell>
+                    <Chip icon={<GroupIcon />} label={`${sessionUsers.length} / ${placeAvailable}` }/>
+                </TableCell>
                 <TableCell align="right">
                     <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
                         <Iconify icon="eva:more-vertical-fill" />
@@ -93,59 +101,6 @@ export default function SessionTableRow({
                 arrow="right-top"
                 sx={{ width: 140 }}
             >
-                <MenuItem
-                    onClick={() => {
-                        onDetailRow();
-                        handleClosePopover();
-                    }}
-                >
-                    <Iconify icon='icon-park-outline:doc-detail' />
-                    Détail
-                </MenuItem>
-
-
-                <MenuItem
-                    onClick={() => {
-                        onUsersListRow();
-                        handleClosePopover();
-                    }}
-                >
-                    <Iconify icon='clarity:users-solid' />
-                    Inscrits
-                </MenuItem>
-
-
-                <MenuItem
-                    onClick={() => {
-                        onExaminatorsListRow();
-                        handleClosePopover();
-                    }}
-                >
-                    <Iconify icon='fa-solid:chalkboard-teacher' />
-                    Examinateurs
-                </MenuItem>
-
-
-                <MenuItem
-                    onClick={() => {
-                        onSessionsListRow();
-                        handleClosePopover();
-                    }}
-                >
-                    <Iconify icon='entypo:price-ribbon' />
-                    Sessions
-                </MenuItem>
-
-                <MenuItem
-                    onClick={() => {
-                        onPricesListRow();
-                        handleClosePopover();
-                    }}
-                >
-                    <Iconify icon='ic:baseline-euro' />
-                    Tarifs
-                </MenuItem>
-
 
                 <MenuItem
                     onClick={() => {
@@ -173,8 +128,8 @@ export default function SessionTableRow({
             <ConfirmDialog
                 open={openConfirm}
                 onClose={handleCloseConfirm}
-                title="Suppression d'un institut"
-                content= "Supprimer définitivement l'institut et ses données? (Action irréversible)"
+                title="Suppression d'une session"
+                content= "Supprimer définitivement une session et ses données? (Action irréversible)"
                 action={
                     <Button variant="contained" color="error" onClick={onDeleteRow}>
                         Delete

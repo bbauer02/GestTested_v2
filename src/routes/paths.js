@@ -35,6 +35,10 @@ export const PATH_DASHBOARD = {
     },
     session: {
       root: path(ROOTS_DASHBOARD, '/admin/session'),
+      list: path(ROOTS_DASHBOARD, '/admin/session/list'),
+      create: path(ROOTS_DASHBOARD, `/admin/session/create`),
+      edit: (id) => path(ROOTS_DASHBOARD, `/session/exam/${id}/edit`),
+
     },
     test: {
       root: path(ROOTS_DASHBOARD, '/admin/test'),

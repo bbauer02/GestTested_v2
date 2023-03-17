@@ -17,7 +17,7 @@ export default function SessionTableToolbar({ filterName, onFilterName }) {
             <TextField
                 value={filterName}
                 onChange={(event) => onFilterName(event.target.value)}
-                placeholder="Recherchez un institut..."
+                placeholder="Recherchez une session d'un institut..."
                 InputProps={{
                     startAdornment: (
                         <InputAdornment position="start">
