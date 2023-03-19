@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-// form
+// new
 import { FormProvider as Form } from 'react-hook-form';
 
 // ----------------------------------------------------------------------

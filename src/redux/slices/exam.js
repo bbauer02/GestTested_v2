@@ -61,11 +61,25 @@ export default slice.reducer;
 
 // GET EXAMS ----------------------------------------------------
 
-export function getExams() {
+export function getExams(filters=null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      const response = await axios.get('/exams');
+      if (filters) {
+        if(filters.test && filters.level) {
+          filters = `?test=${filters.test}&level=${filters.level}`;
+        }
+        else if (filters.test) {
+          filters = `?test=${filters.test}`;
+        }
+        else {
+          filters="/";
+        }
+      }
+      else {
+        filters="/";
+      }
+      const response = await axios.get(`/exams${filters}`);
       dispatch(slice.actions.getExamsSuccess(response.data.exams));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -85,6 +99,7 @@ export function getExam(id) {
     }
   };
 }
+// GET EXAMS Fo
 // POST EXAMS ------------------------------------------------------
 
 export function postExam(exam) {

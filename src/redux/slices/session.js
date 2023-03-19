@@ -2,6 +2,7 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
+import {dispatch} from "../store";
 
 const initialState = {
     isLoading: false,
@@ -45,6 +46,14 @@ const slice = createSlice({
 // Reducer
 export default slice.reducer;
 
+// postSession
+
+export function postSession(idInstitut, session) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        await axios.post(`/instituts/${idInstitut}/sessions`, session);
+    };
+}
 // getSession
 
 export function getSession(idInstitut, idSession) {
