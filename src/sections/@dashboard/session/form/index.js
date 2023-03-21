@@ -36,6 +36,16 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
             is: (test_id) => hasLevelsByTest,
             then: () => Yup.number().required().integer().positive('Ce test possède un niveau à sélectionner'),
         }),
+        institut: Yup.object().required('L\'institut est obligatoire'),
+        createDate: Yup.string().nullable().required('Create date is required'),
+        startDate: Yup.date().nullable().required('Start date is required'),
+        endDate: Yup.date()
+            .required('End date is required')
+            .nullable()
+            .min(Yup.ref('startDate'), 'End date must be later than start date'),
+
+        limitDateSubscribe: Yup.date().required('La date limite d\'inscription est obligatoire'),
+        placeAvailable: Yup.number().required('Le nombre de place est obligatoire').integer().positive('Le nombre de place doit être supérieur à 0'),
     });
 
 
@@ -47,7 +57,7 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
             test_id:  -1,
             level_id:  -1,
             start:  new Date(),
-            end:  new Date(),
+            end:  null,
             limitDateSubscribe:  new Date(),
             validation:  false,
             placeAvailable:  "0"

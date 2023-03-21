@@ -3,8 +3,8 @@ import {useEffect, useState, useMemo} from 'react';
 // form
 import {Controller, useFormContext} from 'react-hook-form';
 // @mui
-import {Stack, Divider, Typography, Button, InputAdornment, Switch, Input} from '@mui/material';
-import {DateTimePicker} from "@mui/x-date-pickers";
+import {Stack, Divider, Typography, Button, InputAdornment, Switch, Input, TextField} from '@mui/material';
+import {DateTimePicker, DatePicker} from "@mui/x-date-pickers";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import {LoadingButton} from "@mui/lab";
 // redux
@@ -42,7 +42,8 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
         watch,
         control,
         clearErrors,
-        setValue
+
+        formState: { errors }
     } = useFormContext();
     const values = watch();
 
@@ -118,25 +119,43 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
             </Stack>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+
                 <Controller
-                    name="start"
+                    name="startDate"
                     control={control}
-                    render={({ field }) => (
-                        <DateTimePicker
+                    render={({ field, fieldState: { error } }) => (
+                        <DatePicker
                             {...field}
-                            label="Date et heure de début"
-                            ampm={false}
+                            label="Start date"
+                            inputFormat="dd/MM/yyyy"
+                            renderInput={(params) => (
+                                <TextField
+                                    fullWidth
+                                    {...params}
+                                    error={!!error}
+                                    helperText={error?.message}
+                                />
+                            )}
                         />
                     )}
                 />
+
                 <Controller
-                    name="end"
+                    name="endDate"
                     control={control}
-                    render={({ field }) => (
-                        <DateTimePicker
+                    render={({ field, fieldState: { error } }) => (
+                        <DatePicker
                             {...field}
-                            label="Date et heure de end"
-                            ampm={false}
+                            label="End date"
+                            inputFormat="dd/MM/yyyy"
+                            renderInput={(params) => (
+                                <TextField
+                                    fullWidth
+                                    {...params}
+                                    error={!!error}
+                                    helperText={error?.message}
+                                />
+                            )}
                         />
                     )}
                 />
@@ -154,8 +173,11 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
                             sx={{
                                 width: { sm: 300, md: 300 }
                             }}
+                            error={!!errors?.limitDateSubscribe}
+                            helperText={errors?.limitDateSubscribe?.message}
                         />
                     )}
+
                 />
                 <RHFTextField
                     name="placeAvailable"
