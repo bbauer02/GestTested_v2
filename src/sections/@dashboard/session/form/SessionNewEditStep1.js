@@ -3,7 +3,7 @@ import {useEffect, useState} from 'react';
 // form
 import {Controller, useFormContext} from 'react-hook-form';
 // @mui
-import {Stack, Divider, Typography, Button, InputAdornment} from '@mui/material';
+import {Stack, Divider, Typography, Button, InputAdornment, Switch} from '@mui/material';
 import {DateTimePicker} from "@mui/x-date-pickers";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import {LoadingButton} from "@mui/lab";
@@ -36,6 +36,8 @@ export default function SessionNewEditStep1()  {
         watch,
         control,
         setValue,
+        setError,
+        register,
         formState: { errors },
     } = useFormContext();
     const values = watch();
@@ -56,8 +58,12 @@ export default function SessionNewEditStep1()  {
         <Stack spacing={3}>
             <Typography variant="h5">Remplir les Informations</Typography>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+                <Switch
+                    name="hasLevels"  
+                    checked={hasLevels}                 
+                />
                 <RHFSwitch
-                    defaultChecked color="secondary"
+                    color="secondary"
                     name="validation"
                     label="Validation"
                     labelPlacement="start"
@@ -75,6 +81,7 @@ export default function SessionNewEditStep1()  {
             </Stack>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
+
                 <RHFSelect
                     native
                     name="test_id"
@@ -94,7 +101,9 @@ export default function SessionNewEditStep1()  {
                             {level.label}
                         </option>
                     ))}
+                   
                 </RHFSelect>
+
             </Stack>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>

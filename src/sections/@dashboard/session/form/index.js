@@ -28,7 +28,8 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
     const [loadingSend, setLoadingSend] = useState(false);
 
     const NewSessionSchema = Yup.object().shape({
-
+        test_id: Yup.number().positive("Sélectionnez au moins un Test").integer().required("Sélectionnez au moins un Test")
+    
     });
 
     const defaultValues = useMemo(
@@ -53,7 +54,8 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
     const {
         reset,
         handleSubmit,
-        formState: { isSubmitting },
+        setError,
+        formState: { errors ,isSubmitting },
     } = methods;
 
     useEffect(() => {
@@ -67,15 +69,24 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
     }, [isEdit, currentSession]);
 
     const handleCreateSession = async (data) => {
+       
         setLoadingSend(true);
 
         try {
+            console.log(data);
+            setError('level_id', {
+                type: 'manual',
+                message: 'Il faut sélectionner un niveau.',
+              });
+              return;
+            /*
             await new Promise((resolve) => setTimeout(resolve, 500));
             reset();
             setLoadingSend(false);
            // navigate(PATH_DASHBOARD.invoice.list);
             enqueueSnackbar(!isEdit ? 'Création de la session effectuée !' : 'Mise à jour effectuée !');
             console.log('DATA', JSON.stringify(data, null, 2));
+            */
         } catch (error) {
             console.error(error);
             setLoadingSend(false);
