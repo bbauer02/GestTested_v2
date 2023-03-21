@@ -23,14 +23,23 @@ SessionNewEditForm.propTypes = {
 };
 
 export default function SessionNewEditForm({ isEdit, currentSession=null }) {
+    const [hasLevelsByTest, setHasLevelsByTest] = useState(false);
     const [loadingSave, setLoadingSave] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
     const [loadingSend, setLoadingSend] = useState(false);
 
+
+
     const NewSessionSchema = Yup.object().shape({
-        test_id: Yup.number().positive("Sélectionnez au moins un Test").integer().required("Sélectionnez au moins un Test")
-    
+        test_id: Yup.number().required().integer().positive('Le test est obligatoire'),
+        level_id: Yup.number().when('test_id', {
+            is: (test_id) => hasLevelsByTest,
+            then: () => Yup.number().required().integer().positive('Ce test possède un niveau à sélectionner'),
+        }),
     });
+
+
+
 
     const defaultValues = useMemo(
         () => ({
@@ -73,11 +82,11 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
         setLoadingSend(true);
 
         try {
-            console.log(data);
-            setError('level_id', {
+            console.log(hasLevelsByTest);
+          /*  setError('level_id', {
                 type: 'manual',
                 message: 'Il faut sélectionner un niveau.',
-              });
+            });
               return;
             /*
             await new Promise((resolve) => setTimeout(resolve, 500));
@@ -96,7 +105,7 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
     return (
         <FormProvider methods={methods}>
             <Card>
-                <SessionNewEditStep1 />
+                <SessionNewEditStep1 setHasLevelsByTest={setHasLevelsByTest} />
                 <SessionNewEditStep2 />
             </Card>
             <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mt: 3 }}>

@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
-import {useEffect, useState} from 'react';
+import {useEffect, useState, useMemo} from 'react';
 // form
 import {Controller, useFormContext} from 'react-hook-form';
 // @mui
-import {Stack, Divider, Typography, Button, InputAdornment, Switch} from '@mui/material';
+import {Stack, Divider, Typography, Button, InputAdornment, Switch, Input} from '@mui/material';
 import {DateTimePicker} from "@mui/x-date-pickers";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import {LoadingButton} from "@mui/lab";
@@ -17,7 +17,11 @@ import {RHFAutocomplete, RHFSelect, RHFSwitch, RHFTextField} from "../../../../c
 
 import {PATH_DASHBOARD} from "../../../../routes/paths";
 
-export default function SessionNewEditStep1()  {
+
+SessionNewEditStep1.propTypes = {
+    setHasLevelsByTest: PropTypes.func,
+};
+export default function SessionNewEditStep1({ setHasLevelsByTest })  {
     const dispatch = useDispatch();
     // Get the Instituts List
     useEffect( () => {
@@ -29,39 +33,46 @@ export default function SessionNewEditStep1()  {
         dispatch(getTests());
     }, [dispatch])
 
+
+
     const { instituts } = useSelector((state) => state.institut);
     const { tests } = useSelector((state) => state.test);
 
     const {
         watch,
         control,
-        setValue,
-        setError,
-        register,
-        formState: { errors },
+        clearErrors,
+        setValue
     } = useFormContext();
     const values = watch();
 
-    let levelsByTest = []
-    let hasLevels = false;
-    if(values.test_id ) {
-        const selectedTest = tests.find(test => test.test_id === parseInt(values.test_id,10));
-        if(selectedTest) {
-            levelsByTest = [...selectedTest.Levels];
+    const levelsByTest = useMemo( () => {
+         if(values.test_id ) {
+            const selectedTest = tests.find(test => test.test_id === parseInt(values.test_id,10));
+            if(selectedTest && selectedTest.Levels.length > 0) {
+                return [...selectedTest.Levels];
+            }
+            return [];
         }
-        if(levelsByTest.length > 0 ) {
-            hasLevels =true;
+        return [];
+    },[values.test_id, tests ])
+
+
+
+    useEffect(() => {
+        setHasLevelsByTest(levelsByTest.length > 0);
+    },[levelsByTest, setHasLevelsByTest])
+
+    useEffect(() => {
+        if(levelsByTest.length === 0) {
+            clearErrors('level_id');
         }
-    }
+    },[values.test_id, clearErrors, levelsByTest]);
 
     return (
         <Stack spacing={3}>
             <Typography variant="h5">Remplir les Informations</Typography>
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                <Switch
-                    name="hasLevels"  
-                    checked={hasLevels}                 
-                />
                 <RHFSwitch
                     color="secondary"
                     name="validation"
@@ -94,7 +105,7 @@ export default function SessionNewEditStep1()  {
                         </option>
                     ))}
                 </RHFSelect>
-                <RHFSelect native name="level_id" label="Niveau"  disabled={ (!hasLevels )}>
+                <RHFSelect native name="level_id" label="Niveau"  disabled={ levelsByTest.length === 0 }>
                     <option value="-1">Sélectionnez un niveau</option>
                     {Object.values(levelsByTest).map((level) => (
                         <option key={`level${level.level_id}`} value={level.level_id}>
