@@ -73,7 +73,7 @@ export default function SessionNewEditStep2() {
                             InputLabelProps={{ shrink: true }}
                         />
                         <Controller
-                            name={`sessionHasExam[${index}].dateTime`}
+                            name={`sessionHasExam[${index}].ExamDateTime`}
                             control={control}
                             render={({ field }) => (
                                 <DateTimePicker

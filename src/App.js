@@ -16,6 +16,7 @@ import { PersistGate } from 'redux-persist/lib/integration/react';
 // @mui
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers';
+import fr from 'date-fns/locale/fr';
 // redux
 import { store, persistor } from './redux/store';
 // routes
@@ -43,7 +44,7 @@ export default function App() {
       <HelmetProvider>
         <ReduxProvider store={store}>
           <PersistGate loading={null} persistor={persistor}>
-            <LocalizationProvider dateAdapter={AdapterDateFns}>
+            <LocalizationProvider dateAdapter={AdapterDateFns} adapterLocale={fr}>
               <SettingsProvider>
                 <BrowserRouter>
                   <ScrollToTop />

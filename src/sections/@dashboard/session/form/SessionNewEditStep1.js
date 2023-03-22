@@ -124,10 +124,9 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
                     name="startDate"
                     control={control}
                     render={({ field, fieldState: { error } }) => (
-                        <DatePicker
+                        <DateTimePicker
                             {...field}
-                            label="Start date"
-                            inputFormat="dd/MM/yyyy"
+                            label="Début de session"
                             slotProps={{
                                 textField: {
                                   helperText: error?.message,
@@ -146,10 +145,9 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
                     name="endDate"
                     control={control}
                     render={({ field, fieldState: { error } }) => (
-                        <DatePicker
+                        <DateTimePicker
                             {...field}
-                            label="End date"
-                            inputFormat="dd/MM/yyyy"
+                            label="Fin de session"
                             slotProps={{
                                 textField: {
                                   helperText: error?.message,
@@ -170,10 +168,9 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
                     name="limitDateSubscribe"
                     control={control}
                     render={({ field, fieldState: { error } }) => (
-                        <DatePicker
+                        <DateTimePicker
                             {...field}
                             label="Date limite d'inscription"
-                            inputFormat="dd/MM/yyyy"
                             slotProps={{
                                 textField: {
                                   helperText: error?.message,

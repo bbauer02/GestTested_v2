@@ -37,15 +37,30 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
             then: () => Yup.number().required().integer().positive('Ce test possède un niveau à sélectionner'),
         }),
         institut: Yup.object().required('L\'institut est obligatoire'),
-        createDate: Yup.string().nullable().required('Create date is required'),
-        startDate: Yup.date().nullable().required('Start date is required'),
+        startDate: Yup.date().required('Une date de début de session est obligatoire!'),
         endDate: Yup.date()
-            .required('End date is required')
-            .nullable()
-            .min(Yup.ref('startDate'), 'End date must be later than start date'),
+            .required('Une date de fin de session est obligatoire!')
+            .min(Yup.ref('startDate'), 'La date de fin ne peut pas être située avant la date de début de session!'),
 
-        limitDateSubscribe: Yup.date().required('La date limite d\'inscription est obligatoire'),
+        limitDateSubscribe: Yup.date()
+        .required('La date limite d\'inscription est obligatoire')
+        .max(Yup.ref('startDate'), 'La date limite doit être située avant la date de début de session!'),
+
         placeAvailable: Yup.number().required('Le nombre de place est obligatoire').integer().positive('Le nombre de place doit être supérieur à 0'),
+        /* 
+                sessionHasExam: Yup.array().of(
+            Yup.object().shape({
+                adressExam: Yup.string().required("L'adresse doit être définie!"),
+                room: Yup.string().required("Le numéro ou le nom de la salle doivent être définie!"),
+                examDateTime: Yup.date()
+                .required('La date de convocation a cette épreuve doit être définie!')
+                .max(Yup.ref('startDate'), "La date de convocation doit être située dans l'intervalle de début et de fin de la session")
+                .min(Yup.ref('endDate'), "La date de convocation doit être située dans l'intervalle de début et de fin de la session")
+            
+            })
+        )
+        */
+
     });
 
 
@@ -56,11 +71,11 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
             institut: null,
             test_id:  -1,
             level_id:  -1,
-            start:  new Date(),
-            end:  null,
-            limitDateSubscribe:  new Date(),
+            startDate:  null,
+            endDate:  null,
+            limitDateSubscribe:  null,
             validation:  false,
-            placeAvailable:  "0"
+            placeAvailable:  "0",
         }),
         []
     );
@@ -92,7 +107,7 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
         setLoadingSend(true);
 
         try {
-            console.log(hasLevelsByTest);
+            console.log(data);
           /*  setError('level_id', {
                 type: 'manual',
                 message: 'Il faut sélectionner un niveau.',
