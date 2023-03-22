@@ -128,14 +128,16 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
                             {...field}
                             label="Start date"
                             inputFormat="dd/MM/yyyy"
-                            renderInput={(params) => (
-                                <TextField
-                                    fullWidth
-                                    {...params}
-                                    error={!!error}
-                                    helperText={error?.message}
-                                />
-                            )}
+                            slotProps={{
+                                textField: {
+                                  helperText: error?.message,
+                                  sx: {
+                                    ...(error?.message && {
+                                      '& .MuiFormHelperText-root': { color: 'error.main' },
+                                    }),
+                                  },
+                                },
+                              }}
                         />
                     )}
                 />
@@ -148,36 +150,42 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
                             {...field}
                             label="End date"
                             inputFormat="dd/MM/yyyy"
-                            renderInput={(params) => (
-                                <TextField
-                                    fullWidth
-                                    {...params}
-                                    error={!!error}
-                                    helperText={error?.message}
-                                />
-                            )}
+                            slotProps={{
+                                textField: {
+                                  helperText: error?.message,
+                                  sx: {
+                                    ...(error?.message && {
+                                      '& .MuiFormHelperText-root': { color: 'error.main' },
+                                    }),
+                                  },
+                                },
+                              }}
                         />
                     )}
                 />
             </Stack>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-                <Controller
+            <Controller
                     name="limitDateSubscribe"
                     control={control}
-                    render={({ field }) => (
-                        <DateTimePicker
+                    render={({ field, fieldState: { error } }) => (
+                        <DatePicker
                             {...field}
                             label="Date limite d'inscription"
-                            ampm={false}
-                            sx={{
-                                width: { sm: 300, md: 300 }
-                            }}
-                            error={!!errors?.limitDateSubscribe}
-                            helperText={errors?.limitDateSubscribe?.message}
+                            inputFormat="dd/MM/yyyy"
+                            slotProps={{
+                                textField: {
+                                  helperText: error?.message,
+                                  sx: {
+                                    ...(error?.message && {
+                                      '& .MuiFormHelperText-root': { color: 'error.main' },
+                                    }),
+                                  },
+                                },
+                              }}
                         />
                     )}
-
                 />
                 <RHFTextField
                     name="placeAvailable"
