@@ -28,7 +28,7 @@ SessionNewEditForm.propTypes = {
 
 export default function SessionNewEditForm({ isEdit, currentSession=null }) {
     const dispatch = useDispatch();
-
+    const navigate = useNavigate();
     const [hasLevelsByTest, setHasLevelsByTest] = useState(false);
     const [loadingSave, setLoadingSave] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
@@ -54,7 +54,7 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
 
         placeAvailable: Yup.number().required('Le nombre de place est obligatoire').integer().positive('Le nombre de place doit être supérieur à 0'),
         
-       
+       /*
         sessionHasExam: Yup.array().of(
             Yup.object().shape({
                 adressExam: Yup.string().required("L'adresse doit être définie!"),
@@ -65,14 +65,9 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
 
             })
         )
-        
-        
-        
 
+        */
     });
-
-
-
 
     const defaultValues = useMemo(
         () => ({
@@ -116,45 +111,28 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
     const handleCreateSession = async (data) => {
        
         setLoadingSend(true);
-        console.log(data)
+
         try {
             const newSession = {
-                institut_id: data.institut.institut_id,
-                start : data.startDate,
-                end: data.endDate,
-                limitDateSubscribe: data.limitDateSubscribe,
-                placeAvailable: data.placeAvailable,
-                validation: data.validation,
-                test_id: data.test_id,
-                level_id: data.level_id,
+                session: {
+                    institut_id: data.institut.institut_id,
+                    start : data.startDate,
+                    end: data.endDate,
+                    limitDateSubscribe: data.limitDateSubscribe,
+                    placeAvailable: data.placeAvailable,
+                    validation: data.validation,
+                    test_id: data.test_id,
+                    level_id: data.level_id,
+                },
                 sessionHasExam:data.sessionHasExam
             }
-
             if(newSession.level_id === -1 ) {
                 newSession.level_id = null;
             }
-
-
-            // 1. Il faut appeler la route pour la création de la session et récupérer l'ID de session 
-           const response = dispatch(postSession(newSession.institut_id,newSession));
-            // 2. Avec l'ID de session il faut remplir la base SessionHasExam
-
-
-
-
-          /*  setError('level_id', {
-                type: 'manual',
-                message: 'Il faut sélectionner un niveau.',
-            });
-              return;
-            /*
-            await new Promise((resolve) => setTimeout(resolve, 500));
-            reset();
+           const {session} = dispatch(postSession(newSession.session.institut_id,newSession));
+           enqueueSnackbar(!isEdit ? 'Création de la session effectuée !' : 'Mise à jour effectuée !');
+            navigate(PATH_DASHBOARD.admin.session.list);
             setLoadingSend(false);
-           // navigate(PATH_DASHBOARD.invoice.list);
-            enqueueSnackbar(!isEdit ? 'Création de la session effectuée !' : 'Mise à jour effectuée !');
-            console.log('DATA', JSON.stringify(data, null, 2));
-            */
         } catch (error) {
             console.error(error);
             setLoadingSend(false);

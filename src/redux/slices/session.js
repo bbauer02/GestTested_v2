@@ -28,7 +28,7 @@ const slice = createSlice({
         addSession(state, action) {
             state.isLoading = false;
             const newSession = action.payload.data;
-            state.sessions[newSession.session_id] = newSession;
+            state.sessions.push(newSession);
         },
         // GET SESSIONS
         getSessionsSuccess(state, action) {
@@ -65,8 +65,7 @@ export function postSession(idInstitut, session) {
         try {
             
             const response =await axios.post(`/instituts/${idInstitut}/sessions`, session);
-            console.log(response)
-            //dispatch(addSession(response.data));
+            dispatch(addSession(response.session));
         }
         catch(error) {
             dispatch(slice.actions.hasError(error));
