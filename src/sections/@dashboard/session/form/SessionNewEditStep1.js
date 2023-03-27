@@ -22,6 +22,7 @@ SessionNewEditStep1.propTypes = {
     setHasLevelsByTest: PropTypes.func,
 };
 export default function SessionNewEditStep1({ setHasLevelsByTest })  {
+    
     const dispatch = useDispatch();
     // Get the Instituts List
     useEffect( () => {
@@ -42,10 +43,12 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
         watch,
         control,
         clearErrors,
-
+        setValue,
         formState: { errors }
     } = useFormContext();
     const values = watch();
+
+
 
     const levelsByTest = useMemo( () => {
          if(values.test_id ) {
@@ -66,9 +69,10 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
 
     useEffect(() => {
         if(levelsByTest.length === 0) {
+            setValue("level_id",-1);
             clearErrors('level_id');
         }
-    },[values.test_id, clearErrors, levelsByTest]);
+    },[values.test_id, clearErrors, levelsByTest,setValue]);
 
     return (
         <Stack spacing={3}>
@@ -119,71 +123,46 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
             </Stack>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
-
                 <Controller
                     name="startDate"
                     control={control}
                     render={({ field, fieldState: { error } }) => (
                         <DateTimePicker
-                            {...field}
-                            label="Début de session"
-                            slotProps={{
-                                textField: {
-                                  helperText: error?.message,
-                                  sx: {
-                                    ...(error?.message && {
-                                      '& .MuiFormHelperText-root': { color: 'error.main' },
-                                    }),
-                                  },
-                                },
-                              }}
+                        {...field}
+                        onChange={(newValue) => field.onChange(newValue)}
+                        label="Début de début de session"
+                        renderInput={(params) => <TextField {...params} fullWidth error={!!error} helperText={error?.message} />}
                         />
                     )}
                 />
-
                 <Controller
                     name="endDate"
                     control={control}
                     render={({ field, fieldState: { error } }) => (
                         <DateTimePicker
-                            {...field}
-                            label="Fin de session"
-                            slotProps={{
-                                textField: {
-                                  helperText: error?.message,
-                                  sx: {
-                                    ...(error?.message && {
-                                      '& .MuiFormHelperText-root': { color: 'error.main' },
-                                    }),
-                                  },
-                                },
-                              }}
+                        {...field}
+                        onChange={(newValue) => field.onChange(newValue)}
+                        label="Début de fin de session"
+                        renderInput={(params) => <TextField {...params} fullWidth error={!!error} helperText={error?.message} />}
                         />
                     )}
                 />
+
             </Stack>
 
             <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 3, sm: 2 }}>
             <Controller
-                    name="limitDateSubscribe"
-                    control={control}
-                    render={({ field, fieldState: { error } }) => (
-                        <DateTimePicker
-                            {...field}
-                            label="Date limite d'inscription"
-                            slotProps={{
-                                textField: {
-                                  helperText: error?.message,
-                                  sx: {
-                                    ...(error?.message && {
-                                      '& .MuiFormHelperText-root': { color: 'error.main' },
-                                    }),
-                                  },
-                                },
-                              }}
-                        />
-                    )}
-                />
+                name="limitDateSubscribe"
+                control={control}
+                render={({ field, fieldState: { error } }) => (
+                    <DateTimePicker
+                    {...field}
+                    onChange={(newValue) => field.onChange(newValue)}
+                    label="Date limite d'inscription"
+                    renderInput={(params) => <TextField {...params} fullWidth error={!!error} helperText={error?.message} />}
+                    />
+                )}
+            />
                 <RHFTextField
                     name="placeAvailable"
                     label="Nombre de place disponible"

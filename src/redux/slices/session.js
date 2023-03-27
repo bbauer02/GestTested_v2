@@ -24,10 +24,21 @@ const slice = createSlice({
             state.isLoading = false;
             state.error = action.payload;
         },
+        // ADD SESSION
+        addSession(state, action) {
+            state.isLoading = false;
+            const newSession = action.payload.data;
+            state.sessions[newSession.session_id] = newSession;
+        },
         // GET SESSIONS
         getSessionsSuccess(state, action) {
             state.isLoading = false;
-            state.sessions = action.payload;
+            state.sessions = [];
+            const allSessions = action.payload;
+            if (allSessions)
+            allSessions.forEach((session) => {
+                state.sessions[session.session_id] = session;
+            });
         },
         // GET SESSION
         getSessionSuccess(state, action) {
@@ -51,7 +62,15 @@ export default slice.reducer;
 export function postSession(idInstitut, session) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
-        await axios.post(`/instituts/${idInstitut}/sessions`, session);
+        try {
+            
+            const response =await axios.post(`/instituts/${idInstitut}/sessions`, session);
+            console.log(response)
+            //dispatch(addSession(response.data));
+        }
+        catch(error) {
+            dispatch(slice.actions.hasError(error));
+        }
     };
 }
 // getSession

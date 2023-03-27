@@ -53,7 +53,7 @@
     "@mui/material": "^5.11.10",
     "@mui/system": "^5.11.5",
     "@mui/x-data-grid": "^5.17.19",
-    "@mui/x-date-pickers": "^6.0.2",
+    "@mui/x-date-pickers": "5.0.14",
     "@react-pdf/renderer": "^3.1.5",
     "@reduxjs/toolkit": "^1.9.1",
     "amazon-cognito-identity-js": "^6.1.2",

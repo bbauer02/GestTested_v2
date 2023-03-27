@@ -9,6 +9,10 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Card, Stack } from '@mui/material';
+// redux
+import { useDispatch, useSelector } from '../../../../redux/store';
+import { postSession } from '../../../../redux/slices/session';
+
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // components
@@ -23,12 +27,14 @@ SessionNewEditForm.propTypes = {
 };
 
 export default function SessionNewEditForm({ isEdit, currentSession=null }) {
+    const dispatch = useDispatch();
+
     const [hasLevelsByTest, setHasLevelsByTest] = useState(false);
     const [loadingSave, setLoadingSave] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
     const [loadingSend, setLoadingSend] = useState(false);
 
-
+    const [hasExams, setHasExams] = useState(false);
 
     const NewSessionSchema = Yup.object().shape({
         test_id: Yup.number().required().integer().positive('Le test est obligatoire'),
@@ -37,8 +43,8 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
             then: () => Yup.number().required().integer().positive('Ce test possède un niveau à sélectionner'),
         }),
         institut: Yup.object().required('L\'institut est obligatoire'),
-        startDate: Yup.date().required('Une date de début de session est obligatoire!'),
-        endDate: Yup.date()
+        startDate: Yup.date('Une date de début de session est obligatoire!').required('Une date de début de session est obligatoire!'),
+        endDate: Yup.date('Une date de début de session est obligatoire!')
             .required('Une date de fin de session est obligatoire!')
             .min(Yup.ref('startDate'), 'La date de fin ne peut pas être située avant la date de début de session!'),
 
@@ -47,19 +53,21 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
         .max(Yup.ref('startDate'), 'La date limite doit être située avant la date de début de session!'),
 
         placeAvailable: Yup.number().required('Le nombre de place est obligatoire').integer().positive('Le nombre de place doit être supérieur à 0'),
-        /* 
-                sessionHasExam: Yup.array().of(
+        
+       
+        sessionHasExam: Yup.array().of(
             Yup.object().shape({
                 adressExam: Yup.string().required("L'adresse doit être définie!"),
                 room: Yup.string().required("Le numéro ou le nom de la salle doivent être définie!"),
                 examDateTime: Yup.date()
                 .required('La date de convocation a cette épreuve doit être définie!')
                 .max(Yup.ref('startDate'), "La date de convocation doit être située dans l'intervalle de début et de fin de la session")
-                .min(Yup.ref('endDate'), "La date de convocation doit être située dans l'intervalle de début et de fin de la session")
-            
+
             })
         )
-        */
+        
+        
+        
 
     });
 
@@ -68,14 +76,17 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
 
     const defaultValues = useMemo(
         () => ({
-            institut: null,
-            test_id:  -1,
-            level_id:  -1,
-            startDate:  null,
-            endDate:  null,
-            limitDateSubscribe:  null,
+            institut: {label:"Institut Français", institut_id:1},
+            test_id:  1,
+            level_id:  1,
+            startDate:  new Date(),
+            endDate:  new Date(),
+            limitDateSubscribe:  new Date(),
             validation:  false,
-            placeAvailable:  "0",
+            placeAvailable:  "10",
+            sessionHasExam: [
+                {examId : "", exam: "", adressExam: '', room:'', examDateTime: new Date()}
+            ]
         }),
         []
     );
@@ -105,9 +116,32 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
     const handleCreateSession = async (data) => {
        
         setLoadingSend(true);
-
+        console.log(data)
         try {
-            console.log(data);
+            const newSession = {
+                institut_id: data.institut.institut_id,
+                start : data.startDate,
+                end: data.endDate,
+                limitDateSubscribe: data.limitDateSubscribe,
+                placeAvailable: data.placeAvailable,
+                validation: data.validation,
+                test_id: data.test_id,
+                level_id: data.level_id,
+                sessionHasExam:data.sessionHasExam
+            }
+
+            if(newSession.level_id === -1 ) {
+                newSession.level_id = null;
+            }
+
+
+            // 1. Il faut appeler la route pour la création de la session et récupérer l'ID de session 
+           const response = dispatch(postSession(newSession.institut_id,newSession));
+            // 2. Avec l'ID de session il faut remplir la base SessionHasExam
+
+
+
+
           /*  setError('level_id', {
                 type: 'manual',
                 message: 'Il faut sélectionner un niveau.',
@@ -131,16 +165,17 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
         <FormProvider methods={methods}>
             <Card>
                 <SessionNewEditStep1 setHasLevelsByTest={setHasLevelsByTest} />
-                <SessionNewEditStep2 />
+                <SessionNewEditStep2  setHasExams={setHasExams} hasExams={hasExams} />
             </Card>
             <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mt: 3 }}>
                 <LoadingButton
+                    disabled={!hasExams}
                     size="large"
                     variant="contained"
                     loading={loadingSend && isSubmitting}
                     onClick={handleSubmit(handleCreateSession)}
                 >
-                    {isEdit ? 'Update' : 'Create'} & Send
+                    {isEdit ? 'Editer' : 'Créer'} une session
                 </LoadingButton>
             </Stack>
         </FormProvider>
