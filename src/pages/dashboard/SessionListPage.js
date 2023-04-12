@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useSnackbar } from 'notistack';
 // @mui
 import {
     Button,
@@ -14,7 +15,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getSessionsFiltered } from '../../redux/slices/session';
+import { getSessionsFiltered, removeSession} from '../../redux/slices/session';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -69,6 +70,8 @@ export default function SessionListPage() {
     } = useTable({
         defaultOrderBy: 'label',
     });
+    const {enqueueSnackbar} = useSnackbar();
+
     const { themeStretch } = useSettingsContext();
 
     const navigate = useNavigate();
@@ -110,11 +113,18 @@ export default function SessionListPage() {
     const handleCloseConfirm = () => {
         setOpenConfirm(false);
     };
-    const handleDeleteRow = (id) => {
-        // dispatch(deleteInstitut(id));
+    const handleDeleteRow = (institutId,sessionId) => {
+        try {
+            dispatch(removeSession(institutId,sessionId));
+            enqueueSnackbar( 'Suppression de la session effectuée !' );
+        }
+        catch (error) {
+            enqueueSnackbar( 'impossible de supprimer la session !' );
+        }
     };
 
     const handleDeleteRows = (selectedRow) => {
+        console.log(selectedRow)
         // const deleteRows = tableData.filter((row) => !selectedRow.includes(row.institut_id));
         // setSelected([]);
         // setTableData(deleteRows);
@@ -208,7 +218,7 @@ export default function SessionListPage() {
                                                     row={row}
                                                     selected={selected.includes(row.session_id)}
                                                     onSelectRow={() => onSelectRow(row.session_id)}
-                                                    onDeleteRow={() => handleDeleteRow(row.session_id)}
+                                                    onDeleteRow={() => handleDeleteRow(row.institut_id, row.session_id)}
                                                     onEditRow={() => handleEditRow(row.institut_id, row.session_id)}
                                                 />
                                             ) : (
