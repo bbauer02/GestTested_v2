@@ -30,7 +30,7 @@ export default function SessionCreatePage() {
                     heading="Création d'une session"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        {name : 'Sessions', href: PATH_DASHBOARD.admin.session.root},
+                        { name : 'Sessions', href: PATH_DASHBOARD.admin.session.root},
                         { name: "Création d'une session" }
                     ]}
                 />

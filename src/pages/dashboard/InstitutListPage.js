@@ -14,7 +14,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getInstituts, deleteInstitut } from '../../redux/slices/institut';
+import { getInstituts } from '../../redux/slices/institut';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components

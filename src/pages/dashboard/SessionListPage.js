@@ -120,8 +120,8 @@ export default function SessionListPage() {
         // setTableData(deleteRows);
     };
 
-    const handleEditRow = (institutId) => {
-     //   navigate(PATH_DASHBOARD.admin.session.edit(institutId));
+    const handleEditRow = (institutId, sessionId) => {
+        navigate(PATH_DASHBOARD.admin.session.edit(institutId, sessionId));
     };
 
 
@@ -209,7 +209,7 @@ export default function SessionListPage() {
                                                     selected={selected.includes(row.session_id)}
                                                     onSelectRow={() => onSelectRow(row.session_id)}
                                                     onDeleteRow={() => handleDeleteRow(row.session_id)}
-                                                    onEditRow={() => handleEditRow(row.session_id)}
+                                                    onEditRow={() => handleEditRow(row.institut_id, row.session_id)}
                                                 />
                                             ) : (
                                                 !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
@@ -264,8 +264,8 @@ export default function SessionListPage() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName }) {
+/*
     const stabilizedThis = inputData.map((el, index) => [el, index]);
-
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
         if (order !== 0) return order;
@@ -273,6 +273,7 @@ function applyFilter({ inputData, comparator, filterName }) {
     });
 
     inputData = stabilizedThis.map((el) => el[0]);
+*/
     if (filterName) {
         inputData = inputData.filter((item) => item.Institut.label.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
     }

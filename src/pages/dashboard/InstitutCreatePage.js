@@ -27,7 +27,7 @@ export default function InstitutCreatePage() {
                     heading="Création d'un nouvel institut"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        {name : 'Instituts', href: PATH_DASHBOARD.admin.institut.root},
+                        { name : 'Instituts', href: PATH_DASHBOARD.admin.institut.root},
                         { name: "Création d'un institut" }
                     ]}
                 />

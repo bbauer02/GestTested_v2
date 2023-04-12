@@ -22,7 +22,7 @@ SessionNewEditStep1.propTypes = {
     setHasLevelsByTest: PropTypes.func,
 };
 export default function SessionNewEditStep1({ setHasLevelsByTest })  {
-    
+
     const dispatch = useDispatch();
     // Get the Instituts List
     useEffect( () => {
@@ -31,7 +31,7 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
 
     // Get the Tests List
     useEffect( () => {
-        dispatch(getTests());
+        dispatch(getTests(true));
     }, [dispatch])
 
 
@@ -51,6 +51,7 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
 
 
     const levelsByTest = useMemo( () => {
+
          if(values.test_id ) {
             const selectedTest = tests.find(test => test.test_id === parseInt(values.test_id,10));
             if(selectedTest && selectedTest.Levels.length > 0) {

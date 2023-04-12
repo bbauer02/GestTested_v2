@@ -11,7 +11,7 @@ import { LoadingButton } from '@mui/lab';
 import { Card, Stack } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
-import { postSession } from '../../../../redux/slices/session';
+import {postSession, putSession} from '../../../../redux/slices/session';
 
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
@@ -47,43 +47,29 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
         endDate: Yup.date('Une date de début de session est obligatoire!')
             .required('Une date de fin de session est obligatoire!')
             .min(Yup.ref('startDate'), 'La date de fin ne peut pas être située avant la date de début de session!'),
-
         limitDateSubscribe: Yup.date()
         .required('La date limite d\'inscription est obligatoire')
         .max(Yup.ref('startDate'), 'La date limite doit être située avant la date de début de session!'),
-
         placeAvailable: Yup.number().required('Le nombre de place est obligatoire').integer().positive('Le nombre de place doit être supérieur à 0'),
-        
-       /*
-        sessionHasExam: Yup.array().of(
-            Yup.object().shape({
-                adressExam: Yup.string().required("L'adresse doit être définie!"),
-                room: Yup.string().required("Le numéro ou le nom de la salle doivent être définie!"),
-                examDateTime: Yup.date()
-                .required('La date de convocation a cette épreuve doit être définie!')
-                .max(Yup.ref('startDate'), "La date de convocation doit être située dans l'intervalle de début et de fin de la session")
 
-            })
-        )
-
-        */
     });
 
     const defaultValues = useMemo(
+
         () => ({
-            institut: {label:"Institut Français", institut_id:1},
-            test_id:  1,
-            level_id:  1,
-            startDate:  new Date(),
-            endDate:  new Date(),
-            limitDateSubscribe:  new Date(),
-            validation:  false,
-            placeAvailable:  "10",
-            sessionHasExam: [
-                {examId : "", exam: "", adressExam: '', room:'', examDateTime: new Date()}
+            institut: {label: currentSession?.Institut?.label || "Institut Français", institut_id:currentSession?.institut_id || 1},
+            test_id:   currentSession?.test_id || -1,
+            level_id:  currentSession?.level_id || -1,
+            startDate: currentSession?.start || new Date(),
+            endDate:  currentSession?.end || new Date(),
+            limitDateSubscribe: currentSession?.limitDateSubscribe || new Date(),
+            validation:  currentSession?.validation || false,
+            placeAvailable:  currentSession?.placeAvailable || "10",
+            sessionHasExams: currentSession?.sessionHasExams || [
+                {examId : "", exam: "", adressExam: '', room:'', DateTime: new Date()}
             ]
         }),
-        []
+        [currentSession]
     );
 
     const methods = useForm({
@@ -99,19 +85,12 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
     } = methods;
 
     useEffect(() => {
-        if (isEdit && currentSession) {
-            reset(defaultValues);
-        }
-        if (!isEdit) {
-            reset(defaultValues);
-        }
+        reset(defaultValues)
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isEdit, currentSession]);
+    }, [currentSession]);
 
     const handleCreateSession = async (data) => {
-       
         setLoadingSend(true);
-
         try {
             const newSession = {
                 session: {
@@ -124,13 +103,21 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
                     test_id: data.test_id,
                     level_id: data.level_id,
                 },
-                sessionHasExam:data.sessionHasExam
+                sessionHasExams:data.sessionHasExams
             }
-            if(newSession.level_id === -1 ) {
-                newSession.level_id = null;
+            if(isEdit) {
+                newSession.session.session_id = currentSession.session_id;
             }
-           const {session} = dispatch(postSession(newSession.session.institut_id,newSession));
-           enqueueSnackbar(!isEdit ? 'Création de la session effectuée !' : 'Mise à jour effectuée !');
+            if(newSession.session.level_id === -1 ) {
+                newSession.session.level_id = null;
+            }
+            if(!isEdit) {
+                dispatch(postSession(newSession.session.institut_id,newSession));
+            }
+            else {
+                dispatch(putSession(currentSession.institut_id, currentSession.session_id,newSession));
+            }
+            enqueueSnackbar(!isEdit ? 'Création de la session effectuée !' : 'Mise à jour effectuée !');
             navigate(PATH_DASHBOARD.admin.session.list);
             setLoadingSend(false);
         } catch (error) {
@@ -143,7 +130,7 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
         <FormProvider methods={methods}>
             <Card>
                 <SessionNewEditStep1 setHasLevelsByTest={setHasLevelsByTest} />
-                <SessionNewEditStep2  setHasExams={setHasExams} hasExams={hasExams} />
+                <SessionNewEditStep2  setHasExams={setHasExams} hasExams={hasExams} isEdit={isEdit}  currentSession={currentSession} />
             </Card>
             <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mt: 3 }}>
                 <LoadingButton

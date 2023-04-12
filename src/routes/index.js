@@ -20,6 +20,7 @@ import {
   TestsPage,
   SessionListPage,
   SessionCreatePage,
+  SessionEditPage,
   InvoicesPage,
   InstitutListPage,
   InstitutEditPage,
@@ -101,6 +102,9 @@ export default function Router() {
                 )},
                 {path: ':id/prices', element: (
                       <InstitutPricesPage />
+                )},
+                {path: ':institut_id/session/:session_id/edit', element: (
+                          <SessionEditPage />
                 )}
               ]
             },

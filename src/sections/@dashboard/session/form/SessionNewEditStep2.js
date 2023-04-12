@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import {useEffect} from 'react';
+import {useEffect, useCallback} from 'react';
 // form
 import {useFormContext, useFieldArray, Controller} from 'react-hook-form';
 // @mui
@@ -13,49 +13,61 @@ import axios from '../../../../utils/axios';
 
 SessionNewEditStep2.propTypes = {
     setHasExams: PropTypes.func,
-    hasExams: PropTypes.bool
+    hasExams: PropTypes.bool,
+    isEdit: PropTypes.bool,
+    currentSession: PropTypes.object,
 };
 
-export default function SessionNewEditStep2({setHasExams, hasExams}) {
+export default function SessionNewEditStep2({setHasExams, hasExams, isEdit, currentSession=null }) {
     const { control, setValue, watch, resetField} = useFormContext();
     const { fields, append, remove } = useFieldArray({
         control,
-        name: 'sessionHasExam',
+        name: 'sessionHasExams',
     });
     const values = watch();
+
+    const getExamsFromApi = useCallback(async (test_id, level_id) => {
+        let filters="/";
+        if (test_id !== -1) {
+            if(test_id !== -1 && level_id !== -1) {
+                filters = `?test=${test_id}&level=${level_id}`;
+            }
+            else if (filters.test_id !== -1 ) {
+                filters = `?test=${test_id}`;
+            }
+            else {
+                return  null;
+            }
+        }
+        else {
+            return null;
+        }
+        const {data} = await axios.get(`/exams${filters}`);
+        return data;
+    }, []);
 
     // on récupére la liste des exams associés au test
     useEffect(() => {
         (async () =>  {
             remove();
-            let filters="/";
-            if (values.test_id !== -1) {
-                if(values.test_id !== -1 && values.level_id !== -1) {
-                    filters = `?test=${values.test_id}&level=${values.level_id}`;
-                }
-                else if (filters.test_id !== -1 ) {
-                    filters = `?test=${values.test_id}`;
+            if(isEdit && currentSession) {
+                setHasExams(true);
+                currentSession.sessionHasExams.forEach( exam => append({sessionHasExam_id: exam.sessionHasExam_id, examId : exam.Exam.exam_id, exam: exam.Exam.label, adressExam: exam.adressExam, room:exam.room, DateTime: exam.DateTime}) );
+            }
+            else {
+               const data = await getExamsFromApi(values.test_id, values.level_id);
+                if(data?.exams.length > 0 ) {
+                    data.exams.forEach(
+                        exam => append({examId : exam.exam_id, exam: exam.label, adressExam: '', room:'', DateTime: new Date()})
+                    );
+                    setHasExams(true);
                 }
                 else {
-                    return;
+                    setHasExams(false);
                 }
             }
-            else {
-                return;
-            }
-            const {data} = await axios.get(`/exams${filters}`);
-            if(data.exams.length > 0 ) {
-                data.exams.forEach(
-                    exam => append({examId : exam.exam_id, exam: exam.label, adressExam: '', room:'', examDateTime: new Date()})
-                );
-                setHasExams(true);
-            }
-            else {
-                setHasExams(false);
-            }
-            
         } )();
-    }, [values.test_id,values.level_id, append, remove,setHasExams]);
+    }, [isEdit,currentSession,  values.test_id,values.level_id, append, remove,setHasExams, getExamsFromApi]);
 
     
     return (
@@ -70,14 +82,14 @@ export default function SessionNewEditStep2({setHasExams, hasExams}) {
                         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ width: 1 }}>
                             <RHFTextField
                                 size="small"
-                                name={`sessionHasExam[${index}].exam`}
+                                name={`sessionHasExams[${index}].exam`}
                                 label="Epreuve"
                                 InputLabelProps={{ shrink: true }}
                                 disabled
                             />
                             <RHFTextField
                                 size="small"
-                                name={`sessionHasExam[${index}].adressExam`}
+                                name={`sessionHasExams[${index}].adressExam`}
                                 label="Adresse "
                                 InputLabelProps={{ shrink: true }}
                                 multiline
@@ -85,12 +97,12 @@ export default function SessionNewEditStep2({setHasExams, hasExams}) {
                             />
                             <RHFTextField
                                 size="small"
-                                name={`sessionHasExam[${index}].room`}
+                                name={`sessionHasExams[${index}].room`}
                                 label="Salle "
                                 InputLabelProps={{ shrink: true }}
                             />
                             <Controller
-                                name={`sessionHasExam[${index}].examDateTime`}
+                                name={`sessionHasExams[${index}].DateTime`}
                                 control={control}
                                 render={({ field, fieldState: { error } }) => (
                                     <DateTimePicker
@@ -109,63 +121,3 @@ export default function SessionNewEditStep2({setHasExams, hasExams}) {
         </Box>
     );  
 }
-
-
-/*
-
-return (
-    <Box sx={{ p: 3 }}>
-        <Stack divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />} spacing={3}>
-        {
-            !hasExams && 
-            <Alert severity="error">Aucune épreuve n&apos;est associée à cet exam !!</Alert>
-        }
-        {     
-             hasExams && fields.map((item, index) => (
-                <Stack key={item.id} direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ width: 1 }}>
-                    <RHFTextField
-                        size="small"
-                        name={`sessionHasExam[${index}].exam`}
-                        label="Epreuve "
-                        InputLabelProps={{ shrink: true }}
-                        disabled
-                    />
-                    <RHFTextField
-                        size="small"
-                        name={`sessionHasExam[${index}].adressExam`}
-                        label="Adresse "
-                        InputLabelProps={{ shrink: true }}
-                        multiline
-                        rows={4}
-                    />
-                    <RHFTextField
-                        size="small"
-                        name={`sessionHasExam[${index}].room`}
-                        label="Salle "
-                        InputLabelProps={{ shrink: true }}
-                    />
-                    <Controller
-                        name={`sessionHasExam[${index}].examDateTime`}
-                        control={control}
-                        render={({ field,fieldState  }) => (
-                            <DateTimePicker
-                                {...field}
-                                label="Date et heure de début"
-                                ampm={false}
-                                sx={{
-                                    width: { xs:900, sm: 900, md: 900 }
-                                }}
-                                
-                            />
-                        )}
-                    />
-
-
-                </Stack>
-            ))
-        }
-        </Stack>
-    </Box>
-)
-
-*/

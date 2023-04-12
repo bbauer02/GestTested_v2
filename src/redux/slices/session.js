@@ -8,6 +8,7 @@ const initialState = {
     isLoading: false,
     error: false,
     sessions: [],
+    session: null,
 }
 
 const slice = createSlice({
@@ -58,14 +59,27 @@ const slice = createSlice({
 export default slice.reducer;
 
 // postSession
-
 export function postSession(idInstitut, session) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
             
             const response =await axios.post(`/instituts/${idInstitut}/sessions`, session);
-            dispatch(addSession(response.session));
+            dispatch(slice.actions.addSession(response.data.session));
+        }
+        catch(error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+// putSession
+export function putSession(idInstitut, idSession, session) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        try {
+           const response =  await axios.put(`/instituts/${idInstitut}/sessions/${idSession}`, session);
+           dispatch(slice.actions.updateSession(response.data.session))
         }
         catch(error) {
             dispatch(slice.actions.hasError(error));
