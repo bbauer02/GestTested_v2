@@ -20,7 +20,7 @@ import AccessTimeIcon from '@mui/icons-material/AccessTime';
 import EuroIcon from '@mui/icons-material/Euro';
 // redux
 import { useDispatch } from '../../../../redux/store';
-import { deleteExam } from '../../../../redux/slices/exam';
+
 // components
 import Iconify from '../../../../components/iconify';
 import MenuPopover from '../../../../components/menu-popover';

@@ -18,8 +18,11 @@ import {
 import Iconify from "../../../../components/iconify";
 import MenuPopover from '../../../../components/menu-popover';
 import ConfirmDialog from '../../../../components/confirm-dialog';
-//
 
+//
+// redux
+import { useDispatch } from '../../../../redux/store';
+import { deleteExam } from '../../../../redux/slices/exam';
 // ----------------------------------------------------------------------
 
 TestTableRow.propTypes = {
@@ -66,8 +69,8 @@ export default function TestTableRow({
             <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
                 <Typography variant="subtitle2" noWrap>{label}</Typography>
             </TableCell>
-            <TableCell> {isInternal? <Switch {...label} defaultChecked /> : <Switch {...label}  /> } </TableCell>
-
+            <TableCell> <Switch  checked={isInternal || false}  disabled />  </TableCell>
+            <TableCell> {row.parent ? row.parent.label : "Aucun parent"} </TableCell>
             <TableCell align="right">
                 <IconButton color={openPopover ? 'primary' : 'default'} onClick={handleOpenPopover}>
                     <Iconify icon="eva:more-vertical-fill" />

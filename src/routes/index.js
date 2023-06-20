@@ -18,6 +18,8 @@ import {
   ExamEditPage,
   ExamCreatePage,
   TestsPage,
+  TestCreatePage,
+  TestEditPage,
   SessionListPage,
   SessionCreatePage,
   SessionEditPage,
@@ -129,6 +131,18 @@ export default function Router() {
                       (
                           <TestsPage />
                       )
+                },
+                {
+                    path: 'create', element:
+                    (
+                        <TestCreatePage />
+                    )
+                },
+                {
+                    path: ':id/edit', element:
+                    (
+                        <TestEditPage />
+                    )
                 }
               ]
             },

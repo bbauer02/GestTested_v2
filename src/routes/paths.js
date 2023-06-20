@@ -42,6 +42,9 @@ export const PATH_DASHBOARD = {
     },
     test: {
       root: path(ROOTS_DASHBOARD, '/admin/test'),
+      list: path(ROOTS_DASHBOARD, '/admin/test/list'),
+      create: path(ROOTS_DASHBOARD, `/admin/test/create`),
+      edit: (id) => path(ROOTS_DASHBOARD, `/admin/test/${id}/edit`),
     },
     exam: {
       root: path(ROOTS_DASHBOARD, '/admin/exam'),

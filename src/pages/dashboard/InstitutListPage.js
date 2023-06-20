@@ -247,7 +247,7 @@ export default function InstitutListPage() {
                     </TableContainer>
                     <TablePaginationCustom
                         count={dataFiltered.length}
-                        page={page}
+                        page={ ( page > 0 && dataFiltered.length === rowsPerPage ) ? 0 : page }
                         rowsPerPage={rowsPerPage}
                         onPageChange={onChangePage}
                         onRowsPerPageChange={onChangeRowsPerPage}

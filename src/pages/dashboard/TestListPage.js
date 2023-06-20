@@ -1,5 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
+import {useSnackbar} from "notistack";
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 // @mui
 import {
@@ -14,7 +15,7 @@ import {
 } from '@mui/material';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTests } from '../../redux/slices/test';
+import { getTests, deleteTest } from '../../redux/slices/test';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -36,6 +37,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import { TestTableRow, TestTableToolbar} from "../../sections/@dashboard/test/list";
+
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
     { id: 'label', label: 'Test', align: 'left' },
@@ -80,6 +82,8 @@ export default function TestListPage() {
 
     const [openConfirm, setOpenConfirm] = useState(false);
 
+    const { enqueueSnackbar } = useSnackbar();
+
     useEffect(() => {
         dispatch(getTests(true));
     }, [dispatch]);
@@ -107,18 +111,23 @@ export default function TestListPage() {
     const handleCloseConfirm = () => {
         setOpenConfirm(false);
     };
-    const handleDeleteRow = (id) => {
-        // dispatch(deleteInstitut(id));
+    const handleDeleteRow = async (id) => {
+        try {
+            await dispatch(deleteTest(id));
+            enqueueSnackbar('Test supprimé', { variant: 'success' });
+
+        }
+        catch (error) {
+            enqueueSnackbar('Une erreur est survenue', { variant: 'error' });
+        }
     };
 
     const handleDeleteRows = (selectedRow) => {
-        // const deleteRows = tableData.filter((row) => !selectedRow.includes(row.institut_id));
-        // setSelected([]);
-        // setTableData(deleteRows);
+            // to DO
     };
 
     const handleEditRow = (testId) => {
-        // navigate(PATH_DASHBOARD.admin.institut.edit(institutId));
+        navigate(PATH_DASHBOARD.admin.test.edit(testId));
     };
 
 
@@ -127,7 +136,7 @@ export default function TestListPage() {
         setPage(0);
     };
 
-console.log(tests)
+
     return (
         <>
             <Helmet>
@@ -145,7 +154,7 @@ console.log(tests)
                             variant="contained"
                             startIcon={<Iconify icon="eva:plus-fill" />}
                             component={RouterLink}
-                            to={PATH_DASHBOARD.admin.institut.create}
+                            to={PATH_DASHBOARD.admin.test.create}
                         >
                             Nouveau test
                         </Button>
@@ -195,12 +204,12 @@ console.log(tests)
                                     }
                                 />
                                 <TableBody>
-                                    {(isLoading ? [...Array(rowsPerPage)] : dataFiltered)
+                                    { (isLoading ? [...Array(rowsPerPage)] : dataFiltered)
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         .map((row, index) =>
                                             row ? (
                                                 <TestTableRow
-                                                    key={row.test_id}
+                                                    key={index}
                                                     row={row}
                                                     selected={selected.includes(row.test_id)}
                                                     onSelectRow={() => onSelectRow(row.test_id)}
@@ -208,7 +217,7 @@ console.log(tests)
                                                     onEditRow={() => handleEditRow(row.test_id)}
                                                 />
                                             ) : (
-                                                !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />
+                                                !isNotFound && ""
                                             )
                                         )}
 
@@ -221,7 +230,7 @@ console.log(tests)
                     </TableContainer>
                     <TablePaginationCustom
                         count={dataFiltered.length}
-                        page={page}
+                        page={ ( page > 0 && dataFiltered.length === rowsPerPage ) ? 0 : page }
                         rowsPerPage={rowsPerPage}
                         onPageChange={onChangePage}
                         onRowsPerPageChange={onChangeRowsPerPage}

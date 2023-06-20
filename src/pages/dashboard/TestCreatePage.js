@@ -10,31 +10,28 @@ import { PATH_DASHBOARD } from '../../routes/paths';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // components
 import { useSettingsContext } from '../../components/settings';
-import SessionNewEditForm from "../../sections/@dashboard/session/form";
+import TestNewEditForm from "../../sections/@dashboard/test/TestNewEditForm";
 
 
-export default function SessionCreatePage() {
+export default function TestCreatePage() {
     const { themeStretch } = useSettingsContext();
     const { pathname } = useLocation();
-    const isEdit = pathname.includes('edit');
-
-    //  <SessionNewEditForm isEdit={isEdit} currentInstitut={null} />
 
     return (
         <>
             <Helmet>
-                <title> Session: Création d&apos;une session | Get-Tested</title>
+                <title> Administration: Tests | Get-Tested</title>
             </Helmet>
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
-                    heading="Création d'une session"
+                    heading="Administration des tests"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name : 'Sessions', href: PATH_DASHBOARD.admin.test.list},
-                        { name: "Création d'une session" }
+                        { name: 'Tests', href: PATH_DASHBOARD.admin.test.root },
+                        { name: "Création d'un test" }
                     ]}
                 />
-                <SessionNewEditForm />
+                <TestNewEditForm />
             </Container>
         </>
     );
