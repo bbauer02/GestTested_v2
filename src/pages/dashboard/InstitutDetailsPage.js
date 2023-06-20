@@ -10,6 +10,8 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // components
 import { useSettingsContext } from '../../components/settings';
 
+// sections
+
 
 export default function InstitutDetailsPage() {
     const { themeStretch } = useSettingsContext();

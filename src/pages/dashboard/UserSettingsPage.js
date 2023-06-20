@@ -3,31 +3,17 @@ import { useState } from 'react';
 // @mui
 import {
     Container,
-    Tab, Tabs, Box
+    Card
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // components
 import { useSettingsContext } from '../../components/settings';
-import Iconify from '../../components/iconify';
-// sections
-import {
-    AccountGeneral
-} from "../../sections/@dashboard/user/account";
 
 export default function UserSettingsPage() {
     const { themeStretch } = useSettingsContext();
 
-    const [currentTab, setCurrentTab] = useState('general');
-    const TABS = [
-        {
-            value: 'general',
-            label: 'General',
-            icon: <Iconify icon="ic:round-account-box" />,
-            component: <AccountGeneral />,
-        },
-    ];
     return (
         <>
             <Helmet>
@@ -42,20 +28,7 @@ export default function UserSettingsPage() {
                     ]}
                 />
 
-                <Tabs value={currentTab} onChange={(event, newValue) => setCurrentTab(newValue)}>
-                    {TABS.map((tab) => (
-                        <Tab key={tab.value} label={tab.label} icon={tab.icon} value={tab.value} />
-                    ))}
-                </Tabs>
-
-                {TABS.map(
-                    (tab) =>
-                        tab.value === currentTab && (
-                            <Box key={tab.value} sx={{ mt: 5 }}>
-                                {tab.component}
-                            </Box>
-                        )
-                )}
+                <Card> Paramètres </Card>
             </Container>
         </>
     );
