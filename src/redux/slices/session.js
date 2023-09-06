@@ -2,7 +2,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
-import {dispatch} from "../store";
 
 const initialState = {
     isLoading: false,

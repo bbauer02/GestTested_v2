@@ -35,7 +35,7 @@ export const TestsPage = Loadable(lazy(() => import('../pages/dashboard/TestList
 export const TestCreatePage = Loadable(lazy(() => import('../pages/dashboard/TestCreatePage')));
 export const TestEditPage = Loadable(lazy(() => import('../pages/dashboard/TestEditPage')));
 
-export const UsersPage = Loadable(lazy(() => import('../pages/dashboard/UsersPage')));
+export const UsersPage = Loadable(lazy(() => import('../pages/dashboard/UserListPage')));
 export const DashboardMainPage = Loadable(lazy( () => import('../pages/dashboard/DashboardMainPage')));
 export const LoginPage = Loadable(lazy(() => import('../pages/LoginPage')));
 export const Page404 = Loadable(lazy(() => import('../pages/Page404')));

@@ -8,6 +8,7 @@ import languageReducer from './slices/language';
 import examReducer from './slices/exam';
 import testReducer from './slices/test';
 import sessionReducer from './slices/session';
+import userReducer from './slices/user';
 
 // ----------------------------------------------------------------------
 
@@ -23,7 +24,9 @@ const rootReducer = combineReducers({
   language: languageReducer,
   exam: examReducer,
   test: testReducer,
-  session: sessionReducer
+  session: sessionReducer,
+  user: userReducer,
+
 });
 
 export default rootReducer;

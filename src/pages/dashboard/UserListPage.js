@@ -1,25 +1,22 @@
 import { Helmet } from 'react-helmet-async';
-import { useState, useEffect } from 'react';
-import {useSnackbar} from "notistack";
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
 // @mui
 import {
-    Button,
-    Card,
-    Table,
-    Tooltip,
-    TableBody,
     Container,
-    IconButton,
-    TableContainer,
+    Card, Button, TableContainer, Tooltip, IconButton, Table, TableBody
 } from '@mui/material';
+
+import {Link as RouterLink, useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
+import {useSnackbar} from "notistack";
+import { useSettingsContext } from '../../components/settings';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getTests, deleteTest } from '../../redux/slices/test';
+import { getUsers } from '../../redux/slices/user';
+
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
+import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // components
-import { useSettingsContext } from '../../components/settings';
 import {
     useTable,
     getComparator,
@@ -33,21 +30,22 @@ import {
 } from '../../components/table';
 import Iconify from '../../components/iconify';
 import Scrollbar from '../../components/scrollbar';
-import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
+
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import { TestTableRow, TestTableToolbar} from "../../sections/@dashboard/test/list";
 
-// ----------------------------------------------------------------------
+import {UserTableRow} from "../../sections/@dashboard/user/list";
+
+
 const TABLE_HEAD = [
-    { id: 'label', label: 'Test', align: 'left' },
-    { id: 'isInternal', label: 'Test Interne?', align: 'left' },
-    { id: 'parent_id', label: 'Test Parent', align: 'left' },
+    { id: 'lastname', label: 'nom', align: 'left' },
+    { id: 'institut', label: 'Institut', align: 'left' },
+    { id: 'institutRole', label: 'Rôle dans l\'institut', align: 'left' },
+    { id: 'systemRole', label: 'Rôle système', align: 'left' },
     { id: '' },
 ];
-// ----------------------------------------------------------------------
-
-export default function TestListPage() {
+export default function UserListPage() {
     const {
         dense,
         page,
@@ -66,7 +64,7 @@ export default function TestListPage() {
         onChangePage,
         onChangeRowsPerPage,
     } = useTable({
-        defaultOrderBy: 'label',
+        defaultOrderBy: 'lastname',
     });
     const { themeStretch } = useSettingsContext();
 
@@ -74,7 +72,7 @@ export default function TestListPage() {
 
     const dispatch = useDispatch();
 
-    const { tests, isLoading} = useSelector((state) => state.test);
+    const { users, isLoading} = useSelector((state) => state.user);
 
     const [tableData, setTableData] = useState([]);
 
@@ -85,21 +83,20 @@ export default function TestListPage() {
     const { enqueueSnackbar } = useSnackbar();
 
     useEffect(() => {
-        dispatch(getTests(true));
+        dispatch(getUsers());
     }, [dispatch]);
 
     useEffect(() => {
-        if (tests.length) {
-            setTableData(tests);
+        if (users.length) {
+            setTableData(users);
         }
-    }, [tests]);
+    }, [users]);
 
     const dataFiltered = applyFilter({
         inputData : tableData,
         comparator: getComparator(order, orderBy),
         filterName,
     });
-
 
     const denseHeight = dense ? 60 : 80;
 
@@ -114,8 +111,7 @@ export default function TestListPage() {
     };
     const handleDeleteRow = async (id) => {
         try {
-            await dispatch(deleteTest(id));
-            enqueueSnackbar('Test supprimé', { variant: 'success' });
+         // TODO
 
         }
         catch (error) {
@@ -124,11 +120,11 @@ export default function TestListPage() {
     };
 
     const handleDeleteRows = (selectedRow) => {
-            // to DO
+        // to DO
     };
 
     const handleEditRow = (testId) => {
-        navigate(PATH_DASHBOARD.admin.test.edit(testId));
+        // TODO
     };
 
 
@@ -137,29 +133,18 @@ export default function TestListPage() {
         setPage(0);
     };
 
-
     return (
         <>
             <Helmet>
-                <title> Administration: Tests | Get-Tested</title>
+                <title> Administration: Utilisateurs | Get-Tested</title>
             </Helmet>
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
-                    heading="Administration des tests"
+                    heading="Administration des utilisateurs"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Tests' }
+                        { name: 'Utilisateurs' }
                     ]}
-                    action={
-                        <Button
-                            variant="contained"
-                            startIcon={<Iconify icon="eva:plus-fill" />}
-                            component={RouterLink}
-                            to={PATH_DASHBOARD.admin.test.create}
-                        >
-                            Nouveau test
-                        </Button>
-                    }
                 />
                 <Card>
                     <TestTableToolbar
@@ -179,7 +164,7 @@ export default function TestListPage() {
                                 )
                             }
                             action={
-                                <Tooltip title="Suppression des tests sélectionnés">
+                                <Tooltip title="Suppression des utilisateurs sélectionnés">
                                     <span>
                                         <IconButton disabled color="primary" onClick={handleOpenConfirm}>
                                             <Iconify icon='eva:trash-2-outline' />
@@ -200,7 +185,7 @@ export default function TestListPage() {
                                     onSelectAllRows={(checked) =>
                                         onSelectAllRows(
                                             checked,
-                                            tableData.map((row) => row.institut_id)
+                                            tableData.map((row) => row.user_id)
                                         )
                                     }
                                 />
@@ -209,13 +194,13 @@ export default function TestListPage() {
                                         .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                                         .map((row, index) =>
                                             row ? (
-                                                <TestTableRow
+                                                <UserTableRow
                                                     key={index}
                                                     row={row}
-                                                    selected={selected.includes(row.test_id)}
-                                                    onSelectRow={() => onSelectRow(row.test_id)}
-                                                    onDeleteRow={() => handleDeleteRow(row.test_id)}
-                                                    onEditRow={() => handleEditRow(row.test_id)}
+                                                    selected={selected.includes(row.user_id)}
+                                                    onSelectRow={() => onSelectRow(row.user_id)}
+                                                    onDeleteRow={() => handleDeleteRow(row.user_id)}
+                                                    onEditRow={() => handleEditRow(row.user_id)}
                                                 />
                                             ) : (
                                                 !isNotFound && ""
@@ -248,7 +233,7 @@ export default function TestListPage() {
                 title="Delete"
                 content={
                     <>
-                        Voulez-vous vraiment supprimer <strong> {selected.length} </strong> instituts ?
+                        Voulez-vous vraiment supprimer <strong> {selected.length} </strong> utilisateurs ?
                     </>
                 }
                 action={
@@ -270,7 +255,8 @@ export default function TestListPage() {
 // ----------------------------------------------------------------------
 
 function applyFilter({ inputData, comparator, filterName }) {
-    const stabilizedThis = inputData.map((el, index) => [el, index]);
+
+        const stabilizedThis = inputData.map((el, index) => [el, index]);
 
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
@@ -281,8 +267,7 @@ function applyFilter({ inputData, comparator, filterName }) {
     inputData = stabilizedThis.map((el) => el[0]);
 
     if (filterName) {
-        inputData = inputData.filter((item) => item.label.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+        inputData = inputData.filter((item) => item.lastname.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
     }
-
     return inputData;
 }

@@ -17,7 +17,7 @@ export default function TestTableToolbar({ filterName, onFilterName }) {
       <TextField
         value={filterName}
         onChange={(event) => onFilterName(event.target.value)}
-        placeholder="Recherchez un test..."
+        placeholder="Recherchez un utilisateur..."
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
