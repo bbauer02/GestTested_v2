@@ -33,6 +33,7 @@ import {
   InstitutCreatePage,
   InstitutPricesPage,
   UsersPage,
+  UserEditPage,
   SkillsPage
 } from './elements';
 
@@ -106,7 +107,7 @@ export default function Router() {
                       <InstitutPricesPage />
                 )},
                 {path: ':institut_id/session/:session_id/edit', element: (
-                          <SessionEditPage />
+                      <SessionEditPage />
                 )}
               ]
             },
@@ -119,7 +120,10 @@ export default function Router() {
                       (
                           <UsersPage />
                       )
-                }
+                },
+                {path: ':id/edit', element: (
+                      <UserEditPage />
+                  )},
               ]
             },
             {

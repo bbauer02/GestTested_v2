@@ -11,7 +11,7 @@ import {useSnackbar} from "notistack";
 import { useSettingsContext } from '../../components/settings';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getUsers } from '../../redux/slices/user';
+import { getUsers, deleteUser } from '../../redux/slices/user';
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -33,9 +33,7 @@ import Scrollbar from '../../components/scrollbar';
 
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
-import { TestTableRow, TestTableToolbar} from "../../sections/@dashboard/test/list";
-
-import {UserTableRow} from "../../sections/@dashboard/user/list";
+import {UserTableRow, UserTableToolbar} from "../../sections/@dashboard/user/list";
 
 
 const TABLE_HEAD = [
@@ -111,8 +109,9 @@ export default function UserListPage() {
     };
     const handleDeleteRow = async (id) => {
         try {
-         // TODO
 
+            dispatch(deleteUser(id));
+            enqueueSnackbar('Utilisateur supprimé', { variant: 'success' });
         }
         catch (error) {
             enqueueSnackbar('Une erreur est survenue', { variant: 'error' });
@@ -120,11 +119,12 @@ export default function UserListPage() {
     };
 
     const handleDeleteRows = (selectedRow) => {
-        // to DO
+
+
     };
 
-    const handleEditRow = (testId) => {
-        // TODO
+    const handleEditRow = (userId) => {
+        navigate(PATH_DASHBOARD.admin.user.edit(userId));
     };
 
 
@@ -147,7 +147,7 @@ export default function UserListPage() {
                     ]}
                 />
                 <Card>
-                    <TestTableToolbar
+                    <UserTableToolbar
                         filterName={filterName}
                         onFilterName={handleFilterName}
                     />

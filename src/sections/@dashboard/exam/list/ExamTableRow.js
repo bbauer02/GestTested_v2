@@ -160,7 +160,7 @@ export default function ExamTableRow({
           <ConfirmDialog
               open={openConfirm}
               onClose={handleCloseConfirm}
-              title="Suppression d'un institut"
+              title="Suppression d'une épreuve"
               content={`Voulez-vous supprimer l'épreuve :  ${row.label} ?`}
               action={
                   <>

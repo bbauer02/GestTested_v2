@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { paramCase } from 'change-case';
+
 // @mui
 import {
     TableRow,
@@ -63,7 +63,7 @@ export default function UserTableRow({
                 </TableCell>
                 <TableCell sx={{ display: 'flex', alignItems: 'center' }}>
                     <Stack direction="row" alignItems="center" spacing={2}>
-                        <Avatar alt={lastname} src={avatar} />
+                        <Avatar alt={lastname} src={avatar? `/avatars/${avatar}` : ''} />
 
                         <Typography variant="subtitle2" noWrap>
                             {lastname} {firstname}
