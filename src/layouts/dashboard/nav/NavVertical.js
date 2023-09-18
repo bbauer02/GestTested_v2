@@ -11,11 +11,19 @@ import { NAV } from '../../../config-global';
 import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import { NavSectionVertical } from '../../../components/nav-section';
+
 //
 import navConfig from './config-navigation';
+import navConfigAdminSys from "./config-nav-adminsys";
+import navConfigInstitutAdmin from './config-navigation-institut';
+
 import NavDocs from './NavDocs';
 import NavAccount from './NavAccount';
 import NavToggleButton from './NavToggleButton';
+
+// auth
+import { useAuthContext } from '../../../auth/useAuthContext';
+
 
 // ----------------------------------------------------------------------
 
@@ -25,11 +33,24 @@ NavVertical.propTypes = {
 };
 
 export default function NavVertical({ openNav, onCloseNav }) {
+  const { user } = useAuthContext();
   const { pathname } = useLocation();
-
   const isDesktop = useResponsive('up', 'lg');
+  let navConfigFinal = [...navConfig]
 
-  useEffect(() => {
+    if(user.instituts[0].Role.power >= 3 ) {
+        navConfigFinal = [...navConfigFinal, ...navConfigInstitutAdmin];
+    }
+    if(user.systemRole.power >= 10 ) {
+        navConfigFinal = [...navConfigFinal, ...navConfigAdminSys];
+    }
+
+
+
+
+
+
+    useEffect(() => {
     if (openNav) {
       onCloseNav();
     }
@@ -61,7 +82,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
         <NavAccount />
       </Stack>
 
-      <NavSectionVertical data={navConfig} />
+      <NavSectionVertical data={navConfigFinal} />
 
       <Box sx={{ flexGrow: 1 }} />
 

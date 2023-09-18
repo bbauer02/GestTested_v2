@@ -62,5 +62,10 @@ export const PATH_DASHBOARD = {
     invoice: {
       root: path(ROOTS_DASHBOARD, '/admin/invoice'),
     },
+  },
+  institut : {
+    root: path(ROOTS_DASHBOARD, '/institut'),
+    profile: path(ROOTS_DASHBOARD, '/institut/profile'),
   }
+
 };

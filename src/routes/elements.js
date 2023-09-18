@@ -40,3 +40,7 @@ export const UserEditPage = Loadable(lazy(() => import('../pages/dashboard/UserE
 export const DashboardMainPage = Loadable(lazy( () => import('../pages/dashboard/DashboardMainPage')));
 export const LoginPage = Loadable(lazy(() => import('../pages/LoginPage')));
 export const Page404 = Loadable(lazy(() => import('../pages/Page404')));
+
+// Administration of Intituts
+
+export const InstitutProfilePage =  Loadable(lazy(() => import('../pages/dashboard/institut/InstitutProfilePage')));

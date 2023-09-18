@@ -32,10 +32,13 @@ import {
   InstitutDetailsPage,
   InstitutCreatePage,
   InstitutPricesPage,
+  InstitutProfilePage,
   UsersPage,
   UserEditPage,
-  SkillsPage
+  SkillsPage,
+
 } from './elements';
+
 
 
 // ----------------------------------------------------------------------
@@ -73,6 +76,17 @@ export default function Router() {
             { element: <Navigate to="/dashboard/user/four" replace />, index: true },
             { path: 'settings', element: <UserSettingsPage /> },
           ],
+        },
+          // Routes Institut => Gestion
+        {
+          path: 'institut',
+          children: [
+            {
+              path: 'profile',
+              element: <InstitutProfilePage />
+            }
+          ]
+
         },
         // Routes Dashboard => Admin
         {

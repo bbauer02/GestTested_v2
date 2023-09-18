@@ -33,12 +33,7 @@ const slice = createSlice({
         // GET SESSIONS
         getSessionsSuccess(state, action) {
             state.isLoading = false;
-            state.sessions = [];
-            const allSessions = action.payload;
-            if (allSessions)
-            allSessions.forEach((session) => {
-                state.sessions[session.session_id] = session;
-            });
+            state.sessions = action.payload;
         },
         // GET SESSION
         getSessionSuccess(state, action) {
@@ -50,6 +45,20 @@ const slice = createSlice({
             state.isLoading = false;
             const deleteSession = state.sessions.filter((session) => session.session_id != action.payload.session_id);
             state.sessions = deleteSession;
+        },
+        // PUT SESSION
+        putSessionSuccess(state, action) {
+            state.isLoading = false;
+            const session_updated = action.payload;
+            const updatedSessions = state.sessions.map((_session) => {
+                if(_session.session_id === session_updated.session_id) {
+
+                    return {..._session, ...session_updated};
+                }
+                return _session;
+            });
+            state.isLoading = false;
+            state.sessions = updatedSessions;
         }
     }
 })
@@ -77,8 +86,8 @@ export function putSession(idInstitut, idSession, session) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
-           const response =  await axios.put(`/instituts/${idInstitut}/sessions/${idSession}`, session);
-           dispatch(slice.actions.updateSession(response.data.session))
+           const response =  await axios.put(`/instituts/${idInstitut}/sessions/${idSession}/admin`, session);
+           dispatch(slice.actions.putSessionSuccess(response.data.session))
         }
         catch(error) {
             dispatch(slice.actions.hasError(error));
@@ -93,6 +102,18 @@ export function getSession(idInstitut, idSession) {
         try {
             const response = await axios.get(`/instituts/${idInstitut}/sessions/${idSession}`);
             dispatch(slice.actions.getSessionSuccess(response.data.session));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    }
+}
+// getSessionsByInstitut
+export function getSessionsByInstitut(idInstitut) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.get(`/instituts/${idInstitut}/sessions`);
+            dispatch(slice.actions.getSessionsSuccess(response.data.sessions));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

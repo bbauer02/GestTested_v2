@@ -7,6 +7,8 @@ import { useLocales } from '../../../locales';
 import { StyledSubheader } from './styles';
 import NavList from './NavList';
 
+
+
 // ----------------------------------------------------------------------
 
 NavSectionVertical.propTypes = {
@@ -15,6 +17,7 @@ NavSectionVertical.propTypes = {
 };
 
 export default function NavSectionVertical({ data, sx, ...other }) {
+
   const { translate } = useLocales();
 
   return (
