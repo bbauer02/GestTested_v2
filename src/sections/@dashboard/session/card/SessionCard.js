@@ -1,4 +1,5 @@
 import PropTypes from 'prop-types';
+import { useNavigate } from 'react-router-dom';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import { Box, Card, Avatar, Divider, Typography, Stack, Button } from '@mui/material';
@@ -11,9 +12,9 @@ import Image from '../../../../components/image';
 import Iconify from '../../../../components/iconify';
 import SvgColor from '../../../../components/svg-color';
 
-// redux
-import {putSession} from "../../../../redux/slices/session";
-import { useDispatch, useSelector } from '../../../../redux/store';
+
+import {PATH_DASHBOARD} from "../../../../routes/paths";
+
 
 // ----------------------------------------------------------------------
 
@@ -35,9 +36,12 @@ SessionCard.propTypes = {
 };
 
 export default function SessionCard({ session, onValidate }) {
+    const navigate = useNavigate();
     const { Institut, Level, Test, start, end, placeAvailable, sessionUsers, validation, institut_id, session_id } = session;
 
-
+    const handleDetails = ( ) => {
+        navigate(PATH_DASHBOARD.session.detail(institut_id,session_id));
+    }
     return (
         <Card sx={{ textAlign: 'center' }}>
             <Box sx={{ position: 'relative' }}>
@@ -90,7 +94,7 @@ export default function SessionCard({ session, onValidate }) {
             <Stack direction="row" alignItems="center" justifyContent="center" sx={{ mt: 1, mb: 3 }}>
                 <Button
                     size="small"
-                    onClick={() => console.log("detail")}
+                    onClick={() => handleDetails() }
                     variant='outlined'
                     color='inherit'
                     startIcon={<Iconify icon="fontisto:zoom" />}

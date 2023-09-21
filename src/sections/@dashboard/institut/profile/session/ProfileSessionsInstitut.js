@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import {useEffect} from "react";
+
 // @mui
 import { Container, Box } from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
@@ -29,6 +30,8 @@ ProfileSessionsInstitut.propTypes = {
     institut: PropTypes.object,
 };
 export default function ProfileSessionsInstitut({institut}) {
+
+
     const { institut_id } = institut;
 
     const dispatch = useDispatch();

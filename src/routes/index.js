@@ -23,6 +23,7 @@ import {
   SessionListPage,
   SessionCreatePage,
   SessionEditPage,
+  SessionDetailPage,
   InvoicesPage,
   InstitutListPage,
   InstitutEditPage,
@@ -84,6 +85,10 @@ export default function Router() {
             {
               path: 'profile',
               element: <InstitutProfilePage />
+            },
+            {
+              path:':institut_id/session/:session_id',
+              element: <SessionDetailPage />
             }
           ]
 

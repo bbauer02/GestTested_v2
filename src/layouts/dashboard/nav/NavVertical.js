@@ -134,3 +134,4 @@ export default function NavVertical({ openNav, onCloseNav }) {
     </Box>
   );
 }
+
