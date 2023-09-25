@@ -13,19 +13,18 @@ import { useAuthContext } from './useAuthContext';
 
 RoleBasedGuard.propTypes = {
   children: PropTypes.node,
-  hasContent: PropTypes.bool,
-  roles: PropTypes.arrayOf(PropTypes.string),
+  power: PropTypes.number
 };
 
-export default function RoleBasedGuard({ hasContent, roles, children }) {
+export default function RoleBasedGuard({ power, children }) {
   // Logic here to get current user role
   const { user } = useAuthContext();
 
   // const currentRole = 'user';
-  const currentRole = user?.role; // admin;
+  const currentRole = user?.instituts[0].Role; // admin;
+  if( power === undefined || currentRole.power < power ) { 
 
-  if (typeof roles !== 'undefined' && !roles.includes(currentRole)) {
-    return hasContent ? (
+    return ( 
       <Container component={MotionContainer} sx={{ textAlign: 'center' }}>
         <m.div variants={varBounce().in}>
           <Typography variant="h3" paragraph>
@@ -43,8 +42,9 @@ export default function RoleBasedGuard({ hasContent, roles, children }) {
           <ForbiddenIllustration sx={{ height: 260, my: { xs: 5, sm: 10 } }} />
         </m.div>
       </Container>
-    ) : null;
+    );
   }
+
 
   return <> {children} </>;
 }

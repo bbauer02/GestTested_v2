@@ -14,8 +14,10 @@ export function fDateTime(date, newFormat) {
   return date ? format(new Date(date), fm) : '';
 }
 
-export function fDateTime_fr(date) {
-    return date ? format(new Date(date), 'dd MMMM yyyy à HH:mm', { locale: fr }) : '';
+export function fDateTime_fr(date, newFormat) {
+  const fm = newFormat || 'dd MMMM yyyy à HH:mm';
+
+    return date ? format(new Date(date), fm , { locale: fr }) : '';
 }
 
 export function fTimestamp(date) {

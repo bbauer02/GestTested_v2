@@ -2,6 +2,8 @@ import { Navigate, useRoutes } from 'react-router-dom';
 // auth
 import AuthGuard from '../auth/AuthGuard';
 import GuestGuard from '../auth/GuestGuard';
+import RoleBasedGuard from '../auth/RoleBasedGuard';
+
 // layouts
 import CompactLayout from '../layouts/compact';
 import DashboardLayout from '../layouts/dashboard';
@@ -84,11 +86,15 @@ export default function Router() {
           children: [
             {
               path: 'profile',
-              element: <InstitutProfilePage />
+              element: <RoleBasedGuard power={3}><InstitutProfilePage /></RoleBasedGuard>
             },
             {
               path:':institut_id/session/:session_id',
               element: <SessionDetailPage />
+            },
+            {
+              path: 'sessions',
+              element: <SessionListPage />
             }
           ]
 

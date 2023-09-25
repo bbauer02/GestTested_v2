@@ -28,11 +28,13 @@ const navConfigInstitutAdmin = [
         items: [
             {
                 title: 'Institut',
-                path: PATH_DASHBOARD.admin.institut.root,
+                path: PATH_DASHBOARD.institut.profile,
                 icon: ICONS.institut,
-                children: [
-                    { title: 'profile', path: PATH_DASHBOARD.institut.profile }
-                ]
+            },
+            {
+                title: 'Sessions', 
+                path: PATH_DASHBOARD.institut.sessions, 
+                icon: ICONS.session 
             },
         ]
     }

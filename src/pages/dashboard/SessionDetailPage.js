@@ -24,6 +24,7 @@ import { getSession } from "../../redux/slices/session";
 // components
 import { useSettingsContext } from '../../components/settings';
 import SessionDetail from "../../sections/@dashboard/session/detail/SessionDetail";
+import SessionDetailUsers from "../../sections/@dashboard/session/users/SessionDetailUsers";
 import CustomBreadcrumbs from "../../components/custom-breadcrumbs";
 import {PATH_DASHBOARD} from "../../routes/paths";
 import Iconify from "../../components/iconify";
@@ -41,6 +42,7 @@ export default function SessionDetailPage() {
         dispatch(getSession(institut_id, session_id))
     }, [dispatch,institut_id, session_id] )
 
+
     const TABS = [
         {
             value: 'session',
@@ -52,7 +54,7 @@ export default function SessionDetailPage() {
             value: 'canditats',
             label: 'Candidats',
             icon: <Iconify icon="fa6-solid:users" />,
-            component: <SessionDetail session={ session }/>
+            component: <SessionDetailUsers session={ session }/>
         }
     ];
 

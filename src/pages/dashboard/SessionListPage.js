@@ -1,6 +1,6 @@
 import { Helmet } from 'react-helmet-async';
 import { useState, useEffect } from 'react';
-import { useNavigate, Link as RouterLink } from 'react-router-dom';
+import { useNavigate, Link as RouterLink, useLocation } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 // @mui
 import {
@@ -13,9 +13,11 @@ import {
     IconButton,
     TableContainer,
 } from '@mui/material';
+// auth
+import { useAuthContext } from '../../auth/useAuthContext';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
-import { getSessionsFiltered, removeSession} from '../../redux/slices/session';
+import { getSessionsFiltered, removeSession, getSessionsByInstitut} from '../../redux/slices/session';
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 // components
@@ -70,11 +72,16 @@ export default function SessionListPage() {
     } = useTable({
         defaultOrderBy: 'label',
     });
+
+    const { user } = useAuthContext();
+
     const {enqueueSnackbar} = useSnackbar();
 
     const { themeStretch } = useSettingsContext();
 
     const navigate = useNavigate();
+
+    const { pathname } = useLocation();
 
     const dispatch = useDispatch();
 
@@ -86,9 +93,18 @@ export default function SessionListPage() {
 
     const [openConfirm, setOpenConfirm] = useState(false);
 
+    const isInstitutPage = pathname.includes(PATH_DASHBOARD.institut.sessions);
+
+    const _institutId = user.instituts[0].institut_id;
+
     useEffect(() => {
-        dispatch(getSessionsFiltered());
-    }, [dispatch]);
+        if (isInstitutPage) {
+            dispatch(getSessionsByInstitut(_institutId));
+        }
+        else {
+            dispatch(getSessionsFiltered());
+        }
+    }, [dispatch, isInstitutPage, _institutId]);
 
     useEffect(() => {
         if (sessions.length) {
@@ -142,14 +158,15 @@ export default function SessionListPage() {
     };
 
 
+
     return (
         <>
             <Helmet>
-                <title> Administration: Sessions | Get-Tested</title>
+                <title> {isInstitutPage ? `Institut: Sessions | Get-Tested`:`Administration: Sessions | Get-Tested`} </title>
             </Helmet>
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
-                    heading="Administration des sessions"
+                    heading={isInstitutPage ? `Gestion des Sessions de : ${user.instituts[0].Institut.label}`:`Administration des sessions`}
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
                         { name: 'Sessions' }

@@ -65,7 +65,9 @@ export const PATH_DASHBOARD = {
   },
   institut : {
     root: path(ROOTS_DASHBOARD, '/institut'),
-    profile: path(ROOTS_DASHBOARD, '/institut/profile')
+    profile: path(ROOTS_DASHBOARD, '/institut/profile'),
+    sessions: path(ROOTS_DASHBOARD, '/institut/sessions')
+
   },
   session : {
     detail: (institut_id, session_id) => path(ROOTS_DASHBOARD, `/institut/${institut_id}/session/${session_id}`)
