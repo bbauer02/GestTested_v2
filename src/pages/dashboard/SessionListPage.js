@@ -93,7 +93,7 @@ export default function SessionListPage() {
 
     const [openConfirm, setOpenConfirm] = useState(false);
 
-    const isInstitutPage = pathname.includes(PATH_DASHBOARD.institut.sessions);
+    const isInstitutPage = pathname.includes(PATH_DASHBOARD.institut.sessions.root);
 
     const _institutId = user.instituts[0].institut_id;
 
@@ -147,7 +147,12 @@ export default function SessionListPage() {
     };
 
     const handleEditRow = (institutId, sessionId) => {
-        navigate(PATH_DASHBOARD.admin.session.edit(institutId, sessionId));
+        if(isInstitutPage) {
+            navigate(PATH_DASHBOARD.institut.sessions.edit(sessionId));
+        }
+        else {
+            navigate(PATH_DASHBOARD.admin.session.edit(institutId, sessionId));
+        }
     };
 
 
@@ -176,7 +181,7 @@ export default function SessionListPage() {
                             variant="contained"
                             startIcon={<Iconify icon="eva:plus-fill" />}
                             component={RouterLink}
-                            to={PATH_DASHBOARD.admin.session.create}
+                            to={isInstitutPage? PATH_DASHBOARD.institut.sessions.create : PATH_DASHBOARD.admin.session.create}
                         >
                             Nouvelle Session
                         </Button>

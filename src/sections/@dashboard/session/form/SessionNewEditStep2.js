@@ -5,6 +5,8 @@ import {useFormContext, useFieldArray, Controller} from 'react-hook-form';
 // @mui
 import {Stack, Divider, Typography, Button, InputAdornment, Box, Card, Alert, TextField} from '@mui/material';
 import {DateTimePicker} from "@mui/x-date-pickers";
+// redux
+import { useSelector } from '../../../../redux/store';
 // components
 import {RHFTextField} from "../../../../components/hook-form";
 // axios
@@ -12,13 +14,11 @@ import axios from '../../../../utils/axios';
 
 
 SessionNewEditStep2.propTypes = {
-    setHasExams: PropTypes.func,
-    hasExams: PropTypes.bool,
     isEdit: PropTypes.bool,
-    currentSession: PropTypes.object,
 };
 
-export default function SessionNewEditStep2({setHasExams, hasExams, isEdit, currentSession=null }) {
+export default function SessionNewEditStep2({ isEdit }) {
+
     const { control, setValue, watch, resetField} = useFormContext();
     const { fields, append, remove } = useFieldArray({
         control,
@@ -26,58 +26,39 @@ export default function SessionNewEditStep2({setHasExams, hasExams, isEdit, curr
     });
     const values = watch();
 
-    const getExamsFromApi = useCallback(async (test_id, level_id) => {
-        let filters="/";
-        if (test_id !== -1) {
-            if(test_id !== -1 && level_id !== -1) {
-                filters = `?test=${test_id}&level=${level_id}`;
-            }
-            else if (filters.test_id !== -1 ) {
-                filters = `?test=${test_id}`;
-            }
-            else {
-                return  null;
-            }
-        }
-        else {
-            return null;
-        }
-        const {data} = await axios.get(`/exams${filters}`);
-        return data;
-    }, []);
+    const { session : currentSession } = useSelector((state) => state.session);
+    const { session_id, institut_id } = currentSession || {session_id: null, institut_id: null};
 
-    // on récupére la liste des exams associés au test
-    useEffect(() => {
-        (async () =>  {
-            remove();
-            if(isEdit && currentSession) {
-                setHasExams(true);
-                currentSession.sessionHasExams.forEach( exam => append({sessionHasExam_id: exam.sessionHasExam_id, examId : exam.Exam.exam_id, exam: exam.Exam.label, adressExam: exam.adressExam, room:exam.room, DateTime: exam.DateTime}) );
-            }
-            else {
-               const data = await getExamsFromApi(values.test_id, values.level_id);
-                if(data?.exams.length > 0 ) {
-                    data.exams.forEach(
-                        exam => append({examId : exam.exam_id, exam: exam.label, adressExam: '', room:'', DateTime: new Date()})
-                    );
-                    setHasExams(true);
-                }
-                else {
-                    setHasExams(false);
-                }
-            }
-        } )();
-    }, [isEdit,currentSession,  values.test_id,values.level_id, append, remove,setHasExams, getExamsFromApi]);
 
+
+    const { exams, isLoading } = useSelector((state) => state.exam);
+
+    // On récupére la liste des Exams de la session ou un tableau vide
     
+    const {sessionHasExams} = currentSession || {sessionHasExams: []};
+    
+
+   useEffect(() => {
+        if(exams.length > 0) {
+
+            remove();
+            exams.forEach(
+                exam => append({examId : exam.exam_id, exam: exam.Exam.label, adressExam: exam.adressExam, room:exam.room, DateTime: exam.DateTime})
+            );
+        }
+   }, [exams, append, remove])
+ 
+  
     return (
+        !isLoading ? (
         <Box sx={{ p: 3 }}>
             <Stack divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />} spacing={3}>
                 {
-                    !hasExams && 
+                    !exams.length > 0 && 
                     <Alert severity="error">Aucune épreuve n&apos;est associée à cet exam !!</Alert>
                 }
-                {hasExams && fields.map((item, index) => (
+
+                {exams.length > 0 && fields.map((item, index) => (
                     <Stack key={item.id} alignItems="flex-end" spacing={1.5}>
                         <Stack direction={{ xs: 'column', md: 'row' }} spacing={2} sx={{ width: 1 }}>
                             <RHFTextField
@@ -119,5 +100,13 @@ export default function SessionNewEditStep2({setHasExams, hasExams, isEdit, curr
                 ))}
             </Stack>
         </Box>
+        ) : (
+
+            <Box sx={{ p: 3 }}>
+                <Stack divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />} spacing={3}>
+                    <Alert severity="info">Chargement des épreuves en cours ...</Alert>
+                </Stack>
+            </Box>
+        )
     );  
 }

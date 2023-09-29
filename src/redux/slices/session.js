@@ -81,12 +81,25 @@ export function postSession(idInstitut, session) {
     };
 }
 
+// putSessionAdmin
+export function putSessionAdmin(idInstitut, idSession, session) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        try {
+           const response =  await axios.put(`/instituts/${idInstitut}/sessions/${idSession}/admin`, session);
+           dispatch(slice.actions.putSessionSuccess(response.data.session))
+        }
+        catch(error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
 // putSession
 export function putSession(idInstitut, idSession, session) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
-           const response =  await axios.put(`/instituts/${idInstitut}/sessions/${idSession}/admin`, session);
+           const response =  await axios.put(`/instituts/${idInstitut}/sessions/${idSession}`, session);
            dispatch(slice.actions.putSessionSuccess(response.data.session))
         }
         catch(error) {

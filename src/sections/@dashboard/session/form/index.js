@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useMemo, useEffect } from 'react';
 import * as Yup from 'yup';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useSnackbar } from 'notistack';
 // form
 import { useForm } from 'react-hook-form';
@@ -9,6 +9,8 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Card, Stack } from '@mui/material';
+// auth
+import { useAuthContext } from '../../../../auth/useAuthContext';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import {postSession, putSession} from '../../../../redux/slices/session';
@@ -23,18 +25,36 @@ import SessionNewEditStep2 from './SessionNewEditStep2';
 
 SessionNewEditForm.propTypes = {
     isEdit: PropTypes.bool,
-    currentSession: PropTypes.object,
 };
 
-export default function SessionNewEditForm({ isEdit, currentSession=null }) {
-    const dispatch = useDispatch();
+export default function SessionNewEditForm({ isEdit }) {
+
+    const { session : currentSession } = useSelector((state) => state.session);
+    const { exams, isLoading } = useSelector((state) => state.exam);
+
+
+    const { user } = useAuthContext();
     const navigate = useNavigate();
+    const { pathname } = useLocation();
+
+    let isInstitutPage = null;
+    if(isEdit) {
+        isInstitutPage = pathname.includes(PATH_DASHBOARD.institut.sessions.root);
+    }
+    else {
+        isInstitutPage = pathname.includes(PATH_DASHBOARD.institut.sessions.create);
+    }
+
+    const _institutId = user.instituts[0].institut_id;
+
+    const dispatch = useDispatch();
+    
     const [hasLevelsByTest, setHasLevelsByTest] = useState(false);
     const [loadingSave, setLoadingSave] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
     const [loadingSend, setLoadingSend] = useState(false);
 
-    const [hasExams, setHasExams] = useState(false);
+   
 
     const NewSessionSchema = Yup.object().shape({
         test_id: Yup.number().required().integer().positive('Le test est obligatoire'),
@@ -57,19 +77,19 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
     const defaultValues = useMemo(
 
         () => ({
-            institut: {label: currentSession?.Institut?.label || "Institut Français", institut_id:currentSession?.institut_id || 1},
+            institut: isInstitutPage? {label: user?.instituts[0]?.Institut?.label || "Institut Français" , institut_id:user?.instituts[0]?.Institut?.institut_id || 1 } : {label: currentSession?.Institut?.label || "Institut Français", institut_id:currentSession?.institut_id || 1},
             test_id:   currentSession?.test_id || -1,
             level_id:  currentSession?.level_id || -1,
             startDate: currentSession?.start || new Date(),
             endDate:  currentSession?.end || new Date(),
             limitDateSubscribe: currentSession?.limitDateSubscribe || new Date(),
             validation:  currentSession?.validation || false,
-            placeAvailable:  currentSession?.placeAvailable || "10",
+            placeAvailable:  currentSession?.placeAvailable || "0",
             sessionHasExams: currentSession?.sessionHasExams || [
                 {examId : "", exam: "", adressExam: '', room:'', DateTime: new Date()}
             ]
         }),
-        [currentSession]
+        [currentSession, isInstitutPage, user]
     );
 
     const methods = useForm({
@@ -118,7 +138,12 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
                 dispatch(putSession(currentSession.institut_id, currentSession.session_id,newSession));
             }
             enqueueSnackbar(!isEdit ? 'Création de la session effectuée !' : 'Mise à jour effectuée !');
-            navigate(PATH_DASHBOARD.admin.session.list);
+            if(isInstitutPage) {
+                navigate(PATH_DASHBOARD.institut.sessions.root)
+            }  
+            else {
+                navigate(PATH_DASHBOARD.admin.session.list);
+            } 
             setLoadingSend(false);
         } catch (error) {
             console.error(error);
@@ -127,14 +152,15 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
     }
 
     return (
+        
         <FormProvider methods={methods}>
             <Card>
-                <SessionNewEditStep1 setHasLevelsByTest={setHasLevelsByTest} />
-                <SessionNewEditStep2  setHasExams={setHasExams} hasExams={hasExams} isEdit={isEdit}  currentSession={currentSession} />
+                <SessionNewEditStep1 setHasLevelsByTest={setHasLevelsByTest} isInstitutPage={isInstitutPage}/>
+                <SessionNewEditStep2   isEdit={isEdit} isInstitutPage={isInstitutPage}/>
             </Card>
             <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mt: 3 }}>
                 <LoadingButton
-                    disabled={!hasExams}
+                    disabled={exams.length === 0 || errors.length > 0}
                     size="large"
                     variant="contained"
                     loading={loadingSend && isSubmitting}
@@ -144,5 +170,6 @@ export default function SessionNewEditForm({ isEdit, currentSession=null }) {
                 </LoadingButton>
             </Stack>
         </FormProvider>
+         
     )
 }

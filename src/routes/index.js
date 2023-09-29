@@ -89,12 +89,17 @@ export default function Router() {
               element: <RoleBasedGuard power={3}><InstitutProfilePage /></RoleBasedGuard>
             },
             {
-              path:':institut_id/session/:session_id',
+              path:':institut_id/sessions/:session_id',
               element: <SessionDetailPage />
             },
             {
               path: 'sessions',
-              element: <SessionListPage />
+              children: [
+                { element: <Navigate to="/dashboard/institut/sessions/list" replace />, index: true },
+                { path: 'list', element: <SessionListPage /> },
+                { path: 'create', element: <SessionCreatePage /> },
+                { path: ':session_id/edit', element: <SessionEditPage /> },
+              ]
             }
           ]
 

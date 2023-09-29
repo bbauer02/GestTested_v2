@@ -5,9 +5,12 @@ import {
     Container
 } from '@mui/material';
 import {useLocation, useParams} from "react-router-dom";
+// auth
+import { useAuthContext } from '../../auth/useAuthContext';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getSession } from "../../redux/slices/session";
+import { getExamsDetailsOfSession } from "../../redux/slices/exam";
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -17,18 +20,36 @@ import { useSettingsContext } from '../../components/settings';
 import SessionNewEditForm from "../../sections/@dashboard/session/form";
 
 
+
 export default function SessionEditPage() {
+    const { user } = useAuthContext();
+    const { pathname } = useLocation();
+    const isInstitutPage = pathname.includes(PATH_DASHBOARD.institut.sessions.root);
+
     const { themeStretch } = useSettingsContext();
     const dispatch = useDispatch();
-    const { pathname } = useLocation();
-    const { institut_id, session_id } = useParams();
     const isEdit = pathname.includes('edit');
 
+    const { institut_id, session_id } = useParams();
+
+    let institutId = institut_id;
+    if(isInstitutPage) {
+        institutId=user.instituts[0].institut_id;
+    }
     useEffect(() => {
-        dispatch(getSession(institut_id, session_id));
-    }, [dispatch, institut_id, session_id]);
+        if(institutId && session_id) {
+            dispatch(getSession(institutId, session_id));
+        }  
+    }, [dispatch, institutId, session_id]);
 
     const { session } = useSelector((state) => state.session);
+
+    useEffect(() => {
+        if(session) {
+           dispatch(getExamsDetailsOfSession(  session.institut_id,session.session_id ));
+        }
+    }, [dispatch,session])
+
     return (
         <>
             <Helmet>
@@ -39,11 +60,11 @@ export default function SessionEditPage() {
                     heading="Edition d'une session"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name : 'Sessions', href: PATH_DASHBOARD.admin.session.root},
+                        { name : 'Sessions', href: isInstitutPage? PATH_DASHBOARD.institut.sessions.root : PATH_DASHBOARD.admin.session.root},
                         { name: "Edition d'une session" }
                     ]}
                 />
-                <SessionNewEditForm isEdit={isEdit} currentSession={session}/>
+                <SessionNewEditForm isEdit={isEdit} />
             </Container>
         </>
     );

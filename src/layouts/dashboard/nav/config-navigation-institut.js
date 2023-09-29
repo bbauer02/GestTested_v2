@@ -33,7 +33,7 @@ const navConfigInstitutAdmin = [
             },
             {
                 title: 'Sessions', 
-                path: PATH_DASHBOARD.institut.sessions, 
+                path: PATH_DASHBOARD.institut.sessions.root, 
                 icon: ICONS.session 
             },
         ]

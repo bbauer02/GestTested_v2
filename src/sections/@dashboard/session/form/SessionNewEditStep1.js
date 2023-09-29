@@ -20,8 +20,11 @@ import {PATH_DASHBOARD} from "../../../../routes/paths";
 
 SessionNewEditStep1.propTypes = {
     setHasLevelsByTest: PropTypes.func,
+    isInstitutPage: PropTypes.bool,
 };
-export default function SessionNewEditStep1({ setHasLevelsByTest })  {
+export default function SessionNewEditStep1({ setHasLevelsByTest , isInstitutPage = null})  {
+
+
 
     const dispatch = useDispatch();
     // Get the Instituts List
@@ -94,6 +97,7 @@ export default function SessionNewEditStep1({ setHasLevelsByTest })  {
                     options={instituts}
                     getOptionLabel={(institut) => institut.label}
                     isOptionEqualToValue={(option, value) => option.institut_id === value.institut_id}
+                    disabled={isInstitutPage}
                 />
             </Stack>
 

@@ -27,6 +27,7 @@ const slice = createSlice({
     // GET EXAMS
     getExamsSuccess(state, action) {
       state.isLoading = false;
+      console.log(action.payload)
       state.exams = action.payload;
     },
     // GET EXAM
@@ -59,6 +60,20 @@ const slice = createSlice({
 // Reducer
 export default slice.reducer;
 
+// GET EXAMS DeTAILS OF SESSION  --------------------------------
+
+export function getExamsDetailsOfSession(institut_id, session_id) {
+  return async (dispatch) => {
+    dispatch(slice.actions.startLoading());
+    try {
+      const response = await axios.get(`/instituts/${institut_id}/sessions/${session_id}/exams`);
+      console.log(response.data.exams);
+      dispatch(slice.actions.getExamsSuccess(response.data.exams));
+    } catch (error) {
+      dispatch(slice.actions.hasError(error));
+    }
+  };
+}
 // GET EXAMS ----------------------------------------------------
 
 export function getExams(filters=null) {
