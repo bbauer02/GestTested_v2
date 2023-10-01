@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
-
+import {useState} from "react";
 // Mui
-import { Box, Card, Button, Avatar, Typography, Stack } from '@mui/material';
+import { Box, Card, Button, Avatar, Typography, Stack, IconButton, } from '@mui/material';
 
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -9,8 +9,11 @@ import { useTheme } from '@mui/material/styles';
 // components
 import Iconify from '../../../../components/iconify';
 
+import ConfirmDialog from '../../../../components/confirm-dialog';
+
 // utils
 import {fDateTime_fr} from '../../../../utils/formatTime';
+
 
 
 SessionDetailUsers.propTypes = {
@@ -20,7 +23,7 @@ export default function SessionDetailUsers({session=null}) {
     const theme = useTheme();
     const { sessionUsers } = session;
 
-    console.log(session)
+
     return (
         <>
       <Typography variant="h6" sx={{ my: 5 }}>
@@ -59,24 +62,34 @@ export default function SessionDetailUsers({session=null}) {
                 </Typography>
         
                 <Stack spacing={0.5} direction="row" alignItems="center" sx={{ color: 'text.secondary' }}>
-                <Iconify icon="eva:pin-fill" width={16} sx={{ flexShrink: 0 }} />
-        
-                <Typography variant="body2" component="span" noWrap>
-                    {candidat.User.country.label}
-                </Typography>
+                    <Iconify icon="eva:pin-fill" width={16} sx={{ flexShrink: 0 }} />
+
+                    <Typography variant="body2" component="span" noWrap>
+                        {candidat.User.country.label}
+                    </Typography>
+                </Stack>
+                <Stack  spacing={0} direction="row" alignItems="left" sx={{ color: 'text.secondary' }}>
+                    <IconButton color='primary' onClick={() => console.log("Détail")}>
+                        <Iconify icon="mdi:account-details" />
+                    </IconButton>
+                    <IconButton color='error' onClick={() => console.log("Quitter la session")}>
+                        <Iconify icon="pepicons-pop:leave" />
+                    </IconButton>
                 </Stack>
                 
             </Box>
             <Button
                 size="small"
                 variant={candidat.hasPaid ? 'text' : 'outlined'}
-                color={candidat.hasPaid  ? 'primary' : 'inherit'}
+                color={candidat.hasPaid  ? 'primary' : 'warning'}
                 startIcon={candidat.hasPaid  && <Iconify icon="mdi:currency-eur" />}
                 sx={{ flexShrink: 0 }}
             >
                 {candidat.hasPaid  ? 'Payé' : 'Non payé'}
             </Button>
+
         </Card>
+
         ))}
       </Box>
     </>
