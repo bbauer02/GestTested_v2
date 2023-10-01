@@ -12,13 +12,11 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 import SessionNewEditForm from "../../sections/@dashboard/session/form";
 
-
 export default function SessionCreatePage() {
+
     const { themeStretch } = useSettingsContext();
     const { pathname } = useLocation();
-    const isEdit = pathname.includes('edit');
-
-    //  <SessionNewEditForm isEdit={isEdit} currentInstitut={null} />
+    const isInstitutPage = pathname.includes(PATH_DASHBOARD.institut.sessions.create);
 
     return (
         <>
@@ -30,7 +28,7 @@ export default function SessionCreatePage() {
                     heading="Création d'une session"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name : 'Sessions', href: PATH_DASHBOARD.admin.test.list},
+                        { name : 'Sessions', href: isInstitutPage? PATH_DASHBOARD.institut.sessions.root : PATH_DASHBOARD.admin.session.list},
                         { name: "Création d'une session" }
                     ]}
                 />

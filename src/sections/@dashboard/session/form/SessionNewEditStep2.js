@@ -6,11 +6,11 @@ import {useFormContext, useFieldArray, Controller} from 'react-hook-form';
 import {Stack, Divider, Typography, Button, InputAdornment, Box, Card, Alert, TextField} from '@mui/material';
 import {DateTimePicker} from "@mui/x-date-pickers";
 // redux
-import { useSelector } from '../../../../redux/store';
+import {dispatch, useDispatch, useSelector} from '../../../../redux/store';
+import { getExams } from '../../../../redux/slices/exam';
 // components
 import {RHFTextField} from "../../../../components/hook-form";
-// axios
-import axios from '../../../../utils/axios';
+
 
 
 SessionNewEditStep2.propTypes = {
@@ -25,28 +25,23 @@ export default function SessionNewEditStep2({ isEdit }) {
         name: 'sessionHasExams',
     });
     const values = watch();
-
     const { session : currentSession } = useSelector((state) => state.session);
-    const { session_id, institut_id } = currentSession || {session_id: null, institut_id: null};
-
-
-
     const { exams, isLoading } = useSelector((state) => state.exam);
 
-    // On récupére la liste des Exams de la session ou un tableau vide
-    
-    const {sessionHasExams} = currentSession || {sessionHasExams: []};
-    
+
+    useEffect(() => {
+        dispatch(getExams({test: values.test_id, level: values.level_id}));
+    }, [values.test_id,values.level_id ]);
+
 
    useEffect(() => {
-        if(exams.length > 0) {
-
+        if(exams?.length > 0) {
             remove();
             exams.forEach(
-                exam => append({examId : exam.exam_id, exam: exam.Exam.label, adressExam: exam.adressExam, room:exam.room, DateTime: exam.DateTime})
+                exam => append({examId : exam.exam_id, exam: exam.label, adressExam: exam.adressExam, room:exam.room, DateTime: exam.DateTime})
             );
         }
-   }, [exams, append, remove])
+   }, [exams, append, remove, isEdit])
  
   
     return (
@@ -54,8 +49,8 @@ export default function SessionNewEditStep2({ isEdit }) {
         <Box sx={{ p: 3 }}>
             <Stack divider={<Divider flexItem sx={{ borderStyle: 'dashed' }} />} spacing={3}>
                 {
-                    !exams.length > 0 && 
-                    <Alert severity="error">Aucune épreuve n&apos;est associée à cet exam !!</Alert>
+                    !exams.length > 0 &&
+                    <Alert severity="error">Aucune épreuve n&apos;est associée à cette session !!</Alert>
                 }
 
                 {exams.length > 0 && fields.map((item, index) => (

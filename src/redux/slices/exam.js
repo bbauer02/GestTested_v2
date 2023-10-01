@@ -27,7 +27,6 @@ const slice = createSlice({
     // GET EXAMS
     getExamsSuccess(state, action) {
       state.isLoading = false;
-      console.log(action.payload)
       state.exams = action.payload;
     },
     // GET EXAM
@@ -67,7 +66,6 @@ export function getExamsDetailsOfSession(institut_id, session_id) {
     dispatch(slice.actions.startLoading());
     try {
       const response = await axios.get(`/instituts/${institut_id}/sessions/${session_id}/exams`);
-      console.log(response.data.exams);
       dispatch(slice.actions.getExamsSuccess(response.data.exams));
     } catch (error) {
       dispatch(slice.actions.hasError(error));
@@ -80,19 +78,19 @@ export function getExams(filters=null) {
   return async (dispatch) => {
     dispatch(slice.actions.startLoading());
     try {
-      if (filters) {
-        if(filters.test && filters.level) {
+      if(filters) {
+        if(filters.test === -1 && filters.level === -1) {
           filters = `?test=${filters.test}&level=${filters.level}`;
         }
-        else if (filters.test) {
+        else if(filters.test !== -1 && filters.level === -1) {
           filters = `?test=${filters.test}`;
         }
-        else {
-          filters="/";
+        else if(filters.test !== -1 && filters.level !== -1) {
+          filters = `?test=${filters.test}&level=${filters.level}`;
         }
       }
       else {
-        filters="/";
+        filters = "";
       }
       const response = await axios.get(`/exams${filters}`);
       dispatch(slice.actions.getExamsSuccess(response.data.exams));

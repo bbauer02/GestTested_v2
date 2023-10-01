@@ -30,7 +30,7 @@ SessionNewEditForm.propTypes = {
 export default function SessionNewEditForm({ isEdit }) {
 
     const { session : currentSession } = useSelector((state) => state.session);
-    const { exams, isLoading } = useSelector((state) => state.exam);
+    const { exams } = useSelector((state) => state.exam);
 
 
     const { user } = useAuthContext();
@@ -45,12 +45,8 @@ export default function SessionNewEditForm({ isEdit }) {
         isInstitutPage = pathname.includes(PATH_DASHBOARD.institut.sessions.create);
     }
 
-    const _institutId = user.instituts[0].institut_id;
-
     const dispatch = useDispatch();
-    
     const [hasLevelsByTest, setHasLevelsByTest] = useState(false);
-    const [loadingSave, setLoadingSave] = useState(false);
     const {enqueueSnackbar} = useSnackbar();
     const [loadingSend, setLoadingSend] = useState(false);
 
@@ -78,18 +74,18 @@ export default function SessionNewEditForm({ isEdit }) {
 
         () => ({
             institut: isInstitutPage? {label: user?.instituts[0]?.Institut?.label || "Institut Français" , institut_id:user?.instituts[0]?.Institut?.institut_id || 1 } : {label: currentSession?.Institut?.label || "Institut Français", institut_id:currentSession?.institut_id || 1},
-            test_id:   currentSession?.test_id || -1,
-            level_id:  currentSession?.level_id || -1,
-            startDate: currentSession?.start || new Date(),
-            endDate:  currentSession?.end || new Date(),
-            limitDateSubscribe: currentSession?.limitDateSubscribe || new Date(),
-            validation:  currentSession?.validation || false,
-            placeAvailable:  currentSession?.placeAvailable || "0",
-            sessionHasExams: currentSession?.sessionHasExams || [
+            test_id:   isEdit && currentSession?.test_id || -1,
+            level_id:  isEdit && currentSession?.level_id || -1,
+            startDate: isEdit && currentSession?.start || new Date(),
+            endDate:  isEdit && currentSession?.end || new Date(),
+            limitDateSubscribe: isEdit && currentSession?.limitDateSubscribe || new Date(),
+            validation:  isEdit && currentSession?.validation || false,
+            placeAvailable:  isEdit && currentSession?.placeAvailable || "0",
+            sessionHasExams: isEdit && currentSession?.sessionHasExams || [
                 {examId : "", exam: "", adressExam: '', room:'', DateTime: new Date()}
             ]
         }),
-        [currentSession, isInstitutPage, user]
+        [currentSession, isInstitutPage, user, isEdit]
     );
 
     const methods = useForm({
@@ -160,7 +156,7 @@ export default function SessionNewEditForm({ isEdit }) {
             </Card>
             <Stack justifyContent="flex-end" direction="row" spacing={2} sx={{ mt: 3 }}>
                 <LoadingButton
-                    disabled={exams.length === 0 || errors.length > 0}
+                    disabled={exams?.length === 0 || errors.length > 0}
                     size="large"
                     variant="contained"
                     loading={loadingSend && isSubmitting}
