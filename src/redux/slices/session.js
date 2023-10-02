@@ -8,6 +8,7 @@ const initialState = {
     error: false,
     sessions: [],
     session: null,
+    sessionUser: null,
 }
 
 const slice = createSlice({
@@ -29,6 +30,11 @@ const slice = createSlice({
             state.isLoading = false;
             const newSession = action.payload.data;
             state.sessions.push(newSession);
+        },
+        // GET SESSION USER
+        getSessionUserSuccess(state, action) {
+            state.isLoading = false;
+            state.sessionUser = action.payload;
         },
         // GET SESSIONS
         getSessionsSuccess(state, action) {
@@ -157,6 +163,21 @@ export function removeSession(institutId, sessionId) {
         } catch (error) {
             console.error(error);
             dispatch(slice.action.hasError(error));
+        }
+    }
+}
+
+// GET SESSION USER -----------------------
+
+export function getSessionUser(institutId, sessionId, userId) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        try {
+           
+            const response = await axios.get(`/instituts/${institutId}/sessions/${sessionId}/users/${userId}`);
+            dispatch(slice.actions.getSessionUserSuccess(response.data.sessionUser));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
         }
     }
 }

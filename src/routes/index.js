@@ -26,6 +26,7 @@ import {
   SessionCreatePage,
   SessionEditPage,
   SessionDetailPage,
+  SessionUserPage,
   InvoicesPage,
   InstitutListPage,
   InstitutEditPage,
@@ -99,6 +100,7 @@ export default function Router() {
                 { path: 'list', element: <SessionListPage /> },
                 { path: 'create', element: <SessionCreatePage /> },
                 { path: ':session_id/edit', element: <SessionEditPage /> },
+                { path: ':session_id/users/:user_id/detail', element: <SessionUserPage /> },
               ]
             }
           ]

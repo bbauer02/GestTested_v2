@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import {useState} from "react";
+import { useNavigate } from 'react-router-dom';
 // Mui
 import { Box, Card, Button, Avatar, Typography, Stack, IconButton, } from '@mui/material';
 
@@ -10,6 +11,8 @@ import { useTheme } from '@mui/material/styles';
 import Iconify from '../../../../components/iconify';
 
 import ConfirmDialog from '../../../../components/confirm-dialog';
+// routes
+import { PATH_DASHBOARD } from '../../../../routes/paths';
 
 // utils
 import {fDateTime_fr} from '../../../../utils/formatTime';
@@ -20,9 +23,14 @@ SessionDetailUsers.propTypes = {
     session : PropTypes.object
 }
 export default function SessionDetailUsers({session=null}) {
+    const navigate = useNavigate();
+
     const theme = useTheme();
     const { sessionUsers } = session;
 
+    const handleSessionUserDetail = (session_id, user_id) => {
+        navigate(PATH_DASHBOARD.session.user(session_id, user_id));
+    }
 
     return (
         <>
@@ -41,6 +49,7 @@ export default function SessionDetailUsers({session=null}) {
       >
         {sessionUsers.map((candidat) => (
         <Card
+        key={candidat.user_id}
             sx={{
                 p: 3,
                 display: 'flex',
@@ -69,7 +78,7 @@ export default function SessionDetailUsers({session=null}) {
                     </Typography>
                 </Stack>
                 <Stack  spacing={0} direction="row" alignItems="left" sx={{ color: 'text.secondary' }}>
-                    <IconButton color='primary' onClick={() => console.log("Détail")}>
+                    <IconButton color='primary' onClick={() => handleSessionUserDetail(session.session_id,candidat.user_id)}>
                         <Iconify icon="mdi:account-details" />
                     </IconButton>
                     <IconButton color='error' onClick={() => console.log("Quitter la session")}>
