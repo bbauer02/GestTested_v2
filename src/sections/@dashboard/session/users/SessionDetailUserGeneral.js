@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect} from 'react';
+import {useCallback, useEffect, useMemo} from 'react';
 // new
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -26,17 +26,18 @@ import FormProvider, {
     RHFTextField,
     RHFUploadAvatar,
 } from '../../../../components/hook-form';
+import {getSessionUser} from "../../../../redux/slices/session";
 
 SessionDetailUserGeneral.propTypes = {
-    user : PropTypes.object
+    sessionUser : PropTypes.object,
 }
-export default function SessionDetailUserGeneral({user=null}) {
-    console.log(user)
-    const { enqueueSnackbar } = useSnackbar();
+export default function SessionDetailUserGeneral({sessionUser}) {
     const dispatch = useDispatch();
+    const { enqueueSnackbar } = useSnackbar();
+
     const { countries } = useSelector((state) => state.country);
     const { languages } = useSelector((state) => state.language);
-    const { sessionUser } = useSelector((state) => state.session);
+
 
     useEffect(() => {
             dispatch(getCountries());
@@ -49,8 +50,9 @@ export default function SessionDetailUserGeneral({user=null}) {
     const UpdateUserSchema = Yup.object().shape({
         firstname: Yup.string().required('Prénom requis!!'),
     });
+    const user = useMemo(() => sessionUser?.User || {}, [sessionUser]);
 
-    const defaultValues = {
+    const initialValues = useMemo(() => ({
         gender: user?.gender || '',
         civility: user?.civility || '',
         firstname: user?.firstname || '',
@@ -65,27 +67,36 @@ export default function SessionDetailUserGeneral({user=null}) {
         nationality_id: user?.nationality_id || -1,
         firstlanguage_id: user?.firstlanguage_id || -1,
         avatar: `/avatars/${user?.avatar}` || ''
-    };
+    }), [user]);
+
+
 
     const methods = useForm({
         resolver: yupResolver(UpdateUserSchema),
-        defaultValues,
-    });
+        defaultValues: initialValues,
 
+    });
     const {
         setValue,
         handleSubmit,
         formState: { isSubmitting },
+        reset,
+
     } = methods;
+
+    useEffect(() => {
+        reset(initialValues);
+    }, [initialValues, reset]);
 
     const onSubmit = async (data, e) => {
         try {
+
             const {avatar} = data;
             delete data.avatar;
             const formData = new FormData();
             formData.append('user', JSON.stringify({...data,user_id: user.user_id}));
             formData.append('avatar', avatar);
-            await putUser(user.user_id, formData);
+            dispatch(putUser(user.user_id, formData))
             enqueueSnackbar('Update success!');
         } catch (error) {
             console.error(error);

@@ -7,7 +7,7 @@ import {Stack, Divider, Typography, Button, InputAdornment, Box, Card, Alert, Te
 import {DateTimePicker} from "@mui/x-date-pickers";
 // redux
 import {dispatch, useDispatch, useSelector} from '../../../../redux/store';
-import { getExams } from '../../../../redux/slices/exam';
+import {getExams, getExamsDetailsOfSession} from '../../../../redux/slices/exam';
 // components
 import {RHFTextField} from "../../../../components/hook-form";
 
@@ -27,18 +27,28 @@ export default function SessionNewEditStep2({ isEdit }) {
     const values = watch();
     const { session : currentSession } = useSelector((state) => state.session);
     const { exams, isLoading } = useSelector((state) => state.exam);
+    const { session } = useSelector((state) => state.session);
+
+
+
 
 
     useEffect(() => {
-        dispatch(getExams({test: values.test_id, level: values.level_id}));
-    }, [values.test_id,values.level_id ]);
+        if(session && isEdit) {
+            dispatch(getExamsDetailsOfSession(  session.institut_id,session.session_id ));
+        }
+        else if(!isEdit) {
+              dispatch(getExams({test: values.test_id, level: values.level_id}));
+        }
+    }, [session, isEdit, values.test_id,values.level_id ])
+
 
 
    useEffect(() => {
         if(exams?.length > 0) {
             remove();
             exams.forEach(
-                exam => append({examId : exam.exam_id, exam: exam.label, adressExam: exam.adressExam, room:exam.room, DateTime: exam.DateTime})
+                exam => append({examId : exam.exam_id, exam: isEdit? exam.Exam.label : exam.label, adressExam: exam.adressExam, room:exam.room, DateTime: exam.DateTime})
             );
         }
    }, [exams, append, remove, isEdit])

@@ -9,6 +9,7 @@ const initialState = {
   error: false,
   exams: [],
   exam: null,
+  sessionExams: [],
 };
 
 const slice = createSlice({
@@ -93,6 +94,7 @@ export function getExams(filters=null) {
         filters = "";
       }
       const response = await axios.get(`/exams${filters}`);
+
       dispatch(slice.actions.getExamsSuccess(response.data.exams));
     } catch (error) {
       dispatch(slice.actions.hasError(error));

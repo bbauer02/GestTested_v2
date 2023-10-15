@@ -42,7 +42,6 @@ export default function SessionDetailPage() {
         dispatch(getSession(institut_id, session_id))
     }, [dispatch,institut_id, session_id] )
 
-
     const TABS = [
         {
             value: 'session',

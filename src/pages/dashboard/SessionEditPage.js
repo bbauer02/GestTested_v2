@@ -10,7 +10,6 @@ import { useAuthContext } from '../../auth/useAuthContext';
 // redux
 import { useDispatch, useSelector } from '../../redux/store';
 import { getSession } from "../../redux/slices/session";
-import { getExamsDetailsOfSession } from "../../redux/slices/exam";
 
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
@@ -42,13 +41,9 @@ export default function SessionEditPage() {
         }  
     }, [dispatch, institutId, session_id]);
 
-    const { session } = useSelector((state) => state.session);
 
-    useEffect(() => {
-        if(session) {
-           dispatch(getExamsDetailsOfSession(  session.institut_id,session.session_id ));
-        }
-    }, [dispatch,session])
+
+
 
     return (
         <>

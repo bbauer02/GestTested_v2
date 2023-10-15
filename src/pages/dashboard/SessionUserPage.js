@@ -15,6 +15,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // components
 import { useSettingsContext } from '../../components/settings';
 import  SessionDetailUserGeneral  from "../../sections/@dashboard/session/users/SessionDetailUserGeneral";
+import SessionDetailUserOptions from "../../sections/@dashboard/session/users/SessionDetailUserOptions";
 
 import Iconify from "../../components/iconify";
 
@@ -24,33 +25,37 @@ import { useAuthContext } from '../../auth/useAuthContext';
 export default function SessionUserPage() {
     // Logic here to get current user role
     const { user } = useAuthContext();
+    const dispatch = useDispatch();
 
     const { themeStretch } = useSettingsContext();
     const { session_id, user_id} = useParams();
-    const { sessionUser } = useSelector((state) => state.session);
-    const dispatch = useDispatch();
-    const location = useLocation();
-
     const [currentTab, setCurrentTab] = useState('coordonnees');
+    const { sessionUser } = useSelector((state) => state.session);
 
     useEffect(() => {
-        dispatch(getSessionUser(user.instituts[0].institut_id, session_id, user_id));
-    }, [dispatch,session_id, user_id, user.instituts] )
+        const loadUserData = () => {
+            dispatch(getSessionUser(user.instituts[0].institut_id, session_id, user_id));
+        };
+        loadUserData();
+        return () => {
+            // Vous pouvez ajouter ici le nettoyage ou l'annulation de la requête en cours si nécessaire.
+        };
+    }, [dispatch, session_id, user_id, user]);
 
 
-    console.log(sessionUser?.User)
     const TABS = [
         {
             value: 'coordonnees',
             label: 'Coordonnées',
             icon: <Iconify icon="ic:round-account-box" />,
-            component: <SessionDetailUserGeneral user={sessionUser?.User} />,
+            component: <SessionDetailUserGeneral sessionUser={sessionUser} />,
+
         },
         {
             value: 'options',
-            label: 'Options choisies',
+            label: 'Epreuves et options',
             icon: <Iconify icon="iconamoon:options" />,
-            component: <>Options Choisies</>,
+            component: <SessionDetailUserOptions sessionUser={sessionUser}/>,
         },
         {
             value: 'documents',
@@ -69,8 +74,8 @@ export default function SessionUserPage() {
                     heading="Profil utilisateur"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
-                        { name: 'Institut', href: PATH_DASHBOARD.root },
-                        { name: 'Session', href: PATH_DASHBOARD.root },
+                        { name: 'Institut', href: PATH_DASHBOARD.institut.profile },
+                        { name: 'Session', href: PATH_DASHBOARD.session.detail(user.instituts[0].institut_id, session_id) },
                         { name: 'User' }
                     ]}
                 />

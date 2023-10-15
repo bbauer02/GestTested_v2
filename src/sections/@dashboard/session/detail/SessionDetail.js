@@ -26,15 +26,6 @@ import SessionDetailBloc from "./SessionDetailBloc";
 //
 // ----------------------------------------------------------------------
 
-const StyledRowResult = styled(TableRow)(({ theme }) => ({
-    '& td': {
-        paddingTop: theme.spacing(1),
-        paddingBottom: theme.spacing(1),
-    },
-}));
-
-// ----------------------------------------------------------------------
-
 
 SessionDetail.propTypes = {
     session : PropTypes.object
@@ -144,7 +135,7 @@ export default function SessionDetail({session=null}) {
                             </TableHead>
                             <TableBody>
                                 {sessionHasExams.map((row, index) => (
-                                    <SessionExamCollapsibleRow key={index} row={row} />
+                                    <SessionExamCollapsibleRow key={index} row={row} isUserOptions={false}/>
                                 ))}
 
                             </TableBody>

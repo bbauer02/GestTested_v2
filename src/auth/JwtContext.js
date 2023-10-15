@@ -163,7 +163,7 @@ export function AuthProvider({ children }) {
   }, []);
 
   // UPDATE
-  const update = useCallback( async(user, userId) => {
+  const update = useCallback( async(userId,user) => {
     const response = await axios.put(`/users/${userId}`, user);
     dispatch({
       type: 'UPDATE',

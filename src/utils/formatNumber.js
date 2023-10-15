@@ -1,5 +1,26 @@
 import numeral from 'numeral';
 
+numeral.register('locale', 'fr', {
+    delimiters: {
+        thousands: ' ',
+        decimal: ','
+    },
+    abbreviations: {
+        thousand: 'k',
+        million: 'm',
+        billion: 'b',
+        trillion: 't'
+    },
+    ordinal(number) {
+        return number === 1 ? 'er' : 'ème';
+    },
+    currency: {
+        symbol: '€'
+    }
+});
+
+// switch between locales
+numeral.locale('fr');
 // ----------------------------------------------------------------------
 
 export function fNumber(number) {
@@ -7,7 +28,7 @@ export function fNumber(number) {
 }
 
 export function fCurrency(number) {
-    const format = number ? numeral(number).format('$0,0.00') : '';
+    const format = number ? numeral(number).format('0,0[.]00 $') : '';
 
     return result(format, '.00');
 }

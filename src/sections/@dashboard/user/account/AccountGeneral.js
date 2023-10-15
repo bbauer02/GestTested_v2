@@ -80,7 +80,7 @@ export default function AccountGeneral() {
             const formData = new FormData();
             formData.append('user', JSON.stringify({...data,user_id: user.user_id}));
             formData.append('avatar', avatar);
-            await update(formData, user.user_id);
+            update(user.user_id, formData);
             enqueueSnackbar('Update success!');
         } catch (error) {
             console.error(error);
