@@ -15,7 +15,7 @@ import { MobileDateTimePicker } from '@mui/x-date-pickers';
 import { fCurrency } from '../../../../utils/formatNumber';
 // redux
 import {dispatch, useDispatch, useSelector} from '../../../../redux/store';
-import {getExams, getExamsDetailsOfSession} from '../../../../redux/slices/exam';
+import { getExamsDetailsOfSession} from '../../../../redux/slices/exam';
 
 // auth
 import { useAuthContext } from '../../../../auth/useAuthContext';
@@ -62,20 +62,18 @@ export default function SessionDetailUserOptions({sessionUser}) {
 
 
         // Prix de base ou prix personnalisé
-       sessionUser?.sessionHasExams?.forEach(option => {
-
-        const price_base = option.InstitutHasPrices? option.InstitutHasPrices[0].price : option.Exam.price;
-        const tva_base = option.InstitutHasPrices? option.InstitutHasPrices[0].tva : 22;
+        sessionUser?.sessionHasExams?.forEach(option => {
+        const price_base = option.InstitutHasPrices && option.InstitutHasPrices.length > 0 ? option.InstitutHasPrices[0].price : option.Exam.price;
+        const tva_base = option.InstitutHasPrices && option.InstitutHasPrices.length > 0 ? option.InstitutHasPrices[0].tva : 22;
 
         const price_user = price_base;
         const tva_user = tva_base;
-
-
         setEXAMSOPTION(exams.filter(exam => !sessionUser?.sessionHasExams.some(sessionExam => sessionExam.Exam.exam_id === exam.exam_id) ))
 
 
         OptFormated.push({
             option_id: null,
+            exam_id: option.Exam.exam_id,
             exam: option.Exam.label,
             datetime: option.DateTime,
             addressExam: option.adressExam,
@@ -92,7 +90,6 @@ export default function SessionDetailUserOptions({sessionUser}) {
 
 
        setUserOptions(OptFormated)
-
     }, [sessionUser, exams, setUserOptions]);
 
 
@@ -104,29 +101,41 @@ export default function SessionDetailUserOptions({sessionUser}) {
             {
                 selNewExam: '-1',
                 items: userOptions || [
-                    { option_id:0,  exam: "", datetime: new Date(), addressExam:'', price_user:0, tva_user:0, price_ttc:0, tva_base:0, price_base:0, isOption: false, price_user_ttc: 0},
+                    { option_id:0,exam_id:0,  exam: "", datetime: new Date(), addressExam:'', price_user:0, tva_user:0, price_ttc:0, tva_base:0, price_base:0, isOption: false, price_user_ttc: 0},
                 ]
             }),
             [userOptions]
         );
 
     const handleAdd = () => {
-        console.log(values.selNewExam)
-        console.log(exams)
-      /*  append({
+        if(values.selNewExam === '-1') return;
+        const selectedExam = exams.filter(exam => exam.exam_id === Number(values.selNewExam))[0];
+        // Prix de base ou prix personnalisé
+        const price_base = selectedExam.Exam.InstitutHasPrices && selectedExam.Exam.InstitutHasPrices.length > 0 ? selectedExam.Exam.InstitutHasPrices[0].price : selectedExam.Exam.price;
+        const tva_base = selectedExam.Exam.InstitutHasPrices && selectedExam.Exam.InstitutHasPrices.length > 0? selectedExam.Exam.InstitutHasPrices[0].tva : 22;
+
+        const userOption = {
 
             option_id: null,
-            exam: '',
-            datetime: new Date(),
-            addressExam: '',
-            price_user: 0,
-            tva_user: 0,
-            price_ttc:0,
-            tva_base:0,
-            price_base:0,
+            exam_id: selectedExam.Exam.exam_id,
+            exam: selectedExam.Exam.label,
+            datetime: selectedExam.DateTime,
+            addressExam: selectedExam.adressExam,
+            price_user: price_base,
+            price_base,
+            tva_user: tva_base,
+            tva_base,
+            
             isOption: true,
-            price_user_ttc:0
-        }); */
+            price_user_ttc:calculTTC( Number(price_base), Number(tva_base) )
+        }
+
+
+        append(userOption); 
+        
+        setEXAMSOPTION(EXAMS_OPTION.filter(exam => exam.exam_id !== Number(selectedExam.exam_id)));
+        setValue('selNewExam', '-1');
+
     };
 
     const methods = useForm({
@@ -159,11 +168,33 @@ export default function SessionDetailUserOptions({sessionUser}) {
 
     const onSubmit = async (data) => {
         setLoadingSend(true);
-        console.log("data", data.items)
+        console.log(data.items)
+        console.log(sessionUser)
+        // Algorithme pour ajouter les options dans la table UserHasOptions
+        // Exam OBLIGATOIRE : => On ne fait rien de spécial SAUF si : 
+        // DateTime , AddressExam, Price et TVA sont différent de ceux de base
+        // Dans ce cas on ajoute une ligne dans la table UserHasOptions avec les valeurs modifiées
+
+        // Exam OPTIONNEL : => On ajoute obligatoirement une ligne dans la table UserHasOptions avec les valeurs de base ou modifiées
+
+        sessionUser.sessionHasExams.forEach( async (option) => {
+            // cas des sessions obligatoires
+            /// On récupére le OPTION_ID s'il existe. Si il est null , nous faisons un insert, sinon un update
+
+
+
+        });
     };
 
-    const handleRemove = (index) => {
+    const handleRemove = (index, exam_id) => {
+        const ExamToRemove = exams.filter(exam => exam.exam_id === exam_id);
+        setEXAMSOPTION([...EXAMS_OPTION, ExamToRemove[0] ]);
         remove(index);
+
+
+
+
+
     };
 
 
@@ -192,7 +223,8 @@ export default function SessionDetailUserOptions({sessionUser}) {
         [setValue, values.items]
     );
 
-    console.log(fields)
+
+
     return (
         <>
             <Card>
@@ -290,7 +322,7 @@ export default function SessionDetailUserOptions({sessionUser}) {
                                               size="small"
                                               color="error"
                                               startIcon={<Iconify icon="eva:trash-2-outline" />}
-                                              onClick={() => handleRemove(index)}
+                                              onClick={ () => handleRemove(index,option.exam_id )   }
                                           >
                                               Remove
                                           </Button>
@@ -320,7 +352,7 @@ export default function SessionDetailUserOptions({sessionUser}) {
                                     InputLabelProps={{ shrink: true }}
                                     sx={{ maxWidth: { md: 250 } }}
                                 >
-                                    <MenuItem value={-1}> Sélectionner une épreuve</MenuItem>
+                                    <MenuItem value={-1} selected> Sélectionner une épreuve</MenuItem>
 
                                     {EXAMS_OPTION.map((exam) => (
                                         <MenuItem

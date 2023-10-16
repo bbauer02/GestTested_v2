@@ -181,3 +181,12 @@ export function getSessionUser(institutId, sessionId, userId) {
         }
     }
 }
+
+
+// ADD USER OPTION
+
+export function addUserOption(institutId, sessionId, userId, option) {
+
+    
+
+}
