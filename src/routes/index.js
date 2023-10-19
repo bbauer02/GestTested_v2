@@ -94,6 +94,10 @@ export default function Router() {
               element: <SessionDetailPage />
             },
             {
+              path:':institut_id/sessions/:session_id/users',
+              element: <SessionDetailPage SelectedTab="canditats"/>
+            },
+            {
               path: 'sessions',
               children: [
                 { element: <Navigate to="/dashboard/institut/sessions/list" replace />, index: true },

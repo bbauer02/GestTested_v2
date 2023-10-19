@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import {useEffect, useState} from "react";
 import {Helmet} from "react-helmet-async";
 
@@ -28,15 +29,18 @@ import SessionDetailUsers from "../../sections/@dashboard/session/users/SessionD
 import CustomBreadcrumbs from "../../components/custom-breadcrumbs";
 import {PATH_DASHBOARD} from "../../routes/paths";
 import Iconify from "../../components/iconify";
+import SessionListPage from "./SessionListPage";
 
 
-
-export default function SessionDetailPage() {
+SessionDetailPage.propTypes = {
+    SelectedTab: PropTypes.string,
+};
+export default function SessionDetailPage({SelectedTab="session"}) {
     const dispatch = useDispatch();
     const { institut_id, session_id} = useParams();
     const { themeStretch } = useSettingsContext();
     const { session } = useSelector((state) => state.session);
-    const [currentTab, setCurrentTab] = useState('session');
+    const [currentTab, setCurrentTab] = useState(SelectedTab);
 
     useEffect(() => {
         dispatch(getSession(institut_id, session_id))

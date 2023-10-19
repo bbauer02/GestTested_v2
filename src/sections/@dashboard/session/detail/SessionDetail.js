@@ -55,7 +55,6 @@ export default function SessionDetail({session=null}) {
 
     return (
         <>
-            <SessionDetailToobar session={session} />
             <Card sx={{ pt: 5, px: 5 }}>
                 <Grid container>
                     <Grid item xs={12} sm={6} sx={{ mb: 5 }}>

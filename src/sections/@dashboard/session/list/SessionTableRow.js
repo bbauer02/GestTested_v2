@@ -33,7 +33,8 @@ SessionTableRow.propTypes = {
     onEditRow: PropTypes.func,
     onSelectRow: PropTypes.func,
     onDeleteRow: PropTypes.func,
-
+    onDetailRow: PropTypes.func,
+    onUsersListRow: PropTypes.func,
 };
 export default function SessionTableRow({
                                              row,
@@ -41,6 +42,8 @@ export default function SessionTableRow({
                                              onEditRow,
                                              onSelectRow,
                                              onDeleteRow,
+                                             onDetailRow,
+                                             onUsersListRow
                                          }) {
     // eslint-disable-next-line camelcase
     const { Institut, Level, Test, start, validation, session_id, duration, sessionUsers, placeAvailable, institut_id} = row;
@@ -101,7 +104,24 @@ export default function SessionTableRow({
                 arrow="right-top"
                 sx={{ width: 140 }}
             >
-
+                <MenuItem
+                    onClick={() => {
+                        onDetailRow();
+                        handleClosePopover();
+                    }}
+                >
+                    <Iconify icon='icon-park-outline:view-grid-detail' />
+                    Détails
+                </MenuItem>
+                <MenuItem
+                    onClick={() => {
+                        onUsersListRow();
+                        handleClosePopover();
+                    }}
+                >
+                    <Iconify icon='mdi:users' />
+                    Candidats
+                </MenuItem>
                 <MenuItem
                     onClick={() => {
                         onEditRow();

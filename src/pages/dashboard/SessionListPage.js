@@ -39,6 +39,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import { SessionTableRow, SessionTableToolbar} from "../../sections/@dashboard/session/list";
+
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
     { id: 'session_id', label: 'ID', align: 'left'},
@@ -50,6 +51,7 @@ const TABLE_HEAD = [
     { id: '' },
 ];
 // ----------------------------------------------------------------------
+
 
 export default function SessionListPage() {
     const {
@@ -137,6 +139,14 @@ export default function SessionListPage() {
         catch (error) {
             enqueueSnackbar( 'impossible de supprimer la session !' );
         }
+    };
+
+    const handleDetailRow = (institutId,sessionId) => {
+            navigate(PATH_DASHBOARD.session.detail(institutId, sessionId));
+    };
+
+    const handleUsersSessionRow = (institutId,sessionId) => {
+        navigate(PATH_DASHBOARD.session.users(institutId, sessionId));
     };
 
     const handleDeleteRows = (selectedRow) => {
@@ -242,6 +252,8 @@ export default function SessionListPage() {
                                                     onSelectRow={() => onSelectRow(row.session_id)}
                                                     onDeleteRow={() => handleDeleteRow(row.institut_id, row.session_id)}
                                                     onEditRow={() => handleEditRow(row.institut_id, row.session_id)}
+                                                    onDetailRow={() => handleDetailRow(row.institut_id, row.session_id)}
+                                                    onUsersListRow={() => handleUsersSessionRow(row.institut_id, row.session_id)}
                                                 />
                                             ) : (
                                                 !isNotFound && <TableSkeleton key={index} sx={{ height: denseHeight }} />

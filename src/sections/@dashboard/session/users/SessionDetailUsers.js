@@ -26,7 +26,7 @@ export default function SessionDetailUsers({session=null}) {
     const navigate = useNavigate();
 
     const theme = useTheme();
-    const { sessionUsers } = session;
+
 
     const handleSessionUserDetail = (session_id, user_id) => {
         navigate(PATH_DASHBOARD.session.user(session_id, user_id));
@@ -35,7 +35,7 @@ export default function SessionDetailUsers({session=null}) {
     return (
         <>
       <Typography variant="h6" sx={{ my: 5 }}>
-        Candidats de la session  du <span style={{color: theme.palette.primary.main }}>{fDateTime_fr(session.start, 'MM/dd/yyyy')}</span> au <span style={{color: theme.palette.primary.main }}>{fDateTime_fr(session.end, 'MM/dd/yyyy')}</span>
+        Candidats de la session  du <span style={{color: theme.palette.primary.main }}>{fDateTime_fr(session?.start, 'MM/dd/yyyy')}</span> au <span style={{color: theme.palette.primary.main }}>{fDateTime_fr(session?.end, 'MM/dd/yyyy')}</span>
       </Typography>
       
       <Box
@@ -47,7 +47,7 @@ export default function SessionDetailUsers({session=null}) {
           md: 'repeat(3, 1fr)',
         }}
       >
-        {sessionUsers.map((candidat) => (
+        {session?.sessionUsers.map((candidat) => (
         <Card
         key={candidat.user_id}
             sx={{
