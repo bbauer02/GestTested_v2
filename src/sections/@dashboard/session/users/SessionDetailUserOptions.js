@@ -1,5 +1,6 @@
 import sum from 'lodash/sum';
 import PropTypes from "prop-types";
+import { useSnackbar } from 'notistack';
 import * as Yup from 'yup';
 import {useTheme} from "@mui/material/styles";
 import {useCallback, useEffect,useState, useMemo} from 'react';
@@ -14,8 +15,9 @@ import { MobileDateTimePicker } from '@mui/x-date-pickers';
 // utils
 import { fCurrency } from '../../../../utils/formatNumber';
 // redux
-import {dispatch, useDispatch, useSelector} from '../../../../redux/store';
+import { useDispatch, useSelector} from '../../../../redux/store';
 import { getExamsDetailsOfSession} from '../../../../redux/slices/exam';
+import {addUserOption, deleteUserOption, updateUserOption} from '../../../../redux/slices/session';
 
 // auth
 import { useAuthContext } from '../../../../auth/useAuthContext';
@@ -33,10 +35,12 @@ import calculTTC from '../../../../utils/tools';
 
 
 SessionDetailUserOptions.propTypes = {
-    sessionUser : PropTypes.object,
+    SessionDetail : PropTypes.object,
 }
-export default function SessionDetailUserOptions({sessionUser}) {
+export default function SessionDetailUserOptions({SessionDetail}) {
+    const {enqueueSnackbar} = useSnackbar();
     const theme = useTheme();
+    const dispatch = useDispatch();
 
     const { user } = useAuthContext();
     const { session_id, user_id } = useParams();
@@ -48,13 +52,13 @@ export default function SessionDetailUserOptions({sessionUser}) {
 
     const { exams, isLoading } = useSelector((state) => state.exam);
 
-    const { sessionHasExams : examsBase } = sessionUser;
+
 
 
     // On récupére la liste complete de tout les exams
    useEffect(() => {
             dispatch(getExamsDetailsOfSession(  institut_id,session_id ));
-    }, [institut_id, session_id])
+    }, [institut_id, session_id, dispatch])
 
 
    useEffect(() => {
@@ -62,21 +66,44 @@ export default function SessionDetailUserOptions({sessionUser}) {
 
 
         // Prix de base ou prix personnalisé
-        sessionUser?.sessionHasExams?.forEach(option => {
-        const price_base = option.InstitutHasPrices && option.InstitutHasPrices.length > 0 ? option.InstitutHasPrices[0].price : option.Exam.price;
-        const tva_base = option.InstitutHasPrices && option.InstitutHasPrices.length > 0 ? option.InstitutHasPrices[0].tva : 22;
+       SessionDetail?.sessionHasExams?.forEach(option => {
+
+
+       // const hasOption =  SessionDetail?.sessionUsers[0].sessionUserOptions.filter(option = option.exam_id === option.Exam.exam_id);
+
+        const curExamOpt = SessionDetail?.sessionUsers[0].sessionUserOptions.filter((opt) => opt.exam_id === option.Exam.exam_id);
+
+        let price_base = null;
+        let tva_base = null;
+        let datetime = null;
+        let addressExam = null;
+        let option_id = null;
+
+        if(curExamOpt && curExamOpt.length > 0) {
+            price_base = curExamOpt[0].user_price;
+            tva_base = curExamOpt[0].tva;
+            datetime =  curExamOpt[0].DateTime;
+            addressExam = curExamOpt[0].addressExam;
+            option_id = curExamOpt[0].option_id;
+        }
+        else {
+            price_base = option.Exam.InstitutHasPrices && option.Exam.InstitutHasPrices.length > 0 ? option.Exam.InstitutHasPrices[0].price : option.Exam.price;
+            tva_base = option.Exam.InstitutHasPrices && option.Exam.InstitutHasPrices.length > 0 ? option.Exam.InstitutHasPrices[0].tva : 22;
+            datetime = option.DateTime;
+            addressExam = option.adressExam;
+        }
 
         const price_user = price_base;
         const tva_user = tva_base;
-        setEXAMSOPTION(exams.filter(exam => !sessionUser?.sessionHasExams.some(sessionExam => sessionExam.Exam.exam_id === exam.exam_id) ))
+
 
 
         OptFormated.push({
-            option_id: null,
+            option_id,
             exam_id: option.Exam.exam_id,
             exam: option.Exam.label,
-            datetime: option.DateTime,
-            addressExam: option.adressExam,
+            datetime,
+            addressExam,
             price_base,
             tva_base,
             price_user,
@@ -88,9 +115,32 @@ export default function SessionDetailUserOptions({sessionUser}) {
 
        })
 
+       // Ajout maintenant des OPTIONS
+
+       const optsUser = SessionDetail?.sessionUsers[0].sessionUserOptions.filter( obj1 => !OptFormated.some( obj2 => obj2.option_id === obj1.option_id));
+
+       optsUser?.forEach(opt => {
+           const labelExam = exams?.find(exam=> exam.exam_id === opt.exam_id)?.Exam?.label || "Exam Label";
+           OptFormated.push({
+               option_id :opt.option_id,
+               exam_id : opt.exam_id,
+               exam :  labelExam,
+               datetime : opt.DateTime,
+               addressExam : opt.addressExam,
+               price_user: opt.user_price,
+               tva_user : opt.tva,
+               price_ttc:0,
+               isOption: true,
+               price_user_ttc: calculTTC( Number(opt.user_price), Number(opt.tva) )
+           });
+       })
 
        setUserOptions(OptFormated)
-    }, [sessionUser, exams, setUserOptions]);
+
+       setEXAMSOPTION(exams.filter(exam => !SessionDetail?.sessionHasExams.some(sessionExam => (sessionExam.Exam.exam_id === exam.exam_id)))
+                           .filter(exam => !OptFormated.some(opt => opt.exam_id === exam.exam_id)))
+
+    }, [SessionDetail, exams, setUserOptions]);
 
 
     const OptionsSchema = Yup.object().shape({
@@ -166,10 +216,8 @@ export default function SessionDetailUserOptions({sessionUser}) {
         }
     }, [reset, userOptions, initialValues]);
 
-    const onSubmit = async (data) => {
+    const onSubmit =  (data) => {
         setLoadingSend(true);
-        console.log(data.items)
-        console.log(sessionUser)
         // Algorithme pour ajouter les options dans la table UserHasOptions
         // Exam OBLIGATOIRE : => On ne fait rien de spécial SAUF si : 
         // DateTime , AddressExam, Price et TVA sont différent de ceux de base
@@ -177,9 +225,54 @@ export default function SessionDetailUserOptions({sessionUser}) {
 
         // Exam OPTIONNEL : => On ajoute obligatoirement une ligne dans la table UserHasOptions avec les valeurs de base ou modifiées
 
-        sessionUser.sessionHasExams.forEach( async (option) => {
+        /* Cas des OPTIONS OBLIGATOIRES */
+        data.items.forEach( async (item) => {
+            const sessionUser_id = SessionDetail?.sessionUsers[0].sessionUser_id;
+            // institut_id
             // cas des sessions obligatoires
             /// On récupére le OPTION_ID s'il existe. Si il est null , nous faisons un insert, sinon un update
+            const sessionExam = SessionDetail?.sessionHasExams.filter( (exam) => exam.Exam.exam_id === item.exam_id )[0];
+            const price_base = sessionExam?.Exam?.InstitutHasPrices && sessionExam?.Exam?.InstitutHasPrices?.length > 0 ? sessionExam?.Exam?.InstitutHasPrices[0].price: sessionExam?.Exam?.price;
+            const tva_base = sessionExam?.InstitutHasPrices && sessionExam?.InstitutHasPrices?.length > 0 ? sessionExam?.InstitutHasPrices[0].tva : 22;
+            const date_base = sessionExam?.DateTime;
+            const adressExam = sessionExam?.adressExam;
+
+            const newOption = {
+                user_price : item.price_user,
+                tva: item.tva_user,
+                addressExam: item.addressExam,
+                isCandidate: null,
+                DateTime: item.datetime,
+                sessionUser_id,
+                exam_id: item.exam_id,
+                session_id: SessionDetail.session_id,
+
+            };
+
+
+            if(!item.isOption) {
+                // on vérifie si le prix !== le prix de base
+                if(!item.option_id && (item.price_user !== price_base || item.tva_user !== tva_base || item.addressExam !== adressExam || item.datetime !== date_base) ) {
+                    // On ajoute alors l'épreuve dans la table UseOption
+                    dispatch(addUserOption(institut_id, newOption));
+                    enqueueSnackbar(`Ajout de l'option ${item.exam}`);
+
+                }
+                else if( item.option_id && (item.price_user !== price_base || item.tva_user !== tva_base || item.addressExam !== adressExam || item.datetime !== date_base) ) {
+                   dispatch(updateUserOption(institut_id, sessionUser_id, item.exam_id, item.option_id, newOption ))
+                    enqueueSnackbar(`Mise à jour de l'option ${item.exam}`);
+                }
+            }
+            else if (item.option_id) {
+
+                    dispatch(updateUserOption(institut_id, sessionUser_id, item.exam_id, item.option_id, newOption ));
+                    enqueueSnackbar(`Mise à jour de l'option ${item.exam}`);
+
+            }
+            else {
+            dispatch(addUserOption(institut_id, newOption));
+            enqueueSnackbar(`Ajout de l'option ${item.exam}`);
+        }
 
 
 
@@ -189,12 +282,15 @@ export default function SessionDetailUserOptions({sessionUser}) {
     const handleRemove = (index, exam_id) => {
         const ExamToRemove = exams.filter(exam => exam.exam_id === exam_id);
         setEXAMSOPTION([...EXAMS_OPTION, ExamToRemove[0] ]);
+        const OptionToRemove = values.items.filter(value => value.exam_id === exam_id);
+        const optionId = OptionToRemove[0].option_id;
+        const examId = OptionToRemove[0].exam_id;
+        const sessionUser_id = SessionDetail?.sessionUsers[0].sessionUser_id;
+        if(OptionToRemove[0].option_id) {
+            dispatch(deleteUserOption(institut_id, sessionUser_id, examId, optionId ))
+        }
         remove(index);
-
-
-
-
-
+        enqueueSnackbar(`Suppresion de l'option ${ExamToRemove[0].Exam?.label}`);
     };
 
 

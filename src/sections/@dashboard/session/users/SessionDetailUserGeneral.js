@@ -50,7 +50,7 @@ export default function SessionDetailUserGeneral({sessionUser}) {
     const UpdateUserSchema = Yup.object().shape({
         firstname: Yup.string().required('Prénom requis!!'),
     });
-    const user = useMemo(() => sessionUser?.User || {}, [sessionUser]);
+    const user = useMemo(() => sessionUser?.sessionUsers[0].User || {}, [sessionUser]);
 
     const initialValues = useMemo(() => ({
         gender: user?.gender || '',

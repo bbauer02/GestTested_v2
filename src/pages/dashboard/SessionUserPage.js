@@ -42,7 +42,6 @@ export default function SessionUserPage() {
         };
     }, [dispatch, session_id, user_id, user]);
 
-
     const TABS = [
         {
             value: 'coordonnees',
@@ -55,7 +54,7 @@ export default function SessionUserPage() {
             value: 'options',
             label: 'Epreuves et options',
             icon: <Iconify icon="iconamoon:options" />,
-            component: <SessionDetailUserOptions sessionUser={sessionUser}/>,
+            component: <SessionDetailUserOptions SessionDetail={sessionUser}/>,
         },
         {
             value: 'documents',

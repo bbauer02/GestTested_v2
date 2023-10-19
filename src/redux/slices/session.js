@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit';
 // utils
 import axios from '../../utils/axios';
 
+
 const initialState = {
     isLoading: false,
     error: false,
@@ -30,6 +31,25 @@ const slice = createSlice({
             state.isLoading = false;
             const newSession = action.payload.data;
             state.sessions.push(newSession);
+        },
+        postSessionUserOptionSuccess(state, action) {
+            state.isLoading = false;
+            state.sessionUser.sessionUsers[0].sessionUserOptions.push(action.payload);
+        },
+        putSessionUserOptionSuccess(state, action) {
+            state.isLoading = false;
+            const updatedOptions = state.sessionUser.sessionUsers[0].sessionUserOptions.map( (opt) => {
+                if(opt.option_id === action.payload.option_id) {
+                    return action.payload;
+                }
+                return opt;
+            });
+            state.sessionUser.sessionUsers[0].sessionUserOptions = updatedOptions;
+        },
+        deleteSessionUserOptionSuccess(state, action) {
+            state.isLoading = false;
+            const updatedOptions =  state.sessionUser.sessionUsers[0].sessionUserOptions.filter(opt => opt.option_id !== +action.payload);
+            state.sessionUser.sessionUsers[0].sessionUserOptions = updatedOptions;
         },
         // GET SESSION USER
         getSessionUserSuccess(state, action) {
@@ -185,8 +205,40 @@ export function getSessionUser(institutId, sessionId, userId) {
 
 // ADD USER OPTION
 
-export function addUserOption(institutId, sessionId, userId, option) {
+export function addUserOption(institutId, option) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        try {
 
-    
+            const response = await axios.post(`/instituts/${institutId}/options`, option);
+            dispatch(slice.actions.postSessionUserOptionSuccess(response.data.sessionUserOption));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
 
+    }
 }
+
+export function updateUserOption(institutId, sessionUser_id, exam_id, option_id, option) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.put(`/instituts/${institutId}/sessionUsers/${sessionUser_id}/exams/${exam_id}/options/${option_id}`, option);
+            dispatch(slice.actions.putSessionUserOptionSuccess(response.data.optionUpdated));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    }
+}
+
+export function deleteUserOption(institutId, sessionUser_id, exam_id, option_id) {
+    return async (dispatch) => {
+        try {
+            const response = await axios.delete(`/instituts/${institutId}/sessionUsers/${sessionUser_id}/exams/${exam_id}/options/${option_id}`);
+            dispatch(slice.actions.deleteSessionUserOptionSuccess(response.data.optionDeleted));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    }
+}
+
