@@ -21,12 +21,10 @@ import { GENDERS_OPTION, CIVILITY_OPTION } from '../../../../utils/formatGenders
 // components
 import { useSnackbar } from '../../../../components/snackbar';
 import FormProvider, {
-    RHFSwitch,
     RHFSelect,
     RHFTextField,
     RHFUploadAvatar,
 } from '../../../../components/hook-form';
-import {getSessionUser} from "../../../../redux/slices/session";
 
 SessionDetailUserGeneral.propTypes = {
     sessionUser : PropTypes.object,
@@ -74,14 +72,12 @@ export default function SessionDetailUserGeneral({sessionUser}) {
     const methods = useForm({
         resolver: yupResolver(UpdateUserSchema),
         defaultValues: initialValues,
-
     });
     const {
         setValue,
         handleSubmit,
         formState: { isSubmitting },
         reset,
-
     } = methods;
 
     useEffect(() => {

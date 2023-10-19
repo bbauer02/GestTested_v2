@@ -16,6 +16,7 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import { useSettingsContext } from '../../components/settings';
 import  SessionDetailUserGeneral  from "../../sections/@dashboard/session/users/SessionDetailUserGeneral";
 import SessionDetailUserOptions from "../../sections/@dashboard/session/users/SessionDetailUserOptions";
+import SessionDetailUserGestion from "../../sections/@dashboard/session/users/SessionDetailUserGestion";
 
 import Iconify from "../../components/iconify";
 
@@ -41,7 +42,7 @@ export default function SessionUserPage() {
             // Vous pouvez ajouter ici le nettoyage ou l'annulation de la requête en cours si nécessaire.
         };
     }, [dispatch, session_id, user_id, user]);
-
+console.log(sessionUser)
     const TABS = [
         {
             value: 'coordonnees',
@@ -55,6 +56,12 @@ export default function SessionUserPage() {
             label: 'Epreuves et options',
             icon: <Iconify icon="iconamoon:options" />,
             component: <SessionDetailUserOptions SessionDetail={sessionUser}/>,
+        },
+        {
+            value: 'gestion',
+            label: 'Gestion',
+            icon: <Iconify icon="icon-park-outline:computer-one" />,
+            component: <SessionDetailUserGestion SessionDetail={sessionUser}/>,
         },
         {
             value: 'documents',
