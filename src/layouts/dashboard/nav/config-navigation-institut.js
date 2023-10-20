@@ -36,6 +36,21 @@ const navConfigInstitutAdmin = [
                 path: PATH_DASHBOARD.institut.sessions.root, 
                 icon: ICONS.session 
             },
+            {
+                title: 'Examinateurs', 
+                path: PATH_DASHBOARD.institut.examinators.root, 
+                icon: ICONS.session 
+            },
+            {
+                title: 'Tarifs', 
+                path: PATH_DASHBOARD.institut.prices.root, 
+                icon: ICONS.session 
+            },
+            {
+                title: 'Invoices', 
+                path: PATH_DASHBOARD.institut.invoices.root, 
+                icon: ICONS.session 
+            },
         ]
     }
 ];

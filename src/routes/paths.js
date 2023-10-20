@@ -70,12 +70,22 @@ export const PATH_DASHBOARD = {
       root: path(ROOTS_DASHBOARD, '/institut/sessions'),
       create: path(ROOTS_DASHBOARD, `/institut/sessions/create`),
       edit: (session_id) => path(ROOTS_DASHBOARD, `/institut/sessions/${session_id}/edit`),
-    }
+    },
+    examinators : {
+      root: path(ROOTS_DASHBOARD, '/institut/examinators'),
+    },
+    prices: {
+      root: path(ROOTS_DASHBOARD, '/institut/prices'),
+    },
+    invoices: {
+      root: path(ROOTS_DASHBOARD, '/institut/invoices'),
+    },
 
   },
   session : {
     detail: (institut_id, session_id) => path(ROOTS_DASHBOARD, `/institut/${institut_id}/sessions/${session_id}`),
     users: (institut_id, session_id) => path(ROOTS_DASHBOARD, `/institut/${institut_id}/sessions/${session_id}/users`),
     user: (session_id, user_id) => path(ROOTS_DASHBOARD, `/institut/sessions/${session_id}/users/${user_id}/detail`),
-  }
+  },
+
 };

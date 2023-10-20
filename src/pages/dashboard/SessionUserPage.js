@@ -17,6 +17,7 @@ import { useSettingsContext } from '../../components/settings';
 import  SessionDetailUserGeneral  from "../../sections/@dashboard/session/users/SessionDetailUserGeneral";
 import SessionDetailUserOptions from "../../sections/@dashboard/session/users/SessionDetailUserOptions";
 import SessionDetailUserGestion from "../../sections/@dashboard/session/users/SessionDetailUserGestion";
+import SessionDetailUserDocuments from "../../sections/@dashboard/session/users/SessionDetailUserDocuments";
 
 import Iconify from "../../components/iconify";
 
@@ -42,7 +43,7 @@ export default function SessionUserPage() {
             // Vous pouvez ajouter ici le nettoyage ou l'annulation de la requête en cours si nécessaire.
         };
     }, [dispatch, session_id, user_id, user]);
-console.log(sessionUser)
+
     const TABS = [
         {
             value: 'coordonnees',
@@ -67,7 +68,7 @@ console.log(sessionUser)
             value: 'documents',
             label: 'Documents',
             icon: <Iconify icon="ic:baseline-folder" />,
-            component: <>Document</>,
+            component: <SessionDetailUserDocuments SessionDetail={sessionUser}/>,
         },
     ];
     return (

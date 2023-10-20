@@ -40,6 +40,9 @@ import {
   UsersPage,
   UserEditPage,
   SkillsPage,
+  InvoicesListPage,
+  PricesListPage,
+  ExaminatorsListPage
 
 } from './elements';
 
@@ -105,6 +108,27 @@ export default function Router() {
                 { path: 'create', element: <SessionCreatePage /> },
                 { path: ':session_id/edit', element: <SessionEditPage /> },
                 { path: ':session_id/users/:user_id/detail', element: <SessionUserPage /> },
+              ]
+            },
+            {
+              path: 'examinators',
+              children: [
+                { element: <Navigate to="/dashboard/institut/examinators/list" replace />, index: true },
+                { path: 'list', element: <ExaminatorsListPage /> },
+              ]
+            },
+            {
+              path: 'prices',
+              children: [
+                { element: <Navigate to="/dashboard/institut/prices/list" replace />, index: true },
+                { path: 'list', element: <PricesListPage /> },
+              ]
+            },
+            {
+              path: 'invoices',
+              children: [
+                { element: <Navigate to="/dashboard/institut/invoices/list" replace />, index: true },
+                { path: 'list', element: <InvoicesListPage /> },
               ]
             }
           ]
