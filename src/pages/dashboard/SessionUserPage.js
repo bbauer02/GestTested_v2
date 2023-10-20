@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import {useEffect, useState} from "react";
 import {useLocation, useParams} from 'react-router-dom';
+
 // @mui
 import {
     Container,
@@ -62,7 +63,7 @@ export default function SessionUserPage() {
             value: 'gestion',
             label: 'Gestion',
             icon: <Iconify icon="icon-park-outline:computer-one" />,
-            component: <SessionDetailUserGestion SessionDetail={sessionUser}/>,
+            component: sessionUser && <SessionDetailUserGestion sessionUser={sessionUser.sessionUsers[0]}/>,
         },
         {
             value: 'documents',

@@ -38,6 +38,7 @@ SessionDetailUserOptions.propTypes = {
     SessionDetail : PropTypes.object,
 }
 export default function SessionDetailUserOptions({SessionDetail}) {
+
     const {enqueueSnackbar} = useSnackbar();
     const theme = useTheme();
     const dispatch = useDispatch();
@@ -73,15 +74,30 @@ export default function SessionDetailUserOptions({SessionDetail}) {
 
         const curExamOpt = SessionDetail?.sessionUsers[0].sessionUserOptions.filter((opt) => opt.exam_id === option.Exam.exam_id);
 
-        let price_base = null;
-        let tva_base = null;
-        let datetime = null;
-        let addressExam = null;
+        let price_base = '';
+        let tva_base = '';
+        let datetime = '';
+        let addressExam = '';
         let option_id = null;
 
+
+
+
         if(curExamOpt && curExamOpt.length > 0) {
-            price_base = curExamOpt[0].user_price;
-            tva_base = curExamOpt[0].tva;
+            if(curExamOpt[0].user_price) {
+                price_base = curExamOpt[0].user_price;
+            }
+            else {
+                price_base = option.Exam.InstitutHasPrices && option.Exam.InstitutHasPrices.length > 0 ? option.Exam.InstitutHasPrices[0].price : option.Exam.price;
+            }
+            
+            if(curExamOpt[0].tva) {
+                tva_base = curExamOpt[0].tva;
+            }
+            else {
+                tva_base = option.Exam.InstitutHasPrices && option.Exam.InstitutHasPrices.length > 0 ? option.Exam.InstitutHasPrices[0].tva : 22;
+            }
+           
             datetime =  curExamOpt[0].DateTime;
             addressExam = curExamOpt[0].addressExam;
             option_id = curExamOpt[0].option_id;
@@ -92,8 +108,9 @@ export default function SessionDetailUserOptions({SessionDetail}) {
             datetime = option.DateTime;
             addressExam = option.adressExam;
         }
-
-        const price_user = price_base;
+        
+       
+        const price_user =  price_base || 0;
         const tva_user = tva_base;
 
 
@@ -270,9 +287,9 @@ export default function SessionDetailUserOptions({SessionDetail}) {
 
             }
             else {
-            dispatch(addUserOption(institut_id, newOption));
-            enqueueSnackbar(`Ajout de l'option ${item.exam}`);
-        }
+                dispatch(addUserOption(institut_id, newOption));
+                enqueueSnackbar(`Ajout de l'option ${item.exam}`);
+            }
 
 
 
@@ -366,7 +383,7 @@ export default function SessionDetailUserOptions({SessionDetail}) {
                                         label="Adresse de l'épreuve"
                                         InputLabelProps={{ shrink: true }}
                                         multiline rows={3}
-                                    />
+                                    />  
 
                                     <RHFTextField
                                         size="small"
@@ -382,7 +399,7 @@ export default function SessionDetailUserOptions({SessionDetail}) {
                                         sx={{ maxWidth: { md: 80 } }}
                                     />
 
-                                     <RHFTextField
+<RHFTextField
                                         size="small"
                                         type="number"
                                         name={`items[${index}].tva_user`}

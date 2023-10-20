@@ -85,6 +85,21 @@ const slice = createSlice({
             });
             state.isLoading = false;
             state.sessions = updatedSessions;
+        },
+
+        //PUT SESSION USER
+        updateSessionUsersSuccess(state, action) {
+
+            state.isLoading = false;
+            const sessionUser_updated = action.payload;
+            const updatedSessionUsers = state.sessionUser.sessionUsers.map((_sessionUser) => {
+                if(_sessionUser.sessionUser_id === sessionUser_updated.sessionUser_id) {
+                    return {..._sessionUser, ...sessionUser_updated};
+                }
+                return _sessionUser;
+            });
+
+            state.sessionUser.sessionUsers = updatedSessionUsers;
         }
     }
 })
@@ -242,3 +257,14 @@ export function deleteUserOption(institutId, sessionUser_id, exam_id, option_id)
     }
 }
 
+export function updateSessionUsers(institut_id, session_id,  user_id, data) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.put(`/instituts/${institut_id}/sessions/${session_id}/users/${user_id}`, data);
+            dispatch(slice.actions.updateSessionUsersSuccess(response.data.sessionUser));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    }
+}

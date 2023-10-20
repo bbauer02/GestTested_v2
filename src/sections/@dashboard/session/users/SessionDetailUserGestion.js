@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
-import {useMemo} from "react";
+
+import {useMemo, useEffect} from "react";
 import * as Yup from "yup";
 
 import {Controller, useForm} from "react-hook-form";
@@ -12,6 +13,12 @@ import {Box, Grid, Card, CardHeader, CardContent, Stack, Typography, TextField} 
 import {MobileDateTimePicker} from "@mui/x-date-pickers";
 import { LoadingButton } from '@mui/lab';
 import { useSnackbar } from '../../../../components/snackbar';
+
+// redux
+import { useDispatch } from '../../../../redux/store';
+import {updateSessionUsers} from '../../../../redux/slices/session';
+// auth
+import { useAuthContext } from '../../../../auth/useAuthContext';
 
 import FormProvider, {
     RHFSwitch,
@@ -30,14 +37,23 @@ SessionDetailUserGestion.propTypes = {
     sessionUser : PropTypes.object,
 }
 export default function SessionDetailUserGestion({sessionUser}) {
+    const dispatch = useDispatch();
+    const { user } = useAuthContext();
+    const institut_id = user.instituts[0].institut_id;
     const { enqueueSnackbar } = useSnackbar();
     const UserGestionSchema = Yup.object().shape({
 
     });
 
     const initialValues = useMemo(() => ({
+        hasPaid: sessionUser.hasPaid || false,
+        paymentMode: sessionUser.paymentMode || '',
+        inscription: sessionUser.inscription || '',
+        numInscrAnt: sessionUser.numInscrAnt || '',
+        informations: sessionUser.informations || '',
+        sessionUser_id: sessionUser.sessionUser_id || '',
 
-    }), []);
+    }), [sessionUser]);
 
     const methods = useForm({
         resolver: yupResolver(UserGestionSchema),
@@ -53,11 +69,17 @@ export default function SessionDetailUserGestion({sessionUser}) {
 
     const onSubmit = async (data, e) => {
         try {
-            enqueueSnackbar('Update success !');
+
+            dispatch(updateSessionUsers(institut_id, sessionUser.session_id, sessionUser.user_id, data));
+            enqueueSnackbar('Mise à jour des informations!');
         } catch (error) {
             console.error(error);
         }
     };
+
+    useEffect(() => {
+        reset(initialValues);
+    }, [initialValues, reset]);
 
     return (
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
@@ -111,9 +133,6 @@ export default function SessionDetailUserGestion({sessionUser}) {
                                     label="Numéro d'inscription antérieur"
                                     InputLabelProps={{ shrink: true }}
                                   />
-
-
-
 
                                 <RHFTextField
                                     size="small"
