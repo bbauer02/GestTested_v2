@@ -13,6 +13,7 @@ import { PATH_AFTER_LOGIN } from '../config-global';
 import {
   Page404,
   LoginPage,
+  RegisterPage,
   UserSettingsPage,
   DashboardMainPage,
   UserProfilPage,
@@ -49,6 +50,8 @@ import {
 
 
 // ----------------------------------------------------------------------
+// Loading // Action
+//
 
 export default function Router() {
   return useRoutes([
@@ -62,6 +65,12 @@ export default function Router() {
             <GuestGuard>
               <LoginPage />
             </GuestGuard>
+          ),
+        },
+        {
+          path: 'register',
+          element: (
+                <RegisterPage />
           ),
         },
       ],

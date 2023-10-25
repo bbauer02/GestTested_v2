@@ -44,6 +44,7 @@ export const UsersPage = Loadable(lazy(() => import('../pages/dashboard/UserList
 export const UserEditPage = Loadable(lazy(() => import('../pages/dashboard/UserEditPage')));
 export const DashboardMainPage = Loadable(lazy( () => import('../pages/dashboard/DashboardMainPage')));
 export const LoginPage = Loadable(lazy(() => import('../pages/LoginPage')));
+export const RegisterPage = Loadable(lazy(() => import('../pages/RegisterPage')));
 export const Page404 = Loadable(lazy(() => import('../pages/Page404')));
 
 // Administration of Intituts

@@ -13,7 +13,7 @@ GuestGuard.propTypes = {
 
 export default function GuestGuard({ children }) {
   const { isAuthenticated, isInitialized } = useAuthContext();
-
+  console.log(isAuthenticated)
   if (isAuthenticated) {
     return <Navigate to="/dashboard" />;
   }

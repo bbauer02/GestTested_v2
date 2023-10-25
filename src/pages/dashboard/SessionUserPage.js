@@ -69,7 +69,7 @@ export default function SessionUserPage() {
             value: 'documents',
             label: 'Documents',
             icon: <Iconify icon="ic:baseline-folder" />,
-            component: <SessionDetailUserDocuments SessionDetail={sessionUser}/>,
+            component: <SessionDetailUserDocuments session={sessionUser}/>,
         },
     ];
     return (

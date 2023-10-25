@@ -8,6 +8,7 @@ import LoginLayout from '../../layouts/login';
 import AuthLoginForm from './AuthLoginForm';
 import AuthWithSocial from './AuthWithSocial';
 
+import { PATH_AUTH } from '../../routes/paths';
 // ----------------------------------------------------------------------
 
 export default function Login() {
@@ -21,7 +22,7 @@ export default function Login() {
         <Stack direction="row" spacing={0.5}>
           <Typography variant="body2">Nouveau sur le portail?</Typography>
 
-          <Link variant="subtitle2">Créer un compte</Link>
+          <Link href={PATH_AUTH.register} variant="subtitle2">Créer un compte</Link>
         </Stack>
 
         <Tooltip title={method} placement="left">

@@ -83,6 +83,7 @@ export function AuthProvider({ children }) {
       if (xsrfToken) {
         setSession(xsrfToken);
         const response = await axios.get('/account/');
+
         const { user } = response.data;
 
         dispatch({
@@ -102,7 +103,6 @@ export function AuthProvider({ children }) {
         });
       }
     } catch (error) {
-      console.error(error);
       dispatch({
         type: 'INITIAL',
         payload: {
