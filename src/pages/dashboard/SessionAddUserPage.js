@@ -34,7 +34,7 @@ import {useParams, useNavigate} from "react-router-dom";
 import {  useSelector } from "react-redux";
 import {useDispatch} from '../../redux/store'
 import { useSettingsContext } from '../../components/settings';
-import { registerUser } from '../../redux/slices/user';
+import { registerUserInstitut } from '../../redux/slices/user';
 
 // components
 import { useSnackbar } from '../../components/snackbar';
@@ -276,7 +276,7 @@ export default function SessionAddUserPage() {
                 firstlanguage_id:data.firstlanguage_id,
             },
             sessionUser : {
-                session_id,
+                session_id: +session_id,
                 user_id: null,
                 paymentMode: data.paymentMode,
                 numInscrAnt: data.numInscrAnt===""? null : data.numInscrAnt,
@@ -313,9 +313,9 @@ export default function SessionAddUserPage() {
 
         dataForm.sessionUserOptions = sessionUserOptions;
 
-        dispatch(registerUser(dataForm));
-        reset(defaultValues);
-        navigate(PATH_DASHBOARD.session.detail(institut_id, session_id));
+        dispatch(registerUserInstitut(institut_id, session_id, dataForm));
+        // reset(defaultValues);
+       // navigate(PATH_DASHBOARD.session.detail(institut_id, session_id));
         enqueueSnackbar('Inscription effectuée !');
     };
 

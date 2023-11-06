@@ -106,11 +106,11 @@ export function deleteUser(id) {
     };
 }
 
-export function registerUser(dataform) {
+export function registerUserInstitut(institut_id, session_id, dataform) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
-            const response = await axios.post(`/users/register`, dataform);
+            const response = await axios.post(`/instituts/${institut_id}/sessions/${session_id}/users`, dataform);
             console.log(response.data);
             //dispatch(slice.actions.deleteUserSuccess(response.data.user));
         } catch (error) {
