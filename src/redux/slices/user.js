@@ -4,6 +4,7 @@ import { createSlice } from '@reduxjs/toolkit';
 import axios from '../../utils/axios';
 
 
+
 // ----------------------------------------------------------------
 
 const initialState = {
@@ -105,3 +106,16 @@ export function deleteUser(id) {
     };
 }
 
+export function registerUser(dataform) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.post(`/users/register`, dataform);
+            console.log(response.data);
+            //dispatch(slice.actions.deleteUserSuccess(response.data.user));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+            console.error(error);
+        }
+    };
+}

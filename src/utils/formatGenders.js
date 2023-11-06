@@ -13,9 +13,9 @@ export const GENDERS_OPTION =
     };
 
 export function getGender(indice) {
-    return GENDERS_OPTION[indice-1];
+    return GENDERS_OPTION[indice];
 }
 
 export function getCivility(indice) {
-    return CIVILITY_OPTION[indice-1];
+    return CIVILITY_OPTION[indice];
 }

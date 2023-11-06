@@ -47,9 +47,9 @@ const navConfigInstitutAdmin = [
                 icon: ICONS.session 
             },
             {
-                title: 'Invoices', 
+                title: 'Factures',
                 path: PATH_DASHBOARD.institut.invoices.root, 
-                icon: ICONS.session 
+                icon: ICONS.invoices
             },
         ]
     }

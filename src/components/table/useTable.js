@@ -5,7 +5,7 @@ import { useState, useCallback } from 'react';
 export default function useTable(props) {
   const [dense, setDense] = useState(!!props?.defaultDense);
 
-  const [orderBy, setOrderBy] = useState(props?.defaultOrderBy || 'name');
+  const [orderBy, setOrderBy] = useState(props?.defaultOrderBy || 'id');
 
   const [order, setOrder] = useState(props?.defaultOrder || 'asc');
 

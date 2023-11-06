@@ -1,115 +1,38 @@
 import PropTypes from "prop-types";
-import * as Yup from 'yup';
-import { useCallback, useEffect} from 'react';
-import {useNavigate} from 'react-router-dom';
-// new
-import { useForm } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
-// @mui
-import { Box, Grid, Card, CardHeader, CardContent, Stack, Typography } from '@mui/material';
-import { LoadingButton } from '@mui/lab';
-// redux
-import { useDispatch, useSelector } from '../../../../redux/store';
-import { getCountries } from '../../../../redux/slices/country';
-import { getLanguages } from '../../../../redux/slices/language';
-import { putUser } from "../../../../redux/slices/user";
+import { useNavigate } from 'react-router-dom';
+import {useCallback} from "react";
+import {Controller, useFormContext} from "react-hook-form";
+import {MobileDateTimePicker} from "@mui/x-date-pickers";
+import {Box, Card, CardContent, CardHeader, Grid, Stack, TextField, Typography} from "@mui/material";
+import {LoadingButton} from "@mui/lab";
+import {RHFSelect, RHFTextField, RHFUploadAvatar} from "../../../../components/hook-form";
+import {fData} from "../../../../utils/formatNumber";
+import {CIVILITY_OPTION, GENDERS_OPTION} from "../../../../utils/formatGenders";
 
-// utils
-import { fData } from '../../../../utils/formatNumber';
-import { GENDERS_OPTION, CIVILITY_OPTION } from '../../../../utils/formatGenders';
-
-// components
-import { useSnackbar } from '../../../../components/snackbar';
-import FormProvider, {
-    RHFSwitch,
-    RHFSelect,
-    RHFTextField,
-    RHFUploadAvatar,
-} from '../../../../components/hook-form';
 import {PATH_DASHBOARD} from "../../../../routes/paths";
+import {useSelector} from "../../../../redux/store";
+import UserNewEditGeneral from "./UserNewEditGeneral";
 
 
-UserNewEditGeneral.propTypes = {
-    isEdit: PropTypes.bool,
-    currentUser: PropTypes.object,
+SessionAddUserStep1.propTypes = {
+    institut_id: PropTypes.number,
+    session_id: PropTypes.number,
+    disabled: PropTypes.bool,
 };
-export default function UserNewEditGeneral({isEdit=false, currentUser=null}) {
+export default function SessionAddUserStep1({disabled=false, institut_id=null, session_id=null}) {
     const navigate = useNavigate();
-    const { enqueueSnackbar } = useSnackbar();
-    const dispatch = useDispatch();
+    const {
+        control,
+        setValue,
+        formState: { isSubmitting },
+    } = useFormContext();
+
+
+
     const { countries } = useSelector((state) => state.country);
     const { languages } = useSelector((state) => state.language);
 
 
-    useEffect(() => {
-        dispatch(getCountries());
-    }, [dispatch]);
-
-    useEffect(()=> {
-        dispatch(getLanguages());
-    },[dispatch])
-
-    const UpdateUserSchema = Yup.object().shape({
-        firstname: Yup.string().required('Prénom requis!!'),
-    });
-
-
-
-    const defaultValues = {
-        gender: currentUser?.gender || '',
-        civility: currentUser?.civility || '',
-        firstname: currentUser?.firstname || '',
-        lastname: currentUser?.lastname || '',
-        adress1: currentUser?.adress1 || '',
-        adress2: currentUser?.adress2 || '',
-        zipcode: currentUser?.zipcode || '',
-        city: currentUser?.city || '',
-        phone: currentUser?.phone || '',
-        email: currentUser?.email || '',
-        country_id: currentUser?.country_id || -1,
-        nationality_id: currentUser?.nationality_id || -1,
-        firstlanguage_id: currentUser?.firstlanguage_id || -1,
-        avatar: `/avatars/${currentUser?.avatar}` || ''
-    };
-
-    useEffect(() => {
-        if (isEdit && currentUser) {
-            reset(defaultValues);
-        }
-        if (!isEdit) {
-            reset(currentUser);
-        }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [isEdit, currentUser]);
-
-    const methods = useForm({
-        resolver: yupResolver(UpdateUserSchema),
-        defaultValues,
-    });
-
-    const {
-        setValue,
-        reset,
-        handleSubmit,
-        formState: { isSubmitting },
-    } = methods;
-
-    const onSubmit = async (data, e) => {
-        try {
-
-            const {avatar} = data;
-            delete data.avatar;
-            const formData = new FormData();
-            formData.append('user', JSON.stringify({...data,user_id: currentUser.user_id}));
-            formData.append('avatar', avatar);
-            dispatch(putUser(currentUser.user_id, formData ));
-            reset();
-            enqueueSnackbar(!isEdit ? 'Création de l\'utilisateur effectée !' : 'Mise à jour effectée !');
-            navigate(PATH_DASHBOARD.admin.user.root);
-        } catch (error) {
-            console.error(error);
-        }
-    };
 
     const handleDrop = useCallback(
         (acceptedFiles) => {
@@ -125,8 +48,9 @@ export default function UserNewEditGeneral({isEdit=false, currentUser=null}) {
         },
         [setValue]
     );
+
     return (
-        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)} >
+        <>
             <Grid container spacing={3}>
                 <Grid item xs={12} md={4}>
                     <Card sx={{ py: 10, px: 3, textAlign: 'center' }}>
@@ -166,29 +90,67 @@ export default function UserNewEditGeneral({isEdit=false, currentUser=null}) {
                                     gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
                                 }}
                             >
-                                <RHFSelect native name="gender" label="Genre" placeholder="Genre" >
+                                <RHFSelect native name="gender" label="Genre" placeholder="Genre" disabled={disabled}>
                                     {Object.entries(GENDERS_OPTION).map(([key, value]) => (
                                         <option key={key} value={key}>{value}</option>
                                     ))}
                                 </RHFSelect>
 
-                                <RHFSelect native name="civility" label="Civilité" placeholder="Civilité" >
+                                <RHFSelect native name="civility" label="Civilité" placeholder="Civilité" disabled={disabled}>
                                     {Object.entries(CIVILITY_OPTION).map(([key, value]) => (
                                         <option key={key} value={key}>{value}</option>
                                     ))}
                                 </RHFSelect>
 
-                                <RHFTextField name="lastname" label="Nom" />
-                                <RHFTextField name="firstname" label="Prénom" />
-
-                                <RHFTextField name="adress1" label="Adresse" />
-                                <RHFTextField name="adress2" label="Complément d'adresse" />
-                                <RHFTextField name="zipcode" label="Code postal" />
-                                <RHFTextField name="city" label="Ville" />
+                                <RHFTextField name="lastname" label="Nom" disabled={disabled} />
+                                <RHFTextField name="firstname" label="Prénom" disabled={disabled} />
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: 'grid',
+                                    rowGap: 3,
+                                    columnGap: 2,
+                                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                                    paddingTop:2,
+                                    paddingBottom:2
+                                }}
+                            >
+                                <Controller
+                                    name="birthday"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <MobileDateTimePicker
+                                            {...field}
+                                            onChange={(newValue) => field.onChange(newValue)}
+                                            label="Date de naissance"
+                                            inputFormat="dd/MM/yyyy"
+                                            renderInput={(params) => <TextField {...params} fullWidth />}
+                                        />
+                                    )}
+                                />
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: 'grid',
+                                    rowGap: 3,
+                                    columnGap: 2,
+                                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                                }}
+                            >
+                                <RHFTextField name="adress1" label="Adresse" disabled={disabled}/>
+                                <RHFTextField name="adress2" label="Complément d'adresse" disabled={disabled}/>
+                                <RHFTextField name="zipcode" label="Code postal" disabled={disabled} />
+                                <RHFTextField name="city" label="Ville" disabled={disabled}/>
 
                             </Box>
                             <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
                                 <RHFSelect native name="country_id" label="Pays" placeholder="Pays">
+                                    <option key={-1} value={-1}>Sélectionnez un pays</option>
+                                    {countries.map(country => (<option key={country.country_id} value={country.country_id}>{country.label}</option>) ) }
+                                </RHFSelect>
+                            </Stack>
+                            <Stack spacing={3} alignItems="flex-end" sx={{ mt: 3 }}>
+                                <RHFSelect native name="nativeCountry_id" label="Pays natal" placeholder="Pays natal">
                                     <option key={-1} value={-1}>Sélectionnez un pays</option>
                                     {countries.map(country => (<option key={country.country_id} value={country.country_id}>{country.label}</option>) ) }
                                 </RHFSelect>
@@ -220,17 +182,27 @@ export default function UserNewEditGeneral({isEdit=false, currentUser=null}) {
                                 <RHFTextField name="email" label="Email" />
                             </Box>
                         </CardContent>
-                        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={{ xs: 2, sm: 2 }}>
-                            <LoadingButton type="submit" variant="contained" fullWidth size="large" loading={isSubmitting}>
-                                {!isEdit ? 'Créer un utilisateur' : 'Enregistrer les changements'}
-                            </LoadingButton>
-                            <LoadingButton type="button" variant="contained" fullWidth size="large" color="error" loading={isSubmitting} onClick={() => navigate(PATH_DASHBOARD.admin.user.root)}>
-                                Retour
-                            </LoadingButton>
-                        </Stack>
+                        <CardHeader  title="Compte utilisateur"  style={{ paddingTop: "0px" }} />
+                        <CardContent>
+                            <Box>
+                                <RHFTextField name="login" label="Identifiant de connexion"  />
+                            </Box>
+                                <Box
+                                    sx={{
+                                        paddingTop: "20px",
+                                        display: 'grid',
+                                        rowGap: 2,
+                                        columnGap: 2,
+                                        gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' }
+                                    }}
+                                >
+                                    <RHFTextField type="password" name="password1" label="Mot de passe"  />
+                                    <RHFTextField type="password" name="password2" label="Confirmation de mot de passe" />
+                                </Box>
+                        </CardContent>
                     </Card>
                 </Grid>
             </Grid>
-        </FormProvider>
-    );
+        </>
+    )
 }

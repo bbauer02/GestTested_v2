@@ -17,7 +17,7 @@ import {
     Box
 } from '@mui/material';
 
-import { useParams } from "react-router-dom";
+import {Link as RouterLink, useParams} from "react-router-dom";
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 import { getSession } from "../../redux/slices/session";
@@ -29,7 +29,6 @@ import SessionDetailUsers from "../../sections/@dashboard/session/users/SessionD
 import CustomBreadcrumbs from "../../components/custom-breadcrumbs";
 import {PATH_DASHBOARD} from "../../routes/paths";
 import Iconify from "../../components/iconify";
-import SessionListPage from "./SessionListPage";
 
 
 SessionDetailPage.propTypes = {
@@ -41,6 +40,8 @@ export default function SessionDetailPage({SelectedTab="session"}) {
     const { themeStretch } = useSettingsContext();
     const { session } = useSelector((state) => state.session);
     const [currentTab, setCurrentTab] = useState(SelectedTab);
+
+
 
     useEffect(() => {
         dispatch(getSession(institut_id, session_id))
@@ -68,12 +69,22 @@ export default function SessionDetailPage({SelectedTab="session"}) {
             </Helmet>
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
-                    heading="Administration des sessions"
+                    heading="Gestion de la session du "
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
                         { name: 'Institut', href: PATH_DASHBOARD.institut.profile},
                         { name: 'Sessions' }
                     ]}
+                    action={
+                        <Button
+                            variant="contained"
+                            startIcon={<Iconify icon="eva:plus-fill" />}
+                            component={RouterLink}
+                            to={PATH_DASHBOARD.institut.sessions.addUser(session_id)}
+                        >
+                            Ajouter un candidat manuellement
+                        </Button>
+                    }
 
                 />
                 <Tabs value={currentTab} onChange={(event, newValue) => setCurrentTab(newValue)}>

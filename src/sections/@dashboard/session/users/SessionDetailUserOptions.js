@@ -56,11 +56,15 @@ export default function SessionDetailUserOptions({SessionDetail}) {
 
 
 
+
     // On récupére la liste complete de tout les exams
    useEffect(() => {
             dispatch(getExamsDetailsOfSession(  institut_id,session_id ));
     }, [institut_id, session_id, dispatch])
 
+    useEffect(() => {
+
+    }, []);
 
    useEffect(() => {
      const OptFormated = [];
@@ -399,7 +403,7 @@ export default function SessionDetailUserOptions({SessionDetail}) {
                                         sx={{ maxWidth: { md: 80 } }}
                                     />
 
-<RHFTextField
+                                    <RHFTextField
                                         size="small"
                                         type="number"
                                         name={`items[${index}].tva_user`}
@@ -523,7 +527,3 @@ export default function SessionDetailUserOptions({SessionDetail}) {
     )
 
 }
-
-// mme messager
-// service urnanisme
-//

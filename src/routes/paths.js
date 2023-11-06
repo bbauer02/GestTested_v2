@@ -71,6 +71,7 @@ export const PATH_DASHBOARD = {
       root: path(ROOTS_DASHBOARD, '/institut/sessions'),
       create: path(ROOTS_DASHBOARD, `/institut/sessions/create`),
       edit: (session_id) => path(ROOTS_DASHBOARD, `/institut/sessions/${session_id}/edit`),
+      addUser: (session_id) => path(ROOTS_DASHBOARD, `/institut/sessions/${session_id}/users/add`),
     },
     examinators : {
       root: path(ROOTS_DASHBOARD, '/institut/examinators'),

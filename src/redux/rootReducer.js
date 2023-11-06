@@ -9,6 +9,7 @@ import examReducer from './slices/exam';
 import testReducer from './slices/test';
 import sessionReducer from './slices/session';
 import userReducer from './slices/user';
+import invoiceReducer from './slices/invoice';
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   test: testReducer,
   session: sessionReducer,
   user: userReducer,
+  invoice: invoiceReducer
 
 });
 

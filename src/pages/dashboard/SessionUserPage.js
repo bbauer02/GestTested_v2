@@ -72,6 +72,8 @@ export default function SessionUserPage() {
             component: <SessionDetailUserDocuments session={sessionUser}/>,
         },
     ];
+
+
     return (
         <>
             <Helmet>
