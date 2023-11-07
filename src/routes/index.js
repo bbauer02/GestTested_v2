@@ -30,6 +30,7 @@ import {
   SessionUserPage,
   SessionAddUserPage,
   InvoicesPage,
+  InvoiceDetailsPage,
   InstitutListPage,
   InstitutEditPage,
   InstitutExaminatorsPage,
@@ -140,6 +141,7 @@ export default function Router() {
               children: [
                 { element: <Navigate to="/dashboard/institut/invoices/list" replace />, index: true },
                 { path: 'list', element: <InvoicesListPage /> },
+                { path: ':id', element: <InvoiceDetailsPage /> },
               ]
             }
           ]

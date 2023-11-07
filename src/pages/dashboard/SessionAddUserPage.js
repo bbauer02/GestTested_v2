@@ -261,26 +261,26 @@ export default function SessionAddUserPage() {
                 password:bcrypt.hashSync(data.password1, salt),
                 email:data.email,
                 phone:data.phone,
-                civility:data.civility,
-                gender:data.gender,
+                civility:+data.civility,
+                gender:+data.gender,
                 firstname:data.firstname,
                 lastname:data.lastname,
                 adress1:data.adress1,
                 adress2:data.adress2===""? null : data.adress2,
                 zipcode:data.zipcode,
                 city:data.city,
-                country_id:data.country_id,
+                country_id:+data.country_id,
                 birthday:data.birthday,
-                nativeCountry_id:data.nativeCountry_id,
-                nationality_id:data.nationality_id,
-                firstlanguage_id:data.firstlanguage_id,
+                nativeCountry_id:+data.nativeCountry_id,
+                nationality_id:+data.nationality_id,
+                firstlanguage_id:+data.firstlanguage_id,
             },
             sessionUser : {
                 session_id: +session_id,
                 user_id: null,
                 paymentMode: data.paymentMode,
                 numInscrAnt: data.numInscrAnt===""? null : data.numInscrAnt,
-                inscription: null,
+                inscription: new Date(),
                 hasPaid: data.hasPaid,
                 informations: data.informations,
             },
@@ -289,33 +289,32 @@ export default function SessionAddUserPage() {
         data.userExams.forEach( (_exam) => {
             if(_exam.isOption) {
                 sessionUserOptions.push({
-                    user_price:_exam.user_price,
-                    tva: _exam.tva_user,
+                    user_price:+_exam.user_price,
+                    tva: +_exam.tva_user,
                     addressExam: _exam.adressExam,
                     isCandidate: null,
                     DateTime: _exam.datetime,
                     sessionUser_id: null,
-                    exam_id: _exam.exam_id
+                    exam_id: +_exam.exam_id
                 });
             } else if(isUserOption(_exam) ) {
                 sessionUserOptions.push({
-                    user_price:_exam.user_price,
-                    tva: _exam.tva_user,
+                    user_price:+_exam.user_price,
+                    tva: +_exam.tva_user,
                     addressExam: _exam.adressExam,
                     isCandidate: null,
                     DateTime: _exam.datetime,
                     sessionUser_id: null,
-                    exam_id: _exam.exam_id
+                    exam_id: +_exam.exam_id
                 });
             }
 
         });
-
         dataForm.sessionUserOptions = sessionUserOptions;
 
         dispatch(registerUserInstitut(institut_id, session_id, dataForm));
-        // reset(defaultValues);
-       // navigate(PATH_DASHBOARD.session.detail(institut_id, session_id));
+        reset(defaultValues);
+        navigate(PATH_DASHBOARD.session.detail(institut_id, session_id));
         enqueueSnackbar('Inscription effectuée !');
     };
 

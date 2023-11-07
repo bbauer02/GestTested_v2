@@ -1,6 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import {useEffect, useState} from "react";
 import sumBy from 'lodash/sumBy';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // Redux
 import { useDispatch, useSelector } from "react-redux";
 
@@ -57,7 +58,7 @@ const TABLE_HEAD = [
     { id: 'ref_invoice', label: 'Référence', align: 'left' },
     { id: 'createDate', label: 'Création', align: 'left' },
     { id: 'dueDate', label: 'Echéance', align: 'left' },
-    { id: 'price', label: 'Montant TTC', align: 'center', width: 140 },
+    { id: 'amount_ttc', label: 'Montant TTC', align: 'center', width: 140 },
     { id: 'status', label: 'Status', align: 'left' },
     { id: '' },
 ];
@@ -68,6 +69,7 @@ export default function InvoicesListPage() {
     const { user } = useAuthContext();
     const dispatch = useDispatch();
 
+    const navigate = useNavigate();
 
     const institut_id = user.instituts[0].institut_id;
     const { invoices } = useSelector((state) => state.invoice);
@@ -142,7 +144,7 @@ export default function InvoicesListPage() {
         console.log(id);
     };
     const handleViewRow = (id) => {
-        console.log(id);
+        navigate(PATH_DASHBOARD.institut.invoices.view(id));
     };
     const handleDeleteRow = (id) => {
         const deleteRow = tableData.filter((row) => row.id !== id);

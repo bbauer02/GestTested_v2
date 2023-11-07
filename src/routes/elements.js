@@ -40,7 +40,7 @@ export const TestEditPage = Loadable(lazy(() => import('../pages/dashboard/TestE
 export const ExaminatorsListPage = Loadable(lazy(() => import('../pages/dashboard/ExaminatorListPage')));
 export const PricesListPage = Loadable(lazy(() => import('../pages/dashboard/PricesListPage')));
 export const InvoicesListPage = Loadable(lazy(() => import('../pages/dashboard/InvoicesListPage')));
-
+export const InvoiceDetailsPage = Loadable(lazy(() => import('../pages/dashboard/InvoiceDetailsPage')));
 export const UsersPage = Loadable(lazy(() => import('../pages/dashboard/UserListPage')));
 export const UserEditPage = Loadable(lazy(() => import('../pages/dashboard/UserEditPage')));
 export const DashboardMainPage = Loadable(lazy( () => import('../pages/dashboard/DashboardMainPage')));

@@ -51,3 +51,15 @@ export function getInvoices(institut_id) {
         }
     };
 }
+
+export function getInvoice(institut_id,invoice_id) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.get(`/instituts/${institut_id}/invoices/${invoice_id}`);
+            dispatch(slice.actions.getInvoiceSuccess(response.data.invoice));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}

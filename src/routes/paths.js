@@ -81,6 +81,10 @@ export const PATH_DASHBOARD = {
     },
     invoices: {
       root: path(ROOTS_DASHBOARD, '/institut/invoices'),
+      list: path(ROOTS_DASHBOARD, '/institut/invoices/list'),
+      view: (id) => path(ROOTS_DASHBOARD, `/institut/invoices/${id}`),
+
+
     },
 
   },
