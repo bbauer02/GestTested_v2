@@ -80,7 +80,6 @@ export function getUser(id) {
 // UPDATE
 
 export function putUser(id, user) {
-
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {

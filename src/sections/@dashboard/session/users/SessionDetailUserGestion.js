@@ -69,7 +69,6 @@ export default function SessionDetailUserGestion({sessionUser}) {
 
     const onSubmit = async (data, e) => {
         try {
-
             dispatch(updateSessionUsers(institut_id, sessionUser.session_id, sessionUser.user_id, data));
             enqueueSnackbar('Mise à jour des informations!');
         } catch (error) {

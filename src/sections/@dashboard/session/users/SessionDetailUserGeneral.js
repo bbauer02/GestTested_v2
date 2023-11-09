@@ -2,16 +2,18 @@ import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import {useCallback, useEffect, useMemo} from 'react';
 // new
-import { useForm } from 'react-hook-form';
+import {Controller, useForm} from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { Box, Grid, Card, CardHeader, CardContent, Stack, Typography } from '@mui/material';
+import {MobileDateTimePicker} from "@mui/x-date-pickers";
+import {Box, Grid, Card, CardHeader, CardContent, Stack, Typography, TextField} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // redux
 import { useDispatch, useSelector } from '../../../../redux/store';
 import { getCountries } from '../../../../redux/slices/country';
 import { getLanguages } from '../../../../redux/slices/language';
 import { putUser } from '../../../../redux/slices/user';
+
 // auth
 import { useAuthContext } from '../../../../auth/useAuthContext';
 // utils
@@ -25,6 +27,8 @@ import FormProvider, {
     RHFTextField,
     RHFUploadAvatar,
 } from '../../../../components/hook-form';
+
+
 
 SessionDetailUserGeneral.propTypes = {
     sessionUser : PropTypes.object,
@@ -52,6 +56,7 @@ export default function SessionDetailUserGeneral({sessionUser}) {
 
     const initialValues = useMemo(() => ({
         gender: user?.gender || '',
+        birthday: user?.birthday || null,
         civility: user?.civility || '',
         firstname: user?.firstname || '',
         lastname: user?.lastname || '',
@@ -75,6 +80,7 @@ export default function SessionDetailUserGeneral({sessionUser}) {
     });
     const {
         setValue,
+        control,
         handleSubmit,
         formState: { isSubmitting },
         reset,
@@ -92,7 +98,7 @@ export default function SessionDetailUserGeneral({sessionUser}) {
             const formData = new FormData();
             formData.append('user', JSON.stringify({...data,user_id: user.user_id}));
             formData.append('avatar', avatar);
-            dispatch(putUser(user.user_id, formData))
+            dispatch(putUser(user.user_id, formData));
             enqueueSnackbar('Update success!');
         } catch (error) {
             console.error(error);
@@ -165,9 +171,41 @@ export default function SessionDetailUserGeneral({sessionUser}) {
                                         <option key={key} value={key}>{value}</option>
                                     ))}
                                 </RHFSelect>
-
                                 <RHFTextField name="lastname" label="Nom" />
                                 <RHFTextField name="firstname" label="Prénom" />
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: 'grid',
+                                    rowGap: 3,
+                                    columnGap: 2,
+                                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                                    paddingTop:2,
+                                    paddingBottom:2
+                                }}
+                            >
+                                <Controller
+                                    name="birthday"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <MobileDateTimePicker
+                                            {...field}
+                                            onChange={(newValue) => field.onChange(newValue)}
+                                            label="Date de naissance"
+                                            inputFormat="dd/MM/yyyy"
+                                            renderInput={(params) => <TextField {...params} fullWidth />}
+                                        />
+                                    )}
+                                />
+                            </Box>
+                            <Box
+                                sx={{
+                                    display: 'grid',
+                                    rowGap: 3,
+                                    columnGap: 2,
+                                    gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(2, 1fr)' },
+                                }}
+                            >
 
                                 <RHFTextField name="adress1" label="Adresse" />
                                 <RHFTextField name="adress2" label="Complément d'adresse" />

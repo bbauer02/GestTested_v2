@@ -100,7 +100,9 @@ const slice = createSlice({
             });
 
             state.sessionUser.sessionUsers = updatedSessionUsers;
-        }
+        },
+
+
     }
 })
 
@@ -268,3 +270,4 @@ export function updateSessionUsers(institut_id, session_id,  user_id, data) {
         }
     }
 }
+

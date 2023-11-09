@@ -62,21 +62,10 @@ export default function InvoicePDF({ invoice }) {
 
                         <Text style={[styles.overline, styles.mb8]}>Facture de:</Text>
                         <Text style={styles.body1}>{Institut.label}</Text>
-                        <Text style={styles.body1}>
-                            {Institut.address1}
-                            {
-                                Institut.address2?
-                                    <>
-                                        <br />
-                                        Institut.address2
-                                    </>
-                                : ""
-                            }
-                            <br />
-                            {Institut.zipcode} {Institut.city.toUpperCase()}
-                            <br />
-                            {Institut.institutCountry.label.toUpperCase()}
-                        </Text>
+                        <Text style={styles.body1}>{Institut.address1}</Text>
+                        {Institut.address2 && <Text style={styles.body1}>{Institut.address2}</Text>}
+                        <Text style={styles.body1}>{Institut.zipcode} {Institut.city.toUpperCase()}</Text>
+                        <Text style={styles.body1}>{Institut.institutCountry.label.toUpperCase()}</Text>
                         <Text style={styles.body1}>{Institut.phone}</Text>
                         <Text style={styles.body1}>{Institut.email}</Text>
 
@@ -84,21 +73,10 @@ export default function InvoicePDF({ invoice }) {
                     <View style={styles.col6}>
                         <Text style={[styles.overline, styles.mb8]}>Facture pour:</Text>
                         <Text style={styles.body1}>{customerLastname} {customerFirstname}</Text>
-                        <Text style={styles.body1}>
-                            {customerAddress1}
-                            {
-                                customerAddress2?
-                                    <>
-                                        <br />
-                                        customerAddress2
-                                    </>
-                                    : ""
-                            }
-                            <br />
-                            {customerZipCode} {customerCity.toUpperCase()}
-                            <br />
-                            {customerCountry.toUpperCase()}
-                        </Text>
+                        <Text style={styles.body1}>{customerAddress1}</Text>
+                        {customerAddress2 && <Text style={styles.body1}>{customerAddress2}</Text>}
+                        <Text style={styles.body1}>{customerZipCode} {customerCity.toUpperCase()}</Text>
+                        <Text style={styles.body1}>{customerCountry.toUpperCase()}</Text>
                         <Text style={styles.body1}>{customerPhone}</Text>
                         <Text style={styles.body1}>{customerEmail}</Text>
 

@@ -20,8 +20,15 @@ export default function RoleBasedGuard({ power, children }) {
   // Logic here to get current user role
   const { user } = useAuthContext();
 
+  let currentRole = 0;
   // const currentRole = 'user';
-  const currentRole = user?.instituts[0].Role; // admin;
+    if(user?.instituts && user?.instituts.length > 0 ) {
+        currentRole = user?.instituts[0].Role;
+    }
+    else {
+        currentRole = user.systemRole;
+    }
+
   if( power === undefined || currentRole.power < power ) { 
 
     return ( 

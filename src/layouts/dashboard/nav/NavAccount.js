@@ -31,7 +31,7 @@ export default function NavAccount() {
         </Typography>
 
         <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
-          {user?.instituts[0].Institut.label}
+          {user?.instituts.length > 0 && user?.instituts[0].Institut.label}
         </Typography>
       </Box>
     </StyledRoot>

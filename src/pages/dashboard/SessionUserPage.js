@@ -9,13 +9,15 @@ import {
 } from '@mui/material';
 // Redux
 import { useDispatch, useSelector } from "react-redux";
-import { getSessionUser } from "../../redux/slices/session";
+import {getSession, getSessionUser} from "../../redux/slices/session";
+
+
 // routes
 import { PATH_DASHBOARD } from '../../routes/paths';
 import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 // components
 import { useSettingsContext } from '../../components/settings';
-import  SessionDetailUserGeneral  from "../../sections/@dashboard/session/users/SessionDetailUserGeneral";
+import SessionDetailUserGeneral  from "../../sections/@dashboard/session/users/SessionDetailUserGeneral";
 import SessionDetailUserOptions from "../../sections/@dashboard/session/users/SessionDetailUserOptions";
 import SessionDetailUserGestion from "../../sections/@dashboard/session/users/SessionDetailUserGestion";
 import SessionDetailUserDocuments from "../../sections/@dashboard/session/users/SessionDetailUserDocuments";
@@ -24,6 +26,7 @@ import Iconify from "../../components/iconify";
 
 //
 import { useAuthContext } from '../../auth/useAuthContext';
+import {getInvoiceByUser} from "../../redux/slices/invoice";
 
 export default function SessionUserPage() {
     // Logic here to get current user role
@@ -33,7 +36,17 @@ export default function SessionUserPage() {
     const { themeStretch } = useSettingsContext();
     const { session_id, user_id} = useParams();
     const [currentTab, setCurrentTab] = useState('coordonnees');
+
     const { sessionUser } = useSelector((state) => state.session);
+
+    const { user : curUser } = useSelector((state) => state.user);
+    const institut_id = user.instituts[0].institut_id;
+
+    useEffect(() => {
+        dispatch(getInvoiceByUser(institut_id,session_id, user_id));
+        dispatch(getSession(institut_id, session_id));
+    },[dispatch, institut_id, session_id, user_id]);
+
 
     useEffect(() => {
         const loadUserData = () => {
@@ -43,7 +56,7 @@ export default function SessionUserPage() {
         return () => {
             // Vous pouvez ajouter ici le nettoyage ou l'annulation de la requête en cours si nécessaire.
         };
-    }, [dispatch, session_id, user_id, user]);
+    }, [dispatch, session_id, user_id, user, curUser]);
 
     const TABS = [
         {

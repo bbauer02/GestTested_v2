@@ -62,9 +62,6 @@ export default function SessionDetailUserOptions({SessionDetail}) {
             dispatch(getExamsDetailsOfSession(  institut_id,session_id ));
     }, [institut_id, session_id, dispatch])
 
-    useEffect(() => {
-
-    }, []);
 
    useEffect(() => {
      const OptFormated = [];
@@ -270,18 +267,18 @@ export default function SessionDetailUserOptions({SessionDetail}) {
 
             };
 
-
             if(!item.isOption) {
                 // on vérifie si le prix !== le prix de base
                 if(!item.option_id && (item.price_user !== price_base || item.tva_user !== tva_base || item.addressExam !== adressExam || item.datetime !== date_base) ) {
                     // On ajoute alors l'épreuve dans la table UseOption
                     dispatch(addUserOption(institut_id, newOption));
+
                     enqueueSnackbar(`Ajout de l'option ${item.exam}`);
 
                 }
                 else if( item.option_id && (item.price_user !== price_base || item.tva_user !== tva_base || item.addressExam !== adressExam || item.datetime !== date_base) ) {
-                   dispatch(updateUserOption(institut_id, sessionUser_id, item.exam_id, item.option_id, newOption ))
-                    enqueueSnackbar(`Mise à jour de l'option ${item.exam}`);
+                   dispatch(updateUserOption(institut_id, sessionUser_id, item.exam_id, item.option_id, newOption ));
+                   enqueueSnackbar(`Mise à jour de l'option ${item.exam}`);
                 }
             }
             else if (item.option_id) {

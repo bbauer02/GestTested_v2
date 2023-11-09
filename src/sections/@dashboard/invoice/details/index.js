@@ -153,7 +153,7 @@ export default function InvoiceDetails({ invoice }) {
                 <br /><br />
                 <TableContainer sx={{ overflow: 'unset' }}>
                     <Scrollbar>
-                        <Table sx={{ minWidth: 960 }}>
+                        <Table sx={{ minWidth: 500 }}>
                             <TableHead
                                 sx={{
                                     borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,

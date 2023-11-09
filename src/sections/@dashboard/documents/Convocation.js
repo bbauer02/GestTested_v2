@@ -31,13 +31,13 @@ const StyledRowResult = styled(TableRow)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 
-AttestationInscription.propTypes = {
+Convocation.propTypes = {
     invoice: PropTypes.object,
     curSession: PropTypes.object,
     curUser: PropTypes.object,
 };
 
-export default function AttestationInscription({ invoice, curSession, curUser }) {
+export default function Convocation({ invoice, curSession, curUser }) {
 
     if (!invoice) {
         return null;
@@ -92,7 +92,7 @@ export default function AttestationInscription({ invoice, curSession, curUser })
 
 
                     <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
-                        <Typography variant="h4" align="center">ATTESTATION DE PRESENCE</Typography>
+                        <Typography variant="h4" align="center">CONVOCATION</Typography>
                         <Typography variant="h5" align="center">{test}{level? `-${level}`:""}</Typography>
                         <Typography variant="h6" align="center">Dossier N° {ref_invoice.replace("F", "D")}</Typography>
                         <Typography variant="h4" align="center"> &nbsp;</Typography>

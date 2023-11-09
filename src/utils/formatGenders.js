@@ -1,7 +1,7 @@
 export const CIVILITY_OPTION =
     {
-        1: 'Mr',
-        2: 'Mme',
+        1: 'Monsieur',
+        2: 'Madame',
         3: 'Autre'
     };
 

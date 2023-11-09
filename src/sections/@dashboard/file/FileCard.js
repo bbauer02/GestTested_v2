@@ -12,10 +12,11 @@ import TextMaxLine from '../../../components/text-max-line';
 
 FileCard.propTypes = {
     filename: PropTypes.string,
-    document: PropTypes.element
+    onSelect: PropTypes.func,
+    docType: PropTypes.string
 };
 
-export default function FileCard({filename, document}) {
+export default function FileCard({filename, onSelect, docType}) {
 return (
         <>
             <Card
@@ -26,16 +27,13 @@ return (
                     boxShadow: 0,
                     bgcolor: 'background.default',
                     border: (theme) => `solid 1px ${theme.palette.divider}`,
-                }}
-            >
+                    cursor: 'pointer'
 
-                    <PDFDownloadLink
-                        document={ document }
-                        fileName="documentPDF"
-                        style={{ textDecoration: 'none' }}
-                    >
+                }}
+                onClick={() => onSelect(docType) }
+            >
                         <Stack
-                            spacing={0.75}
+                            spacing={0.5}
                             direction="row"
                             alignItems="center"
                             sx={{ typography: 'caption', color: 'text.disabled', mt: 0.5 }}
@@ -48,13 +46,7 @@ return (
                                 {filename}
                             </TextMaxLine>
                         </Stack>
-                    </PDFDownloadLink>
-
-
-
-
-
-            </Card>
+         </Card>
         </>
     )
 

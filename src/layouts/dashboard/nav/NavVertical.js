@@ -38,7 +38,7 @@ export default function NavVertical({ openNav, onCloseNav }) {
   const isDesktop = useResponsive('up', 'lg');
   let navConfigFinal = [...navConfig]
 
-    if(user.instituts[0].Role.power >= 3 ) {
+    if(user.instituts && user.instituts.length >0 && user.instituts[0].Role.power >= 3 ) {
         navConfigFinal = [...navConfigFinal, ...navConfigInstitutAdmin];
     }
     if(user.systemRole.power >= 10 ) {
