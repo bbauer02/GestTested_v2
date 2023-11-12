@@ -110,7 +110,6 @@ export function registerUserInstitut(institut_id, session_id, dataform) {
         dispatch(slice.actions.startLoading());
         try {
             const response = await axios.post(`/instituts/${institut_id}/sessions/${session_id}/users`, dataform);
-            console.log(response.data);
             //dispatch(slice.actions.deleteUserSuccess(response.data.user));
         } catch (error) {
             dispatch(slice.actions.hasError(error));

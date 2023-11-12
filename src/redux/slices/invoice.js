@@ -36,8 +36,13 @@ const slice = createSlice({
         },
         deleteInvoiceByUserSuccess(state, action) {
             state.isLoading = false;
-            state.invoice = action.payload;
+            state.invoice = null;
             state.invoices =  state.invoices.filter((_invoice) => _invoice.institut_id !== action.payload.institut_id && _invoice.session_id !== action.payload.session_id && _invoice.user_id !== action.payload.user_id)
+        },
+        postInvoiceSuccess(state, action) {
+            state.isLoading = false;
+            state.invoice = action.payload;
+            state.invoices = [...state.invoices, action.payload];
         }
     }
 });
@@ -87,6 +92,18 @@ export function deleteInvoiceByUser(institut_id, session_id, user_id) {
         try {
             const response = await axios.delete(`/instituts/${institut_id}/sessions/${session_id}/users/${user_id}/invoices`);
             dispatch(slice.actions.deleteInvoiceByUserSuccess(response.data.invoice));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+        }
+    };
+}
+
+export function postInvoice(institut_id, session_id, user_id) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.post(`/instituts/${institut_id}/sessions/${session_id}/users/${user_id}/invoices`);
+            dispatch(slice.actions.postInvoiceSuccess(response.data.invoice));
         } catch (error) {
             dispatch(slice.actions.hasError(error));
         }

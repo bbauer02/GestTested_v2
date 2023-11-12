@@ -18,6 +18,7 @@ import { fCurrency } from '../../../../utils/formatNumber';
 import { useDispatch, useSelector} from '../../../../redux/store';
 import { getExamsDetailsOfSession} from '../../../../redux/slices/exam';
 import {addUserOption, deleteUserOption, updateUserOption} from '../../../../redux/slices/session';
+import {deleteInvoiceByUser, postInvoice} from '../../../../redux/slices/invoice';
 
 // auth
 import { useAuthContext } from '../../../../auth/useAuthContext';
@@ -236,6 +237,7 @@ export default function SessionDetailUserOptions({SessionDetail}) {
 
     const onSubmit =  (data) => {
         setLoadingSend(true);
+
         // Algorithme pour ajouter les options dans la table UserHasOptions
         // Exam OBLIGATOIRE : => On ne fait rien de spécial SAUF si : 
         // DateTime , AddressExam, Price et TVA sont différent de ceux de base
@@ -295,6 +297,7 @@ export default function SessionDetailUserOptions({SessionDetail}) {
 
 
         });
+        dispatch(postInvoice(institut_id, session_id, user_id));
     };
 
     const handleRemove = (index, exam_id) => {

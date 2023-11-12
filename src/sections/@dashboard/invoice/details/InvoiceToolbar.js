@@ -67,7 +67,7 @@ export default function InvoiceToolbar({ invoice }) {
 
                     <PDFDownloadLink
                         document={<InvoicePDF invoice={invoice} />}
-                        fileName={invoice.ref_invoice}
+                        fileName={invoice?.ref_invoice }
                         style={{ textDecoration: 'none' }}
                     >
                         {({ loading }) => (
