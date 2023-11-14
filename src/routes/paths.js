@@ -83,9 +83,12 @@ export const PATH_DASHBOARD = {
       root: path(ROOTS_DASHBOARD, '/institut/invoices'),
       list: path(ROOTS_DASHBOARD, '/institut/invoices/list'),
       view: (id) => path(ROOTS_DASHBOARD, `/institut/invoices/${id}`),
-
-
     },
+    users: {
+      root: path(ROOTS_DASHBOARD, '/institut/users'),
+      list: path(ROOTS_DASHBOARD, '/institut/users/list'),
+      view: (id) => path(ROOTS_DASHBOARD, `/institut/users/${id}`), 
+    }
 
   },
   session : {

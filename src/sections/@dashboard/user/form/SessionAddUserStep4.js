@@ -41,8 +41,8 @@ export default function SessionAddUserStep4() {
     const nationality = countries.filter(_country =>_country.country_id ===values.nationality_id)[0];
 
 
-
-
+    console.log("here")
+    console.log(values)
     return (
         <>
             <Grid container spacing={1}>
@@ -212,9 +212,9 @@ export default function SessionAddUserStep4() {
 
                                                         </Box>
                                                     </TableCell>
-                                                    <TableCell align="center">{fCurrency(_exam.user_price)} </TableCell>
-                                                    <TableCell align="center">{_exam.tva_user? _exam.tva_user : 22} %</TableCell>
-                                                    <TableCell align="center">{fCurrency(CalculPrixTTC(_exam.user_price, _exam.tva_user))}</TableCell>
+                                                    <TableCell align="center">{fCurrency(+_exam.user_price)} </TableCell>
+                                                    <TableCell align="center">{_exam.tva_user? +_exam.tva_user : 22} %</TableCell>
+                                                    <TableCell align="center">{fCurrency(CalculPrixTTC(+_exam.user_price, +_exam.tva_user))}</TableCell>
                                                 </TableRow>
                                             ))
                                         }
@@ -228,7 +228,7 @@ export default function SessionAddUserStep4() {
 
                                             <TableCell align="left"  sx={{ typography: 'subtitle2' }}>
                                                 <Box sx={{ mt: 2 }} />
-                                                {fCurrency(values.userExams.reduce((total, _exam) => total + _exam.user_price ,0))}
+                                                {fCurrency(values.userExams.reduce((total, _exam) => total + +_exam.user_price ,0))}
                                             </TableCell>
                                         </StyledRowResult>
                                         <StyledRowResult>
@@ -240,7 +240,7 @@ export default function SessionAddUserStep4() {
 
                                             <TableCell align="left"  sx={{ typography: 'subtitle2' }}>
                                                 <Box sx={{ mt: 2 }} />
-                                                {fCurrency(values.userExams.reduce((total, _exam) => total + CalculPrixTTC(_exam.user_price,_exam.tva ) ,0))}
+                                                {fCurrency(values.userExams.reduce((total, _exam) => total + CalculPrixTTC(+_exam.user_price,+_exam.tva ) ,0))}
                                             </TableCell>
                                         </StyledRowResult>
 

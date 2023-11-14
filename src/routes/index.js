@@ -40,7 +40,7 @@ import {
   InstitutCreatePage,
   InstitutPricesPage,
   InstitutProfilePage,
-  UsersPage,
+  UserListPage,
   UserEditPage,
   SkillsPage,
   InvoicesListPage,
@@ -110,6 +110,13 @@ export default function Router() {
             {
               path:':institut_id/sessions/:session_id/users',
               element: <SessionDetailPage SelectedTab="canditats"/>
+            },
+            {
+              path: 'users',
+              children: [
+                { element: <Navigate to="/dashboard/institut/users/list" replace />, index: true },
+                { path: 'list', element: <InstitutUsersPage /> },
+              ]
             },
             {
               path: 'sessions',
@@ -191,7 +198,7 @@ export default function Router() {
                 {
                   path: 'list', element:
                       (
-                          <UsersPage />
+                          <UserListPage />
                       )
                 },
                 {path: ':id/edit', element: (

@@ -19,7 +19,8 @@ const ICONS = {
     test:icon('ic_test'),
     exam:icon('ic_exam'),
     users:icon('ic_users'),
-
+    prices:icon('ic_prices'),
+    teachers:icon('ic_teachers'),
 };
 
 const navConfigInstitutAdmin = [
@@ -37,14 +38,19 @@ const navConfigInstitutAdmin = [
                 icon: ICONS.session 
             },
             {
+                title: 'Utilisateurs', 
+                path: PATH_DASHBOARD.institut.users.root, 
+                icon: ICONS.users 
+            },
+            {
                 title: 'Examinateurs', 
                 path: PATH_DASHBOARD.institut.examinators.root, 
-                icon: ICONS.session 
+                icon: ICONS.teachers 
             },
             {
                 title: 'Tarifs', 
                 path: PATH_DASHBOARD.institut.prices.root, 
-                icon: ICONS.session 
+                icon: ICONS.prices 
             },
             {
                 title: 'Factures',

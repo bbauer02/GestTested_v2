@@ -12,6 +12,7 @@ const initialState = {
     error: false,
     users: [],
     user: null,
+    usersInstitut : []
 };
 
 const slice = createSlice({
@@ -46,6 +47,16 @@ const slice = createSlice({
             state.isLoading = false;
             const updatedUsersList = state.users.filter((user) => user.user_id !== action.payload.user_id)
             state.users = updatedUsersList;
+        }, 
+        getUsersByInstitutSuccess(state, action) {
+            state.isLoading = false;
+            const usersInstitut = action.payload.map( _item => {
+                const _usersInstitut = _item.User;
+                const _role = _item.Role;
+                _usersInstitut.Role = _role
+                return _usersInstitut;
+            });    
+            state.usersInstitut = usersInstitut;
         }
     }
 });
@@ -116,4 +127,17 @@ export function registerUserInstitut(institut_id, session_id, dataform) {
             console.error(error);
         }
     };
+}
+
+export function getUsersByInstitut(institut_id) {
+    return async (dispatch) => {
+        dispatch(slice.actions.startLoading());
+        try {
+            const response = await axios.get(`/instituts/${institut_id}/users`);
+            dispatch(slice.actions.getUsersByInstitutSuccess(response.data.usersInstitut));
+        } catch (error) {
+            dispatch(slice.actions.hasError(error));
+            console.error(error);
+        }
+    }
 }
