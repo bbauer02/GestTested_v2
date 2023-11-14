@@ -41,7 +41,7 @@ export default function InstitutUsersTableToolbar({
         fullWidth
         value={filterName}
         onChange={onFilterName}
-        placeholder="Search..."
+        placeholder="Recherche par Nom ou Prénom de candidat..."
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">

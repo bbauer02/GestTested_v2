@@ -14,6 +14,10 @@ import {
     Container,
     IconButton,
     TableContainer,
+    DialogContent,
+    DialogTitle,
+    Dialog,
+    DialogContentText
   } from '@mui/material';
   // Redux
 import { useDispatch, useSelector } from "react-redux";
@@ -46,8 +50,10 @@ import { InstitutUsersTableRow, InstitutUsersTableToolbar } from '../../sections
 const TABLE_HEAD = [
     { id: 'lastname', label: 'Nom', align: 'left' },
     { id: 'firstname', label: 'Prénom', align: 'left' },
+    { id: 'role', label: 'Role', align: 'left' },
     { id: '' },
   ];
+
 
   
 export default function InstitutUsersPage() {
@@ -56,7 +62,6 @@ export default function InstitutUsersPage() {
     const { usersInstitut } = useSelector((state) => state.user);
     const institut_id = user.instituts[0].institut_id;
     const dispatch = useDispatch();
-
 
 
     useEffect(() => {
@@ -90,7 +95,8 @@ export default function InstitutUsersPage() {
     const [tableData, setTableData] = useState([]);
   
     const [openConfirm, setOpenConfirm] = useState(false);
-  
+
+
     const [filterName, setFilterName] = useState('');
 
     const dataFiltered = applyFilter({
@@ -112,7 +118,8 @@ export default function InstitutUsersPage() {
         useEffect(() => {
             setTableData(usersInstitut)
         }, [usersInstitut])
-    
+
+
       const handleOpenConfirm = () => {
         setOpenConfirm(true);
       };
@@ -120,8 +127,7 @@ export default function InstitutUsersPage() {
       const handleCloseConfirm = () => {
         setOpenConfirm(false);
       };
-    
- 
+
       const handleFilterName = (event) => {
         setPage(0);
         setFilterName(event.target.value);
@@ -155,11 +161,6 @@ export default function InstitutUsersPage() {
           }
         }
       };
-
-      const handleEditRow = (id) => {
-        console.log("handleEditRow");
-      };
-    
 
       const handleResetFilter = () => {
         setFilterName('');
@@ -238,7 +239,7 @@ export default function InstitutUsersPage() {
                                     selected={selected.includes(row.id)}
                                     onSelectRow={() => onSelectRow(row.id)}
                                     onDeleteRow={() => handleDeleteRow(row.id)}
-                                    onEditRow={() => handleEditRow(row.name)}
+
                                 />
                                 ))}
 
@@ -288,6 +289,9 @@ export default function InstitutUsersPage() {
                 </Button>
                 }
             />
+
+
+
         </>
     );
 }
@@ -323,7 +327,7 @@ function applyFilter({ inputData, comparator, filterName, filterStatus, filterRo
             
         }
       );
-      console.log(inputData)
+
     }
 
     return inputData;
