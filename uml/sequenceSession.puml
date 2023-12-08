@@ -1,0 +1,11 @@
+@startuml
+'https://plantuml.com/sequence-diagram
+
+autonumber
+
+actor Institut
+
+Institut -> Session : Création de la session
+
+actor Utilisateur
+@enduml

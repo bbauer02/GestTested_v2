@@ -117,6 +117,14 @@ export function postExamPrice(institutId, examId, ExamPrice) {
         dispatch(slice.actions.addPrice(response.data));
     };
 }
+
+export function putExamPrice(institutId, examId, ExamPrice) {
+    return async (dispatch) => {
+        const response = await axios.put(`/instituts/${institutId}/exams/${examId}/price`, ExamPrice);
+        console.log(response.data.price)
+        dispatch(slice.actions.addPrice(response.data));
+    };
+}
 /*
 export function getExamPricesByFK(institutId, examId) {
     return async (dispatch) => {
