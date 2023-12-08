@@ -10,7 +10,7 @@ import testReducer from './slices/test';
 import sessionReducer from './slices/session';
 import userReducer from './slices/user';
 import invoiceReducer from './slices/invoice';
-
+import priceReducer from './slices/price';
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
@@ -27,7 +27,8 @@ const rootReducer = combineReducers({
   test: testReducer,
   session: sessionReducer,
   user: userReducer,
-  invoice: invoiceReducer
+  invoice: invoiceReducer,
+  prices: priceReducer
 
 });
 

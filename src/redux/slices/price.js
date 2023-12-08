@@ -5,30 +5,30 @@ import axios from '../../utils/axios';
 const initialState = {
     isLoading: false,
     error: false,
-    prices: {},
-    currentInstitut: null,
-    currentExam: null,
-    currentTest: null,
+    examsPrices: [],
+    selectedTest: null,
+    selectedTestChild: null,
     admin: false
 };
 
 const slice = createSlice({
-    name: 'institutPrice',
+    name: 'price',
     initialState,
     reducers: {
-        setCurrentTest(state, action) {
-            state.currentTest = action.payload;
+        selectTest(state, action) {
+            state.selectedTest = action.payload;
+        },
+        selectTestChild(state, action) {
+            state.selectedTestChild = action.payload;
         },
 
         setCurrentExam(state, action) {
+            state.isLoading = false;
             state.currentExam = action.payload;
         },
 
-        setCurrentInstitut(state, action) {
-            state.currentInstitut = action.payload;
-        },
-
         setCurrentAdmin(state, action) {
+            state.isLoading = false;
             state.admin = action.payload;
         },
 
@@ -51,8 +51,7 @@ const slice = createSlice({
         },
 
         addPrice(state, action) {
-            const newPrice = action.payload;
-            state.prices[newPrice.price_id] = newPrice;
+
         },
 
         /**
@@ -63,6 +62,15 @@ const slice = createSlice({
         updatePrice(state, action) {
             const newPrice = action.payload;
             state.prices[newPrice.price_id] = newPrice;
+        },
+        getExamPricesSuccess(state, action) {
+            state.isLoading = false;
+            state.examsPrices = action.payload;
+        },
+        postExamPriceSuccess(state,action) {
+            state.isLoading=false;
+
+            // state.examsPrices =
         }
     }
 });
@@ -79,19 +87,21 @@ export const {
     addPrice,
     startLoading,
     hasError,
-    setCurrentTest,
-    setCurrentExam
+    selectTest,
+    setCurrentExam,
+    selectTestChild,
+
 } =
     slice.actions;
 
 // ----------------------------------------------------------------------
 
-export function getExamPrices(institutId) {
+export function getExamPrices(institutId, testId) {
     return async (dispatch) => {
         try {
-            const response = await axios.get(`/instituts/${institutId}/exams/price`);
-            // console.log('data', institutId, response.data.data)
-            dispatch(slice.actions.setExamPrices(response.data.data));
+
+            const response = await axios.get(`/instituts/${institutId}/tests/${testId}/exams/prices`);
+           dispatch(slice.actions.getExamPricesSuccess(response.data.examPrice));
         } catch (error) {
             console.error(error);
             dispatch(slice.actions.hasError(error));
@@ -100,9 +110,16 @@ export function getExamPrices(institutId) {
 }
 
 // ----------------------------------------------------------------------
-
+export function postExamPrice(institutId, examId, ExamPrice) {
+    return async (dispatch) => {
+        const response = await axios.post(`/instituts/${institutId}/exams/${examId}/price`, ExamPrice);
+        console.log(response.data.price)
+        dispatch(slice.actions.addPrice(response.data));
+    };
+}
+/*
 export function getExamPricesByFK(institutId, examId) {
-    return async () => {
+    return async (dispatch) => {
         try {
             const response = await axios.get(`/instituts/${institutId}exams/${examId}/price`);
             console.log(response.data.data);
@@ -112,9 +129,9 @@ export function getExamPricesByFK(institutId, examId) {
         }
     };
 }
-
+*/
 // ----------------------------------------------------------------------
-
+/*
 export function postExamPrice(institutId, ExamPrice) {
     return async (dispatch) => {
         // console.log('avant post', ExamPrice);
@@ -122,9 +139,9 @@ export function postExamPrice(institutId, ExamPrice) {
         dispatch(slice.actions.addPrice(response.data.data));
     };
 }
-
+*/
 // ----------------------------------------------------------------------
-
+/*
 export function putExamPrice(institutId, ExamPrice) {
     return async (dispatch) => {
         // console.log('avant put', ExamPrice);
@@ -132,5 +149,5 @@ export function putExamPrice(institutId, ExamPrice) {
         dispatch(slice.actions.updatePrice(response.data.data));
     };
 }
-
+*/
 // ----------------------------------------------------------------------
