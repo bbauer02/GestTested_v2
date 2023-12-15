@@ -21,7 +21,6 @@ import {
 import Scrollbar from '../../../../components/scrollbar';
 import Iconify from '../../../../components/iconify';
 import SessionExamCollapsibleRow  from "./SessionExamCollapsibleRow";
-import SessionDetailToobar from "./SessionDetailToolbar";
 import SessionDetailBloc from "./SessionDetailBloc";
 //
 // ----------------------------------------------------------------------
@@ -55,7 +54,7 @@ export default function SessionDetail({session=null}) {
 
     return (
         <>
-            <Card sx={{ pt: 5, px: 5 }}>
+            <Card sx={{ pt: 2, px: 5}}>
                 <Grid container>
                     <Grid item xs={12} sm={6} sx={{ mb: 5 }}>
                         <Typography variant="h4">{Institut?.label}</Typography>

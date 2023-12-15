@@ -49,7 +49,8 @@ export default function ProfileSessionsInstitut({institut}) {
                 validation: !validation
             }
         }
-        dispatch(putSession(institutId, sessionId, session));
+        console.log(session)
+       // dispatch(putSession(institutId, sessionId, session));
 
     }
 

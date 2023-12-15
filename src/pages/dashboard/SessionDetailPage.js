@@ -30,6 +30,10 @@ import CustomBreadcrumbs from "../../components/custom-breadcrumbs";
 import {PATH_DASHBOARD} from "../../routes/paths";
 import Iconify from "../../components/iconify";
 
+// utils
+import { fDateTime } from '../../utils/formatTime';
+
+import SessionDetailToobar from "../../sections/@dashboard/session/detail/SessionDetailToolbar";
 
 SessionDetailPage.propTypes = {
     SelectedTab: PropTypes.string,
@@ -46,6 +50,7 @@ export default function SessionDetailPage({SelectedTab="session"}) {
     useEffect(() => {
         dispatch(getSession(institut_id, session_id))
     }, [dispatch,institut_id, session_id] )
+
 
     const TABS = [
         {
@@ -69,24 +74,15 @@ export default function SessionDetailPage({SelectedTab="session"}) {
             </Helmet>
             <Container maxWidth={themeStretch ? false : 'lg'}>
                 <CustomBreadcrumbs
-                    heading="Gestion de la session du "
+                    heading="Gestion de la session"
                     links={[
                         { name: 'Dashboard', href: PATH_DASHBOARD.root },
                         { name: 'Institut', href: PATH_DASHBOARD.institut.profile},
-                        { name: 'Sessions' }
+                        { name: `Session du ${session&&fDateTime(session.start, "dd/MM/Y HH:mm")} au ${session&&fDateTime(session.end, "dd/MM/Y HH:mm")}` }
                     ]}
-                    action={
-                        <Button
-                            variant="contained"
-                            startIcon={<Iconify icon="eva:plus-fill" />}
-                            component={RouterLink}
-                            to={PATH_DASHBOARD.institut.sessions.addUser(session_id)}
-                        >
-                            Ajouter un candidat manuellement
-                        </Button>
-                    }
 
                 />
+               { session && <SessionDetailToobar session={ session }/>}
                 <Tabs value={currentTab} onChange={(event, newValue) => setCurrentTab(newValue)}>
                     {TABS.map((tab) => (
                         <Tab key={tab.value} label={tab.label} icon={tab.icon} value={tab.value} />

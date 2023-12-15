@@ -24,6 +24,8 @@ const PRIMARY = {
   dark: '#007B55',
   darker: '#005249',
   contrastText: '#fff',
+  lightGrey : '#F2F3F5',
+  darkGrey: '#212B36'
 };
 
 const SECONDARY = {
@@ -101,7 +103,8 @@ export default function palette(themeMode) {
       secondary: GREY[600],
       disabled: GREY[500],
     },
-    background: { paper: '#fff', default: '#fff', neutral: GREY[200] },
+    background: { paper: '#fff', default: '#fff', neutral: GREY[200]},
+    toolbar: {  background: PRIMARY.lightGrey, icon: PRIMARY.darkGrey, iconError :ERROR.dark },
     action: {
       ...COMMON.action,
       active: GREY[600],
@@ -120,7 +123,9 @@ export default function palette(themeMode) {
       paper: GREY[800],
       default: GREY[900],
       neutral: alpha(GREY[500], 0.16),
+      toolbar: alpha(GREY[500], 0.16)
     },
+    toolbar: {  background: PRIMARY.lighter, icon: PRIMARY.darker},
     action: {
       ...COMMON.action,
       active: GREY[500],

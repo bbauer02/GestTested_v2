@@ -1,7 +1,8 @@
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+
+import { useSnackbar } from 'notistack';
 // @mui
 import {
     Box,
@@ -12,12 +13,17 @@ import {
     IconButton,
     DialogActions,
     CircularProgress,
+    Typography
 } from '@mui/material';
 // routes
 import { PATH_DASHBOARD } from '../../../../routes/paths';
+// redux
+import { useDispatch } from '../../../../redux/store';
+import { removeSession} from '../../../../redux/slices/session';
 // components
 import Iconify from '../../../../components/iconify';
 import Label from "../../../../components/label";
+import ConfirmDialog from '../../../../components/confirm-dialog';
 //
 
 
@@ -28,25 +34,63 @@ SessionDetailToobar.propTypes = {
 };
 
 export default function SessionDetailToobar({ session }) {
-    const { validation } = session;
+
+    const { institut_id } = useParams();
+
+    const {enqueueSnackbar} = useSnackbar();
+
+    const dispatch = useDispatch();
+
+    const [openConfirm, setOpenConfirm] = useState(false);
+
+    const [openPopover, setOpenPopover] = useState(null);
+
+    const { validation, session_id } = session;
+
     const navigate = useNavigate();
 
     const [open, setOpen] = useState(false);
 
-    const handleOpen = () => {
-        setOpen(true);
+    const handleOpenConfirm = () => {
+        setOpenConfirm(true);
+    };
+    const handleCloseConfirm = () => {
+        setOpenConfirm(false);
+    };
+    const handleOpenPopover = (event) => {
+        setOpenPopover(event.currentTarget);
     };
 
-    const handleClose = () => {
-        setOpen(false);
+    const handleClosePopover = () => {
+        setOpenPopover(null);
     };
+
+
+    const handleDeleteRow = () => {
+        try {
+            dispatch(removeSession(institut_id,session_id));
+            navigate(PATH_DASHBOARD.institut.sessions.root);
+        }
+        catch (error) {
+            enqueueSnackbar( 'impossible de supprimer la session !' );
+        }
+    };
+
+
+    // ---------------------------------
+
+
 
     const handleEdit = () => {
-       console.log("edit");
+        navigate(PATH_DASHBOARD.institut.sessions.edit(session_id))
     };
 
     const handleUsersListOpen = () => {
-        console.log("users list open");
+        navigate(PATH_DASHBOARD.institut.sessions.addUser(session_id))
+    }
+
+    const handleValidateSession = () => {
+        console.log("Valider la session")
     }
 
     return (
@@ -56,55 +100,96 @@ export default function SessionDetailToobar({ session }) {
                 direction={{ xs: 'column', sm: 'row' }}
                 justifyContent="space-between"
                 alignItems={{ sm: 'center' }}
-                sx={{ mb: 5 }}
+                sx={
+                    { 
+                        px: 3,
+                        mb: 3, 
+                        pt: 1,
+                        pb:1,
+                        bgcolor: 'toolbar.background',
+                        borderRadius: 2,
+
+                    }
+                }
+
+
             >
-                <Stack direction="row" spacing={1}>
-                    <Tooltip title="Edit">
+                <Stack direction="row" spacing={0}>
+                    <Tooltip title="Editer la session">
                         <IconButton onClick={handleEdit}>
-                            <Iconify icon="eva:edit-fill" width={28}/>
+                            <Iconify icon="tabler:edit" width={28}  sx= {{ color: 'toolbar.icon'}} />
                         </IconButton>
                     </Tooltip>
 
-                    <Tooltip title="View">
+
+
+
+                    <Tooltip title="Ajouter un candidat">
                         <IconButton onClick={handleUsersListOpen}>
-                            <Iconify icon="mdi:users" width={28} />
+                            <Iconify icon="mdi:user-add" width={28}  sx= {{ color: 'toolbar.icon'}} /> 
+                        </IconButton>
+                    </Tooltip>
+
+                    <Tooltip title="Valider la session">
+                        <IconButton onClick={handleValidateSession}>
+                            <Iconify icon="grommet-icons:validate" width={28}  sx= {{ color: 'toolbar.icon'}} /> 
                         </IconButton>
                     </Tooltip>
 
                 </Stack>
 
-                <Button
-                    color={validation ? "primary" : "inherit"}
-                    variant="outlined"
-                    startIcon={validation ? <Iconify icon="ion:checkmark-done-sharp" /> : <Iconify icon="eva:checkmark-fill" />}
-                >
-                    {validation? "Session Validée" : "Valider la session" }
-                </Button>
+
+
+
+                    <Tooltip title="Supprimer">
+                        <IconButton onClick={() => {
+                        handleOpenConfirm();
+                        handleClosePopover();
+                    }}
+                    sx= {{ color: 'toolbar.iconError'}}>
+                            <Iconify icon="material-symbols:delete" width={28}  sx= {{ color: 'toolbar.iconError'}} /> 
+                            Supprimer
+                        </IconButton>
+                    </Tooltip>
             </Stack>
 
-            <Dialog fullScreen open={open}>
-                <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-                    <DialogActions
-                        sx={{
-                            zIndex: 9,
-                            padding: '12px !important',
-                            boxShadow: (theme) => theme.customShadows.z8,
-                        }}
-                    >
-                        <Tooltip title="Close">
-                            <IconButton color="inherit" onClick={handleClose}>
-                                <Iconify icon="eva:close-fill" />
-                            </IconButton>
-                        </Tooltip>
-                    </DialogActions>
+            
+            <ConfirmDialog
+                open={openConfirm}
+                onClose={handleCloseConfirm}
+                title="Suppression d'une session"
+                content= {
+                    <>  
+                        <Stack 
+                            spacing={2}
+                            direction={{ xs: 'column', sm: 'row' }}
+                            justifyContent="space-between"
+                            alignItems={{ sm: 'center' }}
+                        >
+                            <Stack direction="row" spacing={0}>
+                                <Iconify icon='material-symbols:warning' width={72} sx= {{ color: '#B76E00'}} />
+                            </Stack>
+                            <Stack direction="column" spacing={0}>
+                                <Typography><strong>Supprimer une session et ses données? </strong></Typography>
+                                <Typography> Cela supprimera définitivement :</Typography>
+                                <Typography sx={{ color : "#B76E00"}}>
+                                -<i>Les informations de la session</i><br /> 
+                                -<i>Les utilisateurs de la session</i><br /> 
+                                - <i>Les épreuves de la session</i><br /> <br /> 
 
-                    <Box sx={{ flexGrow: 1, height: '100%', overflow: 'hidden' }}>
-                        <PDFViewer width="100%" height="100%" style={{ border: 'none' }}>
-                            PDF
-                        </PDFViewer>
-                    </Box>
-                </Box>
-            </Dialog>
+                                </Typography>
+                               
+                            </Stack>
+                        </Stack>
+                    </>
+                }
+                action={
+                    <Button variant="contained" color="error" onClick={handleDeleteRow}>
+                        Supprimer définitivement
+                    </Button>
+
+                }
+            />
         </>
     );
 }

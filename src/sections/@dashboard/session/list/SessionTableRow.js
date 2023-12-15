@@ -10,7 +10,8 @@ import {
     MenuItem,
     Alert,
     IconButton,
-    Button, Chip
+    Button, Chip,Stack
+
 } from '@mui/material';
 import TimelineIcon from "@mui/icons-material/Timeline";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
@@ -149,10 +150,34 @@ export default function SessionTableRow({
                 open={openConfirm}
                 onClose={handleCloseConfirm}
                 title="Suppression d'une session"
-                content= "Supprimer définitivement une session et ses données? (Action irréversible)"
+                content= {
+                    <>  
+                        <Stack 
+                            spacing={2}
+                            direction={{ xs: 'column', sm: 'row' }}
+                            justifyContent="space-between"
+                            alignItems={{ sm: 'center' }}
+                        >
+                            <Stack direction="row" spacing={0}>
+                                <Iconify icon='material-symbols:warning' width={72} sx= {{ color: '#B76E00'}} />
+                            </Stack>
+                            <Stack direction="column" spacing={0}>
+                                <Typography><strong>Supprimer une session et ses données? </strong></Typography>
+                                <Typography> Cela supprimera définitivement :</Typography>
+                                <Typography sx={{ color : "#B76E00"}}>
+                                -<i>Les informations de la session</i><br /> 
+                                -<i>Les utilisateurs de la session</i><br /> 
+                                - <i>Les épreuves de la session</i><br /> <br /> 
+
+                                </Typography>
+                               
+                            </Stack>
+                        </Stack>
+                    </>
+                }
                 action={
                     <Button variant="contained" color="error" onClick={onDeleteRow}>
-                        Delete
+                        Supprimer définitivement
                     </Button>
 
                 }
