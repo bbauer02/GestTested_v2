@@ -114,7 +114,6 @@ export function postSession(idInstitut, session) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
-            
             const response =await axios.post(`/instituts/${idInstitut}/sessions`, session);
             dispatch(slice.actions.addSession(response.data.session));
         }
@@ -129,6 +128,7 @@ export function putSessionAdmin(idInstitut, idSession, session) {
     return async (dispatch) => {
         dispatch(slice.actions.startLoading());
         try {
+            console.log(session)
            const response =  await axios.put(`/instituts/${idInstitut}/sessions/${idSession}/admin`, session);
            dispatch(slice.actions.putSessionSuccess(response.data.session))
         }

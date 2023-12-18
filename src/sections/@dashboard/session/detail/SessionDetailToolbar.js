@@ -19,7 +19,7 @@ import {
 import { PATH_DASHBOARD } from '../../../../routes/paths';
 // redux
 import { useDispatch } from '../../../../redux/store';
-import { removeSession} from '../../../../redux/slices/session';
+import { removeSession, putSession} from '../../../../redux/slices/session';
 // components
 import Iconify from '../../../../components/iconify';
 import Label from "../../../../components/label";
@@ -45,6 +45,10 @@ export default function SessionDetailToobar({ session }) {
 
     const [openPopover, setOpenPopover] = useState(null);
 
+    const [openConfirmValidation, setOpenConfirmValidation] = useState(false);
+
+    const [openPopoverValidation, setOpenPopoverValidation] = useState(null);
+
     const { validation, session_id } = session;
 
     const navigate = useNavigate();
@@ -63,6 +67,20 @@ export default function SessionDetailToobar({ session }) {
 
     const handleClosePopover = () => {
         setOpenPopover(null);
+    };
+
+    const handleOpenConfirmValidation = () => {
+        setOpenConfirmValidation(true);
+    };
+    const handleCloseConfirmValidation = () => {
+        setOpenConfirmValidation(false);
+    };
+    const handleOpenPopoverValidation = (event) => {
+        setOpenPopoverValidation(event.currentTarget);
+    };
+
+    const handleClosePopoverValidation = () => {
+        setOpenPopoverValidation(null);
     };
 
 
@@ -90,7 +108,20 @@ export default function SessionDetailToobar({ session }) {
     }
 
     const handleValidateSession = () => {
-        console.log("Valider la session")
+
+        const _session = {
+            session: {
+                validation: !session.validation,
+                institut_id,
+                session_id,
+            },
+            sessionHasExams:null
+        }
+
+        dispatch(putSession(institut_id,session_id, _session));
+
+        enqueueSnackbar( 'Session validée !!' );
+        setOpenConfirmValidation(false);
     }
 
     return (
@@ -131,7 +162,10 @@ export default function SessionDetailToobar({ session }) {
                     </Tooltip>
 
                     <Tooltip title="Valider la session">
-                        <IconButton onClick={handleValidateSession}>
+                        <IconButton onClick={() => {
+                        handleOpenConfirmValidation();
+                        handleClosePopoverValidation();
+                    }}>
                             <Iconify icon="grommet-icons:validate" width={28}  sx= {{ color: 'toolbar.icon'}} /> 
                         </IconButton>
                     </Tooltip>
@@ -141,23 +175,61 @@ export default function SessionDetailToobar({ session }) {
 
 
 
-                    <Tooltip title="Supprimer">
+                    <Tooltip title="Supprimer la session">
                         <IconButton onClick={() => {
                         handleOpenConfirm();
                         handleClosePopover();
                     }}
                     sx= {{ color: 'toolbar.iconError'}}>
                             <Iconify icon="material-symbols:delete" width={28}  sx= {{ color: 'toolbar.iconError'}} /> 
-                            Supprimer
                         </IconButton>
                     </Tooltip>
             </Stack>
+
+
+
+            <ConfirmDialog
+                open={openConfirmValidation}
+                onClose={handleCloseConfirmValidation}
+                content= {
+                    <>  
+                        <Stack 
+                            spacing={2}
+                            direction={{ xs: 'column', sm: 'row' }}
+                            justifyContent="space-between"
+                            alignItems={{ sm: 'center' }}
+                        >
+                            <Stack direction="row" spacing={0}>
+                                <Iconify icon='material-symbols:info' width={72} sx= {{ color: '#00B8D9'}} />
+                            </Stack>
+                            <Stack direction="column" spacing={0}>
+                                <Typography><strong>Souhaitez-vous valider la session? </strong></Typography>   
+                            </Stack>
+                        </Stack>
+                    </>
+                }
+                action={
+                    <Button variant="contained" color="info" onClick={handleValidateSession}>
+                        Valider la session
+                    </Button>
+
+                }
+            />
+
+
+
+
+
+
+
+
+
+
 
             
             <ConfirmDialog
                 open={openConfirm}
                 onClose={handleCloseConfirm}
-                title="Suppression d'une session"
                 content= {
                     <>  
                         <Stack 
