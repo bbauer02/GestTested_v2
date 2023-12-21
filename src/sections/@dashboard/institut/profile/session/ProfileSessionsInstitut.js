@@ -1,8 +1,8 @@
 import PropTypes from "prop-types";
-import {useEffect} from "react";
+import {useEffect, useState} from "react";
 
 // @mui
-import { Container, Box } from '@mui/material';
+import {Container, Box, Stack, Typography, Button} from '@mui/material';
 import { alpha, styled } from '@mui/material/styles';
 
 // redux
@@ -10,7 +10,6 @@ import {getSessionsByInstitut, putSession} from "../../../../../redux/slices/ses
 import { useDispatch, useSelector } from '../../../../../redux/store';
 
 // Component
-
 import SessionCard from "../../../session/card/SessionCard";
 // ----------------------------------------------------------------------
 
@@ -31,11 +30,12 @@ ProfileSessionsInstitut.propTypes = {
 };
 export default function ProfileSessionsInstitut({institut}) {
 
-
     const { institut_id } = institut;
 
     const dispatch = useDispatch();
+
     const { sessions } = useSelector((state) => state.session);
+
     useEffect(() => {
         dispatch(getSessionsByInstitut(institut_id));
     }, [dispatch, institut_id]);
@@ -43,14 +43,14 @@ export default function ProfileSessionsInstitut({institut}) {
 
     const handleValidateSession = (sessionId, institutId, validation ) => {
         const session = {
-            institut_id: institutId,
-            session_id: sessionId,
             session: {
-                validation: !validation
-            }
+                validation: !validation,
+                institut_id: institutId,
+                session_id: sessionId,
+            },
+            sessionHasExams:null
         }
-        console.log(session)
-       // dispatch(putSession(institutId, sessionId, session));
+       dispatch(putSession(institutId, sessionId, session));
 
     }
 

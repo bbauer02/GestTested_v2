@@ -22,7 +22,6 @@ import { useDispatch } from '../../../../redux/store';
 import { removeSession, putSession} from '../../../../redux/slices/session';
 // components
 import Iconify from '../../../../components/iconify';
-import Label from "../../../../components/label";
 import ConfirmDialog from '../../../../components/confirm-dialog';
 //
 
@@ -109,7 +108,7 @@ export default function SessionDetailToobar({ session }) {
 
     const handleValidateSession = () => {
 
-        const _session = {
+       const _session = {
             session: {
                 validation: !session.validation,
                 institut_id,
@@ -120,10 +119,15 @@ export default function SessionDetailToobar({ session }) {
 
         dispatch(putSession(institut_id,session_id, _session));
 
-        enqueueSnackbar( 'Session validée !!' );
+        if (session.validation ) {
+            enqueueSnackbar( 'Session invalidée!' );
+        }
+        else {
+            enqueueSnackbar( 'Session validée!' );
+        }
+
         setOpenConfirmValidation(false);
     }
-
     return (
         <>
             <Stack
@@ -157,7 +161,7 @@ export default function SessionDetailToobar({ session }) {
 
                     <Tooltip title="Ajouter un candidat">
                         <IconButton onClick={handleUsersListOpen}>
-                            <Iconify icon="mdi:user-add" width={28}  sx= {{ color: 'toolbar.icon'}} /> 
+                            <Iconify icon="mdi:user-add" width={28}  sx= {{ color: 'toolbar.icon'}} />
                         </IconButton>
                     </Tooltip>
 
@@ -166,7 +170,7 @@ export default function SessionDetailToobar({ session }) {
                         handleOpenConfirmValidation();
                         handleClosePopoverValidation();
                     }}>
-                            <Iconify icon="grommet-icons:validate" width={28}  sx= {{ color: 'toolbar.icon'}} /> 
+                            <Iconify icon={ session.validation? `el:ok-sign` : `el:ok-sign` } width={28}  sx= {  session.validation ? { color: 'toolbar.validated'} : { color: 'toolbar.icon'} } />
                         </IconButton>
                     </Tooltip>
 
@@ -203,14 +207,14 @@ export default function SessionDetailToobar({ session }) {
                                 <Iconify icon='material-symbols:info' width={72} sx= {{ color: '#00B8D9'}} />
                             </Stack>
                             <Stack direction="column" spacing={0}>
-                                <Typography><strong>Souhaitez-vous valider la session? </strong></Typography>   
+                                <Typography><strong>{session.validation ? `Souhaitez-vous invalider la session` : `Souhaitez-vous valider la session`} </strong></Typography>
                             </Stack>
                         </Stack>
                     </>
                 }
                 action={
                     <Button variant="contained" color="info" onClick={handleValidateSession}>
-                        Valider la session
+                        {session.validation ? `Invalider la session` : `Valider la session`}
                     </Button>
 
                 }

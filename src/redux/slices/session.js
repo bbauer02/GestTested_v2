@@ -85,6 +85,7 @@ const slice = createSlice({
             });
             state.isLoading = false;
             state.sessions = updatedSessions;
+            state.session = {...state.session, ...session_updated};
         },
 
         //PUT SESSION USER

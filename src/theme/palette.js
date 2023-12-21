@@ -104,7 +104,7 @@ export default function palette(themeMode) {
       disabled: GREY[500],
     },
     background: { paper: '#fff', default: '#fff', neutral: GREY[200]},
-    toolbar: {  background: PRIMARY.lightGrey, icon: PRIMARY.darkGrey, iconError :ERROR.dark },
+    toolbar: {  background: PRIMARY.lightGrey, icon:'#637381', iconError :ERROR.dark, validated: PRIMARY.main },
     action: {
       ...COMMON.action,
       active: GREY[600],
