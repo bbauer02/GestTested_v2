@@ -40,7 +40,7 @@ SessionDetailUserOptions.propTypes = {
     session: PropTypes.object
 }
 export default function SessionDetailUserOptions({ session, SessionDetail}) {
-    const { hasPaid } = SessionDetail.sessionUsers;
+    const { hasPaid } = SessionDetail.sessionUsers[0];
     const { validation } = session;
 
     const {enqueueSnackbar} = useSnackbar();
@@ -342,8 +342,6 @@ export default function SessionDetailUserOptions({ session, SessionDetail}) {
         [setValue, values.items]
     );
 
-
-
     return (
         <>
             <Card>
@@ -378,6 +376,7 @@ export default function SessionDetailUserOptions({ session, SessionDetail}) {
                                                 label="Start date"
                                                 inputFormat="dd/MM/yyyy hh:mm a"
                                                 renderInput={(params) => <TextField {...params} fullWidth />}
+                                                disabled={validation || hasPaid}
                                             />
                                         )}
 
@@ -389,6 +388,7 @@ export default function SessionDetailUserOptions({ session, SessionDetail}) {
                                         label="Adresse de l'épreuve"
                                         InputLabelProps={{ shrink: true }}
                                         multiline rows={3}
+                                        disabled={validation || hasPaid}
                                     />  
 
                                     <RHFTextField
@@ -403,6 +403,7 @@ export default function SessionDetailUserOptions({ session, SessionDetail}) {
                                             endAdornment: <InputAdornment position="start">€</InputAdornment>,
                                         }}
                                         sx={{ maxWidth: { md: 80 } }}
+                                        disabled={validation || hasPaid}
                                     />
 
                                     <RHFTextField
@@ -419,6 +420,7 @@ export default function SessionDetailUserOptions({ session, SessionDetail}) {
                                             inputProps: { min: 0, max: 100 },
                                         }}
                                         sx={{ maxWidth: { md: 80 } }}
+                                        disabled={validation || hasPaid}
                                     />
 
                                     <RHFTextField
@@ -436,7 +438,7 @@ export default function SessionDetailUserOptions({ session, SessionDetail}) {
                                     />
 
                                   {
-                                      option.isOption ?
+                                      option.isOption &&  (!validation || hasPaid) ?
                                           <Button
                                               size="small"
                                               color="error"
@@ -462,7 +464,7 @@ export default function SessionDetailUserOptions({ session, SessionDetail}) {
                             alignItems={{ xs: 'flex-start', md: 'center' }}
                         >
 
-                            { EXAMS_OPTION.length > 0 &&
+                            { EXAMS_OPTION.length > 0 && (!validation || hasPaid) &&
                             <>
                                 <RHFSelect
                                     name="selNewExam"
@@ -523,7 +525,8 @@ export default function SessionDetailUserOptions({ session, SessionDetail}) {
                     onClick={handleSubmit(onSubmit)}
                     disabled={validation || hasPaid}
                 >
-                   Mettre à jour les options
+
+                    <Iconify icon={validation || hasPaid ? `material-symbols:lock` : `uiw:edit`} />  {validation || hasPaid ? `Modification Verrouillée` : `Mettre à jour les options`}
                 </LoadingButton>
             </Stack>
         </>
