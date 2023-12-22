@@ -277,7 +277,7 @@ export default function SessionDetailUserOptions({ session, SessionDetail}) {
                 if(!item.option_id && (item.price_user !== price_base || item.tva_user !== tva_base || item.addressExam !== adressExam || item.datetime !== date_base) ) {
                     // On ajoute alors l'épreuve dans la table UseOption
                     dispatch(addUserOption(institut_id, newOption));
-
+                    
                     enqueueSnackbar(`Ajout de l'option ${item.exam}`);
 
                 }
@@ -290,7 +290,6 @@ export default function SessionDetailUserOptions({ session, SessionDetail}) {
 
                     dispatch(updateUserOption(institut_id, sessionUser_id, item.exam_id, item.option_id, newOption ));
                     enqueueSnackbar(`Mise à jour de l'option ${item.exam}`);
-
             }
             else {
                 dispatch(addUserOption(institut_id, newOption));
