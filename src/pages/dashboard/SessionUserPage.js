@@ -37,7 +37,7 @@ export default function SessionUserPage() {
     const { session_id, user_id} = useParams();
     const [currentTab, setCurrentTab] = useState('coordonnees');
 
-    const { sessionUser } = useSelector((state) => state.session);
+    const { sessionUser, session } = useSelector((state) => state.session);
 
     const { user : curUser } = useSelector((state) => state.user);
     const institut_id = user.instituts[0].institut_id;
@@ -70,7 +70,7 @@ export default function SessionUserPage() {
             value: 'options',
             label: 'Epreuves et options',
             icon: <Iconify icon="iconamoon:options" />,
-            component: <SessionDetailUserOptions SessionDetail={sessionUser}/>,
+            component: <SessionDetailUserOptions session={session} SessionDetail={sessionUser}/>,
         },
         {
             value: 'gestion',

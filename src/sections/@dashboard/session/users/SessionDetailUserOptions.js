@@ -37,8 +37,11 @@ import calculTTC from '../../../../utils/tools';
 
 SessionDetailUserOptions.propTypes = {
     SessionDetail : PropTypes.object,
+    session: PropTypes.object
 }
-export default function SessionDetailUserOptions({SessionDetail}) {
+export default function SessionDetailUserOptions({ session, SessionDetail}) {
+    const { hasPaid } = SessionDetail.sessionUsers;
+    const { validation } = session;
 
     const {enqueueSnackbar} = useSnackbar();
     const theme = useTheme();
@@ -519,6 +522,7 @@ export default function SessionDetailUserOptions({SessionDetail}) {
                     variant="contained"
                     loading={loadingSend && isSubmitting}
                     onClick={handleSubmit(onSubmit)}
+                    disabled={validation || hasPaid}
                 >
                    Mettre à jour les options
                 </LoadingButton>
