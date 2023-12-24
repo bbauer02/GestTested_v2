@@ -160,8 +160,8 @@ export default function SessionDetailToobar({ session }) {
 
 
                     <Tooltip title="Ajouter un candidat">
-                        <IconButton onClick={handleUsersListOpen}>
-                            <Iconify icon="mdi:user-add" width={28}  sx= {{ color: 'toolbar.icon'}} />
+                        <IconButton onClick={handleUsersListOpen} disabled={validation}>
+                            <Iconify icon={validation?`ic:sharp-person-add-disabled`:`mdi:user-add`} width={28}  sx= {{ color: 'toolbar.icon'}} />
                         </IconButton>
                     </Tooltip>
 
