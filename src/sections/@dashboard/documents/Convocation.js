@@ -101,6 +101,59 @@ export default function Convocation({ invoice, curSession, curUser }) {
 
                 </Grid>
 
+                <Grid container>
+                    <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
+                        <Typography variant="h6" align="center" sx={{ color: "red", border: "2px solid red", padding: 2 }}>
+                            VEUILLEZ LIRE TOUTE LA CONVOCATION : Veuillez vous munir d’une pièce d’identité  VALIDE et d’un stylo à  ENCRE NOIRE ,  Présentez-vous 30 minutes avant l’heure de début de l’épreuve.Prévoyez 3 heures d’examen.
+                        </Typography>
+                    </Grid>
+                </Grid>
+
+                <Grid container>
+                    <Grid item xs={12} sm={12} sx={{ mb: 5 }}>
+                        <Typography variant="subtitle1" align="left">{getCivility(curUser.gender)} {curUser.lastname} {curUser.firstname},</Typography>
+                        <Typography variant="subtitle1" align="left">J&apos;ai l&apos;honneur de vous inviter à vous présenter à la session du test <strong>{test}{level? `-${level}`:""}</strong>,</Typography>
+                            <TableContainer>
+                                <Table >
+                                    <TableBody>
+                                        <TableRow >
+                                            <TableCell align="left"
+                                                       sx={{
+                                                           borderRight: (theme) => `solid 1px ${theme.palette.divider}`,
+                                                           borderLeft: (theme) => `solid 1px ${theme.palette.divider}`,
+                                                           borderTop: (theme) => `solid 1px ${theme.palette.divider}`,
+                                                           borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                                       }}
+                                            >
+                                                <strong>Epreuve</strong>
+                                            </TableCell>
+                                            <TableCell align="left"                                                    sx={{
+                                                borderRight: (theme) => `solid 1px ${theme.palette.divider}`,
+                                                borderLeft: (theme) => `solid 1px ${theme.palette.divider}`,
+                                                borderTop: (theme) => `solid 1px ${theme.palette.divider}`,
+                                                borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                            }}>
+                                                <strong>Date et heure</strong>
+                                            </TableCell>
+                                            <TableCell align="left"                                                    sx={{
+                                                borderRight: (theme) => `solid 1px ${theme.palette.divider}`,
+                                                borderLeft: (theme) => `solid 1px ${theme.palette.divider}`,
+                                                borderTop: (theme) => `solid 1px ${theme.palette.divider}`,
+                                                borderBottom: (theme) => `solid 1px ${theme.palette.divider}`,
+                                            }}>
+                                                <strong>Adresse</strong>
+                                            </TableCell>
+                                        </TableRow>
+                                    </TableBody>
+                                </Table>
+                            </TableContainer>
+                    </Grid>
+                </Grid>
+
+
+
+
+
 
                 <Divider sx={{ mt: 5 }} />
                 <Typography align="center" variant="body2">{Institut.label} - {Institut.adress1} {Institut.adress2} {Institut.zipcode} {Institut.city.toUpperCase()} {Institut.institutCountry.label.toUpperCase()}</Typography>

@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
-import {useState} from "react";
 import { useNavigate } from 'react-router-dom';
 // Mui
-import { Box, Card, Button, Avatar, Typography, Stack, IconButton, } from '@mui/material';
+import { Box, Card, Button, Avatar, Typography, Stack, IconButton,Tooltip } from '@mui/material';
 
 // @mui
 import { useTheme } from '@mui/material/styles';
@@ -28,8 +27,8 @@ export default function SessionDetailUsers({session=null}) {
     const theme = useTheme();
 
 
-    const handleSessionUserDetail = (session_id, user_id) => {
-        navigate(PATH_DASHBOARD.session.user(session_id, user_id));
+    const handleSessionUserDetail = (session_id, user_id, tab=null) => {
+        navigate(PATH_DASHBOARD.session.user(session_id, user_id, tab));
     }
 
     return (
@@ -78,12 +77,26 @@ export default function SessionDetailUsers({session=null}) {
                     </Typography>
                 </Stack>
                 <Stack  spacing={0} direction="row" alignItems="left" sx={{ color: 'text.secondary' }}>
-                    <IconButton color='primary' onClick={() => handleSessionUserDetail(session.session_id,candidat.user_id)}>
-                        <Iconify icon="mdi:account-details" />
-                    </IconButton>
-                    <IconButton color='error' onClick={() => console.log("Quitter la session")}>
-                        <Iconify icon="pepicons-pop:leave" />
-                    </IconButton>
+                    <Tooltip title="Voir détails">
+                        <IconButton color='primary' onClick={() => handleSessionUserDetail(session.session_id,candidat.user_id)}>
+                            <Iconify icon="mdi:account-details" />
+                        </IconButton>
+                    </Tooltip>
+                    {
+                        candidat.informations &&  candidat.informations !=="" &&
+                        <Tooltip title={candidat.informations}>
+                            <IconButton color='secondary' onClick={() => handleSessionUserDetail(session.session_id,candidat.user_id, 'gestion')}>
+                                <Iconify icon="mdi:information" />
+                            </IconButton>
+                        </Tooltip>
+                    }
+                    <Tooltip title="Désinscrire un candidat">
+                        <span>
+                            <IconButton color='error' onClick={() => console.log("Quitter la session")} disabled>
+                                <Iconify icon="pepicons-pop:leave" />
+                            </IconButton>
+                        </span>
+                    </Tooltip>
                 </Stack>
                 
             </Box>

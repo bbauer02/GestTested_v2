@@ -34,8 +34,18 @@ export default function SessionUserPage() {
     const dispatch = useDispatch();
 
     const { themeStretch } = useSettingsContext();
+    const location = useLocation();
+    // Utilisez new URLSearchParams pour obtenir les paramètres de la query string
+    const params = new URLSearchParams(location.search);
+    // Obtenez la valeur du paramètre
+    const cat = params.get('cat');
+
     const { session_id, user_id} = useParams();
-    const [currentTab, setCurrentTab] = useState('coordonnees');
+
+    const defaultTab = cat || 'coordonnees';
+
+    const [currentTab, setCurrentTab] = useState(defaultTab);
+
 
     const { sessionUser, session } = useSelector((state) => state.session);
 
