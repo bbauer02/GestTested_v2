@@ -77,6 +77,8 @@ export default function SessionListPage() {
 
     const { user } = useAuthContext();
 
+    const { tests } = useSelector((state) => state.test);
+
     const {enqueueSnackbar} = useSnackbar();
 
     const { themeStretch } = useSettingsContext();
@@ -92,6 +94,10 @@ export default function SessionListPage() {
     const [tableData, setTableData] = useState([]);
 
     const [filterName, setFilterName] = useState('');
+    const [filterTest, setFilterTest] = useState('all');
+    const [optionsTest, setOptionsTest] = useState([]);
+    const [optionsLevel, setOptionsLevel] = useState([]);
+    const [filterLevel, setFilterLevel] = useState('all');
 
     const [openConfirm, setOpenConfirm] = useState(false);
 
@@ -172,7 +178,22 @@ export default function SessionListPage() {
         setPage(0);
     };
 
+    const handleTestFilter = (event) => {
+        setPage(0);
+        setFilterTest(event.target.value);
+        if(event.target.value === "all") {
+            setOptionsLevel([]);
+            setFilterLevel('all');
+        } else {
+            const levels = tests.filter((test) => test.label === event.target.value)[0].Levels;
+            setOptionsLevel(levels);
+        }
+    }
 
+    const handleLevelFilter = (event) => {
+        setPage(0);
+        setFilterLevel(event.target.value);
+    }
 
     return (
         <>
@@ -201,6 +222,13 @@ export default function SessionListPage() {
                     <SessionTableToolbar
                         filterName={filterName}
                         onFilterName={handleFilterName}
+                        filterTest={filterTest}
+                        onFilterTest = {handleTestFilter}
+                        optionsTest = {optionsTest}
+                        filterLevel={filterLevel}
+                        onFilterLevel = {handleLevelFilter}
+                        optionsLevel = {optionsLevel}
+
                     />
 
                     <TableContainer sx={{ position: 'relative', overflow: 'unset' }}>
