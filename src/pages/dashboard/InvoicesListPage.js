@@ -174,6 +174,7 @@ export default function InvoicesListPage() {
     const handleTestFilter = (event) => {
         setPage(0);
         setFilterTest(event.target.value);
+        setFilterLevel('all');
         if(event.target.value === "all") {
             setOptionsLevel([]);
             setFilterLevel('all');

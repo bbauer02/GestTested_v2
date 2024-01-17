@@ -11,7 +11,7 @@ import {
     TableBody,
     Container,
     IconButton,
-    TableContainer,
+    TableContainer, Tabs, Tab, Divider,
 } from '@mui/material';
 // auth
 import { useAuthContext } from '../../auth/useAuthContext';
@@ -39,6 +39,9 @@ import CustomBreadcrumbs from '../../components/custom-breadcrumbs';
 import ConfirmDialog from '../../components/confirm-dialog';
 // sections
 import { SessionTableRow, SessionTableToolbar} from "../../sections/@dashboard/session/list";
+import {getTests} from "../../redux/slices/test";
+import {fTimestamp} from "../../utils/formatTime";
+import Label from "../../components/label";
 
 // ----------------------------------------------------------------------
 const TABLE_HEAD = [
@@ -98,12 +101,23 @@ export default function SessionListPage() {
     const [optionsTest, setOptionsTest] = useState([]);
     const [optionsLevel, setOptionsLevel] = useState([]);
     const [filterLevel, setFilterLevel] = useState('all');
+    const [filterStartDate, setFilterStartDate] = useState(null);
+    const [filterEndDate, setFilterEndDate] = useState(null);
+    const [filterStatus, setFilterStatus] = useState('all');
 
     const [openConfirm, setOpenConfirm] = useState(false);
 
     const isInstitutPage = pathname.includes(PATH_DASHBOARD.institut.sessions.root);
 
     const _institutId = user.instituts[0].institut_id;
+
+    useEffect(() => {
+        dispatch(getTests(true));
+    }, [dispatch]);
+
+    useEffect(() => {
+        setOptionsTest(tests);
+    }, [tests]);
 
     useEffect(() => {
         if (isInstitutPage) {
@@ -124,11 +138,28 @@ export default function SessionListPage() {
         inputData : tableData,
         comparator: getComparator(order, orderBy),
         filterName,
+        filterTest,
+        filterLevel,
+        filterStartDate,
+        filterEndDate,
+        filterStatus
     });
 
     const denseHeight = dense ? 60 : 80;
 
-    const isNotFound = (!dataFiltered.length && !!filterName) || (!isLoading && !dataFiltered.length);
+    const isNotFound =
+        (!dataFiltered.length && !!filterName) ||
+        (!dataFiltered.length && !!filterTest) ||
+        (!dataFiltered.length && !!filterLevel) ||
+        (!dataFiltered.length && !!filterEndDate) ||
+        (!dataFiltered.length && !!filterStartDate) ||
+        (!isLoading && !dataFiltered.length);
+
+    const isFiltered =
+        filterLevel !== 'all' ||
+        filterName !== '' ||
+        filterTest !== 'all' ||
+        (!!filterStartDate && !!filterEndDate);
 
     const handleOpenConfirm = () => {
         setOpenConfirm(true);
@@ -181,6 +212,7 @@ export default function SessionListPage() {
     const handleTestFilter = (event) => {
         setPage(0);
         setFilterTest(event.target.value);
+        setFilterLevel('all');
         if(event.target.value === "all") {
             setOptionsLevel([]);
             setFilterLevel('all');
@@ -194,6 +226,46 @@ export default function SessionListPage() {
         setPage(0);
         setFilterLevel(event.target.value);
     }
+
+    const handleResetFilter = () => {
+        setFilterName('');
+        setFilterEndDate(null);
+        setFilterStartDate(null);
+        setFilterLevel('all');
+        setFilterTest('all');
+    };
+
+    const getLengthByStatus = (status) => {
+        // tableData?.filter((item) => item.status === status).length;
+        switch (status) {
+            case 1 :
+                return tableData?.filter((item) => item.validation === true).length;
+            case 2 :
+                return tableData?.filter((item) => item.validation === false).length;
+            case 3 :
+                return tableData?.filter((item) => item.sessionUsers.length >= item.placeAvailable  ).length;
+            case 4 :
+                return tableData?.filter((item) => item.sessionUsers.length < item.placeAvailable  ).length;
+            case 5 :
+                return tableData?.filter((item) => fTimestamp(item.end) < Date.now()  ).length;
+            default: return 0;
+        }
+    }
+
+
+    const TABS = [
+        { value: 'all', label: 'All', color: 'info', count: tableData.length },
+        { value: 1, label: 'Validé', color: 'success', count: getLengthByStatus(1) },
+        { value: 2, label: 'Non Validé', color: 'error', count: getLengthByStatus(2) },
+        { value: 3, label: 'Compléte', color: 'complete', count: getLengthByStatus(3) },
+        { value: 4, label: 'Incompléte', color: 'incomplete', count: getLengthByStatus(4) },
+        { value: 5, label: 'Fini', color: 'fini', count: getLengthByStatus(5) },
+    ];
+
+    const handleFilterStatus = (event, newValue) => {
+        setPage(0);
+        setFilterStatus(newValue);
+    };
 
     return (
         <>
@@ -219,8 +291,32 @@ export default function SessionListPage() {
                     }
                 />
                 <Card>
+                    <Tabs
+                        value={filterStatus}
+                        onChange={handleFilterStatus}
+                        sx={{
+                            px: 2,
+                            bgcolor: 'background.neutral',
+                        }}
+                    >
+                        {TABS.map((tab) => (
+                            <Tab
+                                key={tab.value}
+                                value={tab.value}
+                                label={tab.label}
+                                icon={
+                                    <Label color={tab.color} sx={{ mr: 1 }}>
+                                        {tab.count}
+                                    </Label>
+                                }
+                            />
+                        ))}
+                    </Tabs>
+                    <Divider />
                     <SessionTableToolbar
+                        isFiltered={isFiltered}
                         filterName={filterName}
+                        onResetFilter={handleResetFilter}
                         onFilterName={handleFilterName}
                         filterTest={filterTest}
                         onFilterTest = {handleTestFilter}
@@ -228,6 +324,14 @@ export default function SessionListPage() {
                         filterLevel={filterLevel}
                         onFilterLevel = {handleLevelFilter}
                         optionsLevel = {optionsLevel}
+                        onFilterStartDate={(newValue) => {
+                            setFilterStartDate(newValue);
+                        }}
+                        onFilterEndDate={(newValue) => {
+                            setFilterEndDate(newValue);
+                        }}
+                        filterStartDate={filterStartDate}
+                        filterEndDate={filterEndDate}
 
                     />
 
@@ -335,8 +439,18 @@ export default function SessionListPage() {
 }
 // ----------------------------------------------------------------------
 
-function applyFilter({ inputData, comparator, filterName }) {
-/*
+function applyFilter(
+    {
+                         inputData,
+                         comparator,
+                         filterName,
+                         filterTest,
+                         filterLevel,
+                         filterStartDate,
+                         filterEndDate,
+                         filterStatus
+    }) {
+
     const stabilizedThis = inputData.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
@@ -345,9 +459,46 @@ function applyFilter({ inputData, comparator, filterName }) {
     });
 
     inputData = stabilizedThis.map((el) => el[0]);
-*/
+
     if (filterName) {
         inputData = inputData.filter((item) => item.Institut.label.toLowerCase().indexOf(filterName.toLowerCase()) !== -1);
+    }
+
+    if(filterTest !== "all" && filterLevel==="all") {
+        inputData = inputData.filter((session) =>session.Test.label === filterTest);
+    }
+    else if(filterTest !== "all" && filterLevel!=="all") {
+
+        inputData = inputData.filter((session) =>session.Test.label === filterTest && session.Level.label === filterLevel);
+    }
+
+    if (filterStartDate && filterEndDate) {
+        inputData = inputData.filter((session) =>
+            fTimestamp(session.start) >= fTimestamp(filterStartDate) &&
+            fTimestamp(session.end) <= fTimestamp(filterEndDate)
+        );
+    }
+
+    if (filterStatus !== 'all') {
+
+        switch (filterStatus) {
+            case 1 :
+                inputData =  inputData?.filter((item) => item.validation === true);
+                break;
+            case 2 :
+                inputData = inputData?.filter((item) => item.validation === false);
+                break;
+            case 3 :
+                inputData = inputData?.filter((item) => item.sessionUsers.length >= item.placeAvailable  );
+                break;
+            case 4 :
+                inputData = inputData?.filter((item) => item.sessionUsers.length < item.placeAvailable  );
+                break;
+            case 5 :
+                inputData = inputData?.filter((item) => fTimestamp(item.end) < Date.now()  );
+                break;
+            default: break;
+        }
     }
 
     return inputData;

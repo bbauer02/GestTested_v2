@@ -130,5 +130,6 @@
   "overrides": {
     "nth-check": "2.1.1"
   },
-  "proxy": "http://localhost:3003/api"
+  "proxy": "http://localhost:3003/api",
+  "allowedHosts": ["localhost", "dev-cifle.cifle.eu"]
 }

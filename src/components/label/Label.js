@@ -55,6 +55,9 @@ Label.propTypes = {
     'success',
     'warning',
     'error',
+    'complete',
+    'incomplete',
+    'fini'
   ]),
 };
 

@@ -1,14 +1,17 @@
 import PropTypes from 'prop-types';
 // @mui
-import { Tooltip, IconButton, Stack, InputAdornment, TextField, MenuItem } from '@mui/material';
+import {Tooltip, IconButton, Stack, InputAdornment, TextField, MenuItem, Button} from '@mui/material';
+import {DatePicker} from "@mui/x-date-pickers";
 // components
 import Iconify from "../../../../components/iconify";
+
 
 // ----------------------------------------------------------------------
 
 const INPUT_WIDTH = 160;
 
 SessionTableToolbar.propTypes = {
+    isFiltered: PropTypes.bool,
     filterName: PropTypes.string,
     onFilterName: PropTypes.func,
     filterTest: PropTypes.string,
@@ -17,18 +20,31 @@ SessionTableToolbar.propTypes = {
     filterLevel: PropTypes.string,
     onFilterLevel: PropTypes.func,
     optionsLevel: PropTypes.array,
+    filterEndDate: PropTypes.instanceOf(Date),
+    filterStartDate: PropTypes.instanceOf(Date),
+    onFilterStartDate: PropTypes.func,
+    onFilterEndDate: PropTypes.func,
+    onResetFilter: PropTypes.func,
 };
 
-export default function SessionTableToolbar({ 
+export default function SessionTableToolbar({
+    isFiltered,
     filterName, 
     onFilterName,
+    onResetFilter,
     filterTest,
     onFilterTest,
     optionsTest,
     filterLevel,
     onFilterLevel,
     optionsLevel,
+    onFilterEndDate,
+    onFilterStartDate,
+    filterStartDate,
+    filterEndDate,
 }) {
+
+
     return (
         <Stack
             spacing={2}
@@ -126,7 +142,37 @@ export default function SessionTableToolbar({
                     </MenuItem>
                 ))}
             </TextField>
+            <DatePicker
+                label="Date début"
+                value={filterStartDate}
+                onChange={onFilterStartDate}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        fullWidth
+                        sx={{
+                            maxWidth: { md: INPUT_WIDTH },
+                        }}
+                    />
+                )}
+            />
+
+            <DatePicker
+                label="Date Fin"
+                value={filterEndDate}
+                onChange={onFilterEndDate}
+                renderInput={(params) => (
+                    <TextField
+                        {...params}
+                        fullWidth
+                        sx={{
+                            maxWidth: { md: INPUT_WIDTH },
+                        }}
+                    />
+                )}
+            />
             <TextField
+                fullWidth
                 value={filterName}
                 onChange={(event) => onFilterName(event.target.value)}
                 placeholder="Recherchez une session d'un institut..."
@@ -139,11 +185,16 @@ export default function SessionTableToolbar({
                 }}
             />
 
-            <Tooltip title="Filter list">
-                <IconButton>
-                    <Iconify icon='ic:round-filter-list' />
-                </IconButton>
-            </Tooltip>
+            {isFiltered && (
+                <Button
+                    color="error"
+                    sx={{ flexShrink: 0 }}
+                    onClick={onResetFilter}
+                    startIcon={<Iconify icon="eva:trash-2-outline" />}
+                >
+                    supprimer les filtres
+                </Button>
+            )}
         </Stack>
     );
 }

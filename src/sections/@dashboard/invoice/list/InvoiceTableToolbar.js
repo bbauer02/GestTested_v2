@@ -41,6 +41,8 @@ export default function InvoiceTableToolbar({
                                                 filterStartDate,
                                                 filterEndDate,
                                             }) {
+
+
     return (
         <Stack
             spacing={2}

@@ -34,6 +34,7 @@ import Iconify from "../../components/iconify";
 import { fDateTime } from '../../utils/formatTime';
 
 import SessionDetailToobar from "../../sections/@dashboard/session/detail/SessionDetailToolbar";
+import {getTests} from "../../redux/slices/test";
 
 SessionDetailPage.propTypes = {
     SelectedTab: PropTypes.string,
@@ -45,7 +46,9 @@ export default function SessionDetailPage({SelectedTab="session"}) {
     const { session } = useSelector((state) => state.session);
     const [currentTab, setCurrentTab] = useState(SelectedTab);
 
-
+    useEffect(() => {
+        dispatch(getTests(true));
+    }, [dispatch]);
 
     useEffect(() => {
         dispatch(getSession(institut_id, session_id))

@@ -73,6 +73,35 @@ const ERROR = {
   contrastText: '#fff',
 };
 
+const COMPLETE = {
+  lighter: '#99ccff',
+  light: '#99e3e6',
+  main: '#0052CC',
+  dark: '#0052CC',
+  darker: '#a1ff99',
+  contrastText: GREY[800],
+};
+
+const INCOMPLETE = {
+  lighter: '#FFF5CC',
+  light: '#FFD666',
+  main: '#FFAB00',
+  dark: '#B76E00',
+  darker: '#7A4100',
+  contrastText: GREY[800],
+};
+
+const FINI = {
+  lighter: '#b171f3',
+  light: '#b17fda',
+  main: '#6554C0',
+  dark: '#b1a5a6',
+  darker: '#b1c38d',
+  contrastText: '#424242',
+};
+
+
+
 const COMMON = {
   common: { black: '#000', white: '#fff' },
   primary: PRIMARY,
@@ -82,6 +111,9 @@ const COMMON = {
   warning: WARNING,
   error: ERROR,
   grey: GREY,
+  complete : COMPLETE,
+  incomplete: INCOMPLETE,
+  fini: FINI,
   divider: alpha(GREY[500], 0.24),
   action: {
     hover: alpha(GREY[500], 0.08),
