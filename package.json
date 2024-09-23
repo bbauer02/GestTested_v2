@@ -129,5 +129,6 @@
   },
   "overrides": {
     "nth-check": "2.1.1"
-  }
+  },
+  "proxy": "http://localhost:3003/api"
 }
