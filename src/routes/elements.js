@@ -51,3 +51,8 @@ export const Page404 = Loadable(lazy(() => import('../pages/Page404')));
 // Administration of Intituts
 
 export const InstitutProfilePage =  Loadable(lazy(() => import('../pages/dashboard/institut/InstitutProfilePage')));
+
+// Gestion des Questions et tests
+
+export const QuestionListPage = Loadable(lazy(() => import('../pages/dashboard/QuestionListPage')));
+export const SujetListPage = Loadable(lazy(() => import('../pages/dashboard/SujetListPage')));

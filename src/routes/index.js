@@ -45,7 +45,9 @@ import {
   SkillsPage,
   InvoicesListPage,
   PricesListPage,
-  ExaminatorsListPage
+  ExaminatorsListPage,
+  QuestionListPage,
+  SujetListPage,
 
 } from './elements';
 
@@ -150,7 +152,14 @@ export default function Router() {
                 { path: 'list', element: <InvoicesListPage /> },
                 { path: ':id', element: <InvoiceDetailsPage /> },
               ]
-            }
+            },
+            {
+              path: 'questions',
+              children: [
+                { element: <Navigate to="/dashboard/questions/list" replace />, index: true },
+                { path: 'list', element: <QuestionListPage /> },
+              ]
+            },
           ]
 
         },

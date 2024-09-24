@@ -16,6 +16,7 @@ import { NavSectionVertical } from '../../../components/nav-section';
 import navConfig from './config-navigation';
 import navConfigAdminSys from "./config-nav-adminsys";
 import navConfigInstitutAdmin from './config-navigation-institut';
+import navConfigQuestion from './config-navigation-question';
 
 import NavDocs from './NavDocs';
 import NavAccount from './NavAccount';
@@ -39,10 +40,10 @@ export default function NavVertical({ openNav, onCloseNav }) {
   let navConfigFinal = [...navConfig]
 
     if(user.instituts && user.instituts.length >0 && user.instituts[0].Role.power >= 3 ) {
-        navConfigFinal = [...navConfigFinal, ...navConfigInstitutAdmin];
+        navConfigFinal = [...navConfigFinal, ...navConfigInstitutAdmin, ...navConfigQuestion];
     }
     if(user.systemRole.power >= 10 ) {
-        navConfigFinal = [...navConfigFinal, ...navConfigAdminSys];
+        navConfigFinal = [...navConfigFinal, ...navConfigAdminSys, ...navConfigQuestion];
     }
 
 

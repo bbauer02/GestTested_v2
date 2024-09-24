@@ -96,5 +96,11 @@ export const PATH_DASHBOARD = {
     users: (institut_id, session_id) => path(ROOTS_DASHBOARD, `/institut/${institut_id}/sessions/${session_id}/users`),
     user: (session_id, user_id, tab=null) => path(ROOTS_DASHBOARD, `/institut/sessions/${session_id}/users/${user_id}/detail${tab? `?cat=${tab}` : ``}`),
   },
+  sujets : {
+    root: path(ROOTS_DASHBOARD, '/sujets/list'),
+  },
+  questions : {
+    root: path(ROOTS_DASHBOARD, '/questions/list'),
+  }
 
 };
