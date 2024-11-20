@@ -48,6 +48,7 @@ import {
   ExaminatorsListPage,
   QuestionListPage,
   SujetListPage,
+  QuestionCreatePage
 
 } from './elements';
 
@@ -152,14 +153,7 @@ export default function Router() {
                 { path: 'list', element: <InvoicesListPage /> },
                 { path: ':id', element: <InvoiceDetailsPage /> },
               ]
-            },
-            {
-              path: 'questions',
-              children: [
-                { element: <Navigate to="/dashboard/questions/list" replace />, index: true },
-                { path: 'list', element: <QuestionListPage /> },
-              ]
-            },
+            }
           ]
 
         },
@@ -300,6 +294,21 @@ export default function Router() {
               ]
             }
 
+          ]
+        },
+        {
+          path: 'questions',
+          children: [
+            { element: <Navigate to="/dashboard/questions/list" replace />, index: true },
+            { path: 'list', element: <QuestionListPage /> },
+            { path: 'create', element: <QuestionCreatePage /> },
+          ]
+        },
+        {
+          path: 'sujets',
+          children: [
+            { element: <Navigate to="/dashboard/sujets/list" replace />, index: true },
+            { path: 'list', element: <SujetListPage /> },
           ]
         }
       ],

@@ -101,6 +101,10 @@ export const PATH_DASHBOARD = {
   },
   questions : {
     root: path(ROOTS_DASHBOARD, '/questions/list'),
+    list: path(ROOTS_DASHBOARD, '/questions/list'),
+    create: path(ROOTS_DASHBOARD, '/questions/create'),
+    details: (id) => path(ROOTS_DASHBOARD, `/questions/${id}/details`),
+    edit: (id) => path(ROOTS_DASHBOARD, `/questions/${id}/edit`),
   }
 
 };

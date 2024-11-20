@@ -1,0 +1,70 @@
+{
+  "subject": {
+    "questions": [
+      {
+        "label": "Question Label",
+        "instruction": "Question Instruction",
+        "timemax": 60,
+        "points": 5,
+        "skills": [
+          {
+            "label": "Skill Label",
+            "parent": "Parent Skill Label",
+            "level": "Skill Level"
+          }
+        ],
+        "medias": [
+          {
+            "filename": "media_file.jpg",
+            "type": "picture"
+          }
+        ],
+        "questionType": "MCQ",
+        "choices": ["Choice 1", "Choice 2"],
+        "answers": ["Answer 1"]
+      },
+      {
+        "label": "Question Label",
+        "instruction": "Question Instruction",
+        "timemax": 60,
+        "points": 5,
+        "skills": [
+          {
+            "label": "Skill Label",
+            "parent": "Parent Skill Label",
+            "level": "Skill Level"
+          }
+        ],
+        "medias": [
+          {
+            "filename": "media_file.mp4",
+            "type": "video"
+          }
+        ],
+        "questionType": "TrueFalse",
+        "answer": true
+      },
+      {
+        "label": "Question Label",
+        "instruction": "Question Instruction",
+        "timemax": 60,
+        "points": 5,
+        "skills": [
+          {
+            "label": "Skill Label",
+            "parent": "Parent Skill Label",
+            "level": "Skill Level"
+          }
+        ],
+        "medias": [],
+        "questionType": "FillInTheBlanks",
+        "sentence": "The _______ is the largest planet in our solar system, and _______ is the smallest.",
+        "blankSymbol": "_______",
+        "answers": ["Jupiter", "Mercury"]
+      }
+      // More questions...
+    ],
+    "session": "Session Name",
+    "exam": "Exam Name"
+  }
+}

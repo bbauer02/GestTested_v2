@@ -56,3 +56,7 @@ export const InstitutProfilePage =  Loadable(lazy(() => import('../pages/dashboa
 
 export const QuestionListPage = Loadable(lazy(() => import('../pages/dashboard/QuestionListPage')));
 export const SujetListPage = Loadable(lazy(() => import('../pages/dashboard/SujetListPage')));
+
+export const QuestionCreatePage = Loadable(lazy(() => import('../pages/dashboard/QuestionCreatePage')));
+
+

@@ -11,6 +11,8 @@ import sessionReducer from './slices/session';
 import userReducer from './slices/user';
 import invoiceReducer from './slices/invoice';
 import priceReducer from './slices/price';
+import questionReducer from './slices/question';
+import skillReducer from './slices/skill';
 // ----------------------------------------------------------------------
 
 export const rootPersistConfig = {
@@ -28,7 +30,9 @@ const rootReducer = combineReducers({
   session: sessionReducer,
   user: userReducer,
   invoice: invoiceReducer,
-  prices: priceReducer
+  prices: priceReducer,
+  question: questionReducer,
+  skill: skillReducer
 
 });
 
